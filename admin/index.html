@@ -10,9 +10,9 @@
 <link rel="stylesheet" href="./style.css?v=20261026-builder1">
 <script src="./app.js?v=20261026-builder1" defer></script>
 <link rel="stylesheet" href="../design-system.css?v=20261026-projects1">
-<script src="./collaboration.js?v=20261026-collab1" defer></script>
+<script src="./collaboration.js?v=20261026-collab2" defer></script>
 <script src="./starter.js?v=20261026-builder1" defer></script>
-<link rel="stylesheet" href="./collaboration.css?v=20261026-collab1">
+<link rel="stylesheet" href="./collaboration.css?v=20261026-collab2">
 </head>
 <body>
 <div class="studio-layout">
@@ -21,6 +21,7 @@
   <nav class="side-menu" aria-label="제작 메뉴">
     <button type="button" data-view="dashboard">대시보드</button>
     <button type="button" data-view="create">새 전시 만들기</button>
+    <button type="button" data-view="create" data-jump="collaboration">6단계 협업 작업실</button>
     <button type="button" data-view="create" data-jump="artist-portrait">작가 인물사진 등록</button>
     <button type="button" data-view="create" data-jump="artist-optional">작가 소개 등록</button>
     <button type="button" data-view="create" data-jump="artwork-list">작품 등록</button>
@@ -42,6 +43,7 @@
     <div class="sonu-overview">
       <section class="sonu-workflow" aria-label="전체 제작 작업">
         <div class="sonu-panel-head"><span class="eyebrow">WORKFLOW</span><h3>전체 제작 작업</h3><span class="sonu-tip">6단계</span></div>
+        <div class="collaboration-dashboard-link"><button type="button" data-view="create" data-jump="collaboration" class="subtle">협업 진행 현황·담당자 관리 ↗</button></div>
         <div class="sonu-steps">
           <button type="button" data-view="create" data-jump="title"><span class="sonu-step-no">1</span><b>전시 기본정보</b><small>제목 · 분야 · 전시 소개</small></button>
           <button type="button" data-view="create" data-jump="artist-portrait"><span class="sonu-step-no">2</span><b>작가 등록</b><small>인물사진 · 약력 · 작가 노트</small></button>
