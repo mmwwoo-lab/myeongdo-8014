@@ -107,8 +107,8 @@
       '담당 범위: '+d.desc,
       '담당자: '+(stage.assignee||'(미정)'),
       '진행 상태: '+stage.status,
-      '## 자료·권리 근거',stage.sources||'(입력 필요)',
-      '## 작업 내용·인수인계',stage.notes||'(입력 필요)',
+      '## 자료·권리 근거',stage.sources.slice(0,1500)||'(입력 필요)',
+      '## 작업 내용·인수인계',stage.notes.slice(0,1800)||'(입력 필요)',
       '## 확인 사항','- [ ] 저작권과 공개 허락 확인','- [ ] 결과물 및 링크 확인','- [ ] 담당자 검수 및 인수인계'
     ].join('\n\n');
     return 'https://github.com/'+REPO+'/issues/new?'+new URLSearchParams({
@@ -157,8 +157,10 @@
           }
           message.textContent='';
           stage[name]=input.value;touched(stage);
-          if(d.key==='REVIEW'&&name==='status'&&stage.status!=='승인 완료'){
+          if(name==='status'&&stage.status!=='승인 완료'&&(d.key==='REVIEW'||d.key==='DIRECTOR')){
             stages[0].finalApproval=false;stages[0].finalApprovedAt='';
+            const approval=document.getElementById('director-final-approval');
+            if(approval)approval.checked=false;
           }
         });
         wrap.append(input);body.append(wrap);
@@ -184,6 +186,8 @@
                 body.querySelector('#stage-REVIEW-status').value=stage.status;
               }
               stages[0].finalApproval=false;stages[0].finalApprovedAt='';
+              const approval=document.getElementById('director-final-approval');
+              if(approval)approval.checked=false;
             }
             touched(stage);
           });
