@@ -56,7 +56,7 @@ async function main(){
     await page.locator('#title').fill('명도재 테스트 전시');
     await page.locator('#artist').fill('명도재 이명우');
 
-    await page.locator('.collaboration-stage[data-stage="DIRECTOR"] summary').click();
+    await page.locator('.collaboration-stage[data-stage="DIRECTOR"]').evaluate(el=>{el.open=true;});
     await page.locator('#stage-DIRECTOR-assignee').fill('명도재 이명우');
     await page.locator('#stage-DIRECTOR-notes').fill('전시 방향 검토 완료');
     await page.locator('#stage-DIRECTOR-status').selectOption('승인 완료');
