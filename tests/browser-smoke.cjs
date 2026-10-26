@@ -17,7 +17,7 @@ async function ready(){
 }
 async function main(){
   await ready();
-  const browser=await chromium.launch({headless:true});
+  const browser=await chromium.launch({headless:true,args:["--use-fake-ui-for-media-stream","--autoplay-policy=no-user-gesture-required"]});
   try{
     const page=await browser.newPage({acceptDownloads:true});
     const errors=[];
@@ -111,8 +111,32 @@ async function main(){
       null,{timeout:15000});
     assert((await page.locator('#artwork-list [data-image] img').count())>=3,
       'Quick starter must preload existing artist works');
+    const firstWork=page.locator('#artwork-list .work-editor').first();
+    const music=firstWork.locator('[data-act="make-music"]');
+    assert.equal(await music.isDisabled(),false,'Music creation must be enabled with an artwork');
+    await music.click();
+    const wav=firstWork.locator('.generated-media a[download$=".wav"]');
+    await wav.waitFor({state:'visible',timeout:20000});
+    const sample=await firstWork.locator('.generated-media audio').getAttribute('src');
+    assert(sample.startsWith('blob:'),'Music player must have locally generated audio');
+    const sound=await page.evaluate(async url=>{
+      const arr=await (await fetch(url)).arrayBuffer();
+      const data=new DataView(arr);
+      return {size:data.byteLength,rate:data.getUint32(24,true),seconds:data.getUint32(40,true)/32000};
+    },sample);
+    assert.equal(sound.rate,16000,'Generated music sample rate');
+    assert.equal(sound.seconds,20,'Generated soundtrack should last 20 seconds');
+    const video=firstWork.locator('[data-act="make-video"]');
+    assert.equal(await video.isDisabled(),false,'Video creation must be available with an artwork');
+    await video.click();
+    const recording=firstWork.locator('.generated-media a[download$=".webm"],.generated-media a[download$=".mp4"]');
+    await recording.waitFor({state:'visible',timeout:65000});
+    const videoUrl=await recording.getAttribute('href');
+    assert(videoUrl.startsWith('blob:'),'Artwork film must produce a locally downloadable recording');
+    const filmBytes=await page.evaluate(async url=>(await(await fetch(url)).blob()).size,videoUrl);
+    assert(filmBytes>5000,'Video output must not be empty');
     assert.deepEqual(errors,[],'No uncaught browser runtime errors expected');
-    console.log('PASS: portfolio images, collaboration states, portrait/name, local save, JSON export/import, iframe preview, standalone HTML, artist starter');
+    console.log('PASS: portfolio images, collaboration, portrait/name, local save, JSON round-trip, HTML export, starter art, 20s generated music and recorded video');
   }finally{await browser.close();}
 }
 main().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>server.kill('SIGTERM'));
