@@ -74,10 +74,10 @@ Sites 원본 작업 폴더에서는 정적 파일이 `dist/`에 있습니다. �
 
 ### GitHub Pages 공개 설정
 
-파일은 `main` 브랜치의 루트에 저장됩니다. 저장소 설정의 **Settings → Pages → Build and deployment**에서 `Deploy from a branch` → `main` → `/(root)`를 선택해 저장하면 GitHub Pages가 활성화됩니다. 설정이 완료되면 일반적으로 다음 주소를 사용할 수 있습니다.
+파일은 `main` 브랜치의 루트에 저장됩니다. 저장소의 **Settings → Pages → Build and deployment → Source**에서 **`GitHub Actions`**를 선택해 저장하세요. `.github/workflows/deploy-pages.yml`이 `main` 브랜치의 정적 홈페이지 전체를 배포합니다. 처음에는 저장소 소유자의 Pages 활성화 설정이 필요합니다. 배포가 즉시 시작되지 않으면 Actions 탭에서 `Deploy Myeongdo 8014 Website` 작업을 다시 실행하세요. 설정이 완료되면 일반적으로 다음 주소를 사용할 수 있습니다.
 
 - 공개 홈페이지: `https://mmwwoo-lab.github.io/myeongdo-8014/`
 - 홈페이지 제작: `https://mmwwoo-lab.github.io/myeongdo-8014/admin/#create`
 
-GitHub Pages 활성화 전에는 주소가 열리지 않을 수 있습니다. 파일 업로드만으로 호스팅이 활성화되지는 않습니다.
+**현재 점검 결과 GitHub Pages가 아직 활성화되지 않아 `Configure GitHub Pages` 단계가 실패합니다.** 코드 자동 검증 및 브라우저 점검과 사이트 공개 여부는 서로 별개입니다. 파일 업로드만으로 호스팅이 활성화되지는 않습니다.
 
