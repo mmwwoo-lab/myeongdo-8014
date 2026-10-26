@@ -301,7 +301,7 @@ async function recordArtworkFilm(w,audioBlob,onProgress){
     {x:-.7,y:.58,z:1.02}
   ];
   const pose=t=>{
-    const segment=Math.min(3,Math.floor(t/5));
+    const segment=Math.max(0,Math.min(3,Math.floor(t/5)));
     const fraction=Math.max(0,Math.min(1,(t-segment*5)/5));
     const ease=fraction*fraction*(3-2*fraction);
     const mix=k=>shots[segment][k]+(shots[segment+1][k]-shots[segment][k])*ease;
@@ -309,7 +309,7 @@ async function recordArtworkFilm(w,audioBlob,onProgress){
   };
   const paint=start=>{
     const frame=now=>{
-      const time=Math.min(duration,(now-start)/1000),progress=time/duration;
+      const time=Math.max(0,Math.min(duration,(now-start)/1000)),progress=time/duration;
       const cam=pose(time);
       // Depth-of-field backdrop: a larger, darkened, blurred copy of the artwork.
       ctx.fillStyle="#14241d";ctx.fillRect(0,0,1280,720);
