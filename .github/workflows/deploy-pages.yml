@@ -22,6 +22,14 @@ jobs:
       - name: Validate required entry points
         run: |
           node tests/check-site.cjs
+      - name: Verify GitHub Pages is enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh api "repos/${{ github.repository }}/pages" >/dev/null 2>&1; then
+            echo "::error title=GitHub Pages is not enabled::Open https://github.com/${{ github.repository }}/settings/pages and set Build and deployment > Source to GitHub Actions, then rerun this workflow."
+            exit 1
+          fi
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload static website files
