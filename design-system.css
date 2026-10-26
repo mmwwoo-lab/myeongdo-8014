@@ -1,0 +1,278 @@
+/* MYEONGDOJAE unified light design system • 2026-10-26
+   White canvas, lilac navigation, function-specific low-chroma actions.
+   This stylesheet intentionally changes presentation only; all links and controls remain intact. */
+:root{
+  color-scheme:light;
+  --md-white:#ffffff;--md-text:#25344b;--md-muted:#526278;--md-line:#dce2ee;
+  --md-lilac:#ebe3fa;--md-lilac-hover:#dfd1f4;--md-lilac-strong:#c59aee;
+  --md-blue:#eaf3ff;--md-green:#e9f6e8;--md-rose:#fff0f0;
+  --md-soft:#f8f9ff;--md-text-purple:#4b3674;
+}
+html{background:#fff}
+body{background:#fff!important;color:var(--md-text)!important}
+body :is(h1,h2,h3,h4){color:#25344b}
+body :is(p,.muted,.helper,.hint,.small){color:var(--md-muted)}
+header,.top,body .sidebar,body .topbar{
+  background:#fafbff!important;color:#25344b!important;
+  border-color:var(--md-line)!important;
+}
+header :is(.brand,.logo),.sidebar .identity b,.sidebar .brand b{color:#273951!important}
+header .muted,.sidebar .sidebar-bottom,.sidebar .sidebar-foot{color:#596b81!important}
+header .sidebar-bottom a,.sidebar .sidebar-bottom a{color:#4b3674!important}
+body :is(.hero,.dashboard-hero,.creator-banner,.quick-hero){
+  background:linear-gradient(115deg,#ffffff 0%,#f7f5ff 48%,#ecf7ff 100%)!important;
+  color:#263852!important;border-color:#e1e5f0!important;
+}
+body :is(.hero,.dashboard-hero,.creator-banner,.quick-hero) :is(h1,h2,h3,strong){color:#263852!important}
+body :is(.hero,.dashboard-hero,.creator-banner,.quick-hero) :is(p,small){color:#52647a!important}
+body :is(.hero,.dashboard-hero,.creator-banner,.quick-hero) .eyebrow{color:#71559f!important}
+body .hero .seal{color:#694b97!important;border-color:#cbb9e4!important;background:#f5f0fc!important}
+body :is(.panel,.card,.stats>div,.stat,.tips,.form-section,.work-editor,.creator-help article,.why-grid article,.studio-project-card,.artist-example,.stage,.info,.review,.notice){
+  background:#fff!important;color:#27384e!important;border-color:#dce3ef!important;
+}
+body :is(.card,.panel,.form-section,.stage,.work-editor) :is(h2,h3,strong){color:#2b3c55!important}
+body :is(.card,.panel,.form-section,.stage,.work-editor) :is(p,small){color:#566980}
+body .stage-head,body .quick-steps span,body .process span,body .video-process span{
+  background:#f4f6ff!important;color:#40556e!important;border-color:#dee5f1!important;
+}
+body :is(.notice,.review,.quote){background:#f9f7ff!important;color:#35445b!important}
+body :is(footer,.foot){background:#f8f9fd!important;color:#586b81!important;border-color:#dce3ed!important}
+body :is(footer,.foot) :is(a,p,small){color:#53657b!important}
+body :is(.cover,.intro){background:linear-gradient(120deg,#f4f9ff,#f8f4ff)!important;color:#344860!important}
+body .intro :is(p,.edition),body .cover :is(p,h1,h2){color:#405571!important}
+body .eyebrow,body .sectionnum,body .kicker{color:#7961a9!important}
+body .source{color:#385578!important}
+body .seal{background:#eee5fa!important;color:#634796!important}
+body .sidebar :is(.identity small,.brand small){color:#67758d!important}
+body .logo,body .brand{color:#253952!important}
+
+/* Navigation is consistent on all public pages, without swallowing brand/logo links. */
+nav a:not(.brand):not(.logo),
+header > div > a:not(.brand):not(.logo),
+header > .wrap > a:not(.brand):not(.logo),
+.sidebar nav button,
+.side-menu button,
+.nav-item{
+  display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
+  background:var(--md-lilac)!important;color:var(--md-text-purple)!important;
+  border:1px solid #d6c5ee!important;border-radius:9px!important;
+  padding:9px 13px;line-height:1.4;text-align:center;
+  text-decoration:none!important;font-weight:700;
+}
+nav a:not(.brand):not(.logo):hover,
+header > div > a:not(.brand):not(.logo):hover,
+.sidebar nav button:hover,.side-menu button:hover,.nav-item:hover{
+  background:var(--md-lilac-hover)!important;color:#39245d!important;
+}
+.sidebar nav button.active,.side-menu button.active,.nav-item.active{
+  background:#dac5f4!important;color:#32204e!important;border-color:#bda0e7!important;
+}
+body :is(button,.btn,.action,a.button,.links a,.search,.link,.source,.outline-link,.generated-media a):not(.brand):not(.logo){
+  background:var(--md-lilac)!important;color:var(--md-text-purple)!important;
+  border:1px solid #d5c5ed!important;border-radius:9px!important;
+  text-decoration:none;
+}
+body :is(button,.btn,.action,a.button,.links a,.search,.link,.source,.outline-link,.generated-media a):not(.brand):not(.logo):hover:not(:disabled){
+  background:var(--md-lilac-hover)!important;color:#39265e!important;
+  border-color:#baa1e2!important;
+}
+/* Output / preview / informational actions: pale blue */
+body :is(.subtle,.secondary,.ghost,[id*="preview"],[id*="export"],[id*="backup"],.source):not(.nav-item):not(.card){
+  background:var(--md-blue)!important;color:#315273!important;border-color:#cdddf0!important;
+}
+body :is(.subtle,.secondary,.ghost,[id*="preview"],[id*="export"],[id*="backup"],.source):not(.nav-item):not(.card):hover:not(:disabled){
+  background:#dceafd!important;color:#284763!important;
+}
+/* Delete and destructive actions remain identifiable while light. */
+body :is(.danger,[id="remove"],[data-act="remove"]){
+  background:var(--md-rose)!important;color:#933b45!important;border-color:#edccd2!important;
+}
+body :is(.danger,[id="remove"],[data-act="remove"]):hover:not(:disabled){
+  background:#ffe1e4!important;color:#842f39!important;
+}
+/* Production actions match the SAME lilac as all other navigation/buttons. */
+body .studio-layout .media-buttons button[data-act="make-music"],
+body .studio-layout .media-buttons button[data-act="make-video"],
+body .studio-layout .side-menu button[data-jump="music-controls"],
+body .studio-layout .side-menu button[data-jump="video-controls"]{
+ background:var(--md-lilac)!important;
+ color:var(--md-text-purple)!important;
+ border:1px solid #d6c5ee!important;
+ font-weight:800!important;
+}
+body .studio-layout .media-buttons button[data-act="make-music"]:hover:not(:disabled),
+body .studio-layout .media-buttons button[data-act="make-video"]:hover:not(:disabled),
+body .studio-layout .side-menu button[data-jump="music-controls"]:hover,
+body .studio-layout .side-menu button[data-jump="video-controls"]:hover{
+ background:var(--md-lilac-hover)!important;
+ color:#39265e!important;
+ border-color:#baa1e2!important;
+}
+/* Studio dashboard: warm white surface, restrained blue/lavender hierarchy and contrast. */
+body .studio-layout,body .studio-layout .main{background:#fff!important;color:#26364b!important}
+body .studio-layout .sidebar{background:#f8faff!important;color:#30415c!important}
+body .studio-layout .topbar h1,body .studio-layout .sonu-heading h2,
+body .studio-layout .section-heading h2{color:#253751!important}
+body .studio-layout .sonu-heading{border-color:#dfe6f1!important}
+body .studio-layout .sonu-heading h2 strong{color:#6f519f!important}
+body .studio-layout .sonu-heading p{color:#536985!important}
+body .studio-layout .sonu-workflow{
+  background:linear-gradient(115deg,#fff,#faf7ff)!important;
+  color:#273954!important;border-color:#e0d9ee!important;
+}
+body .studio-layout .sonu-checklist{
+  background:linear-gradient(115deg,#fff,#f2f8ff)!important;
+  color:#273954!important;border-color:#d8e5f1!important;
+}
+body .studio-layout :is(.sonu-panel-head h3,.sonu-checklist h3){color:#263954!important}
+body .studio-layout .sonu-checklist p{color:#526881!important}
+body .studio-layout .sonu-steps button{
+  background:#f3effd!important;color:#304361!important;border:1px solid #e1d7f3!important;
+}
+body .studio-layout .sonu-steps button:hover{
+  background:#e8def9!important;color:#304361!important;
+}
+body .studio-layout .sonu-steps button small{color:#586981!important}
+body .studio-layout .sonu-step-no{background:#d6c3f3!important;color:#39275d!important}
+body .studio-layout .sonu-tip{background:#e4f5e8!important;color:#2d684e!important}
+body .studio-layout .sonu-check-row{
+  background:#f2f7fd!important;border:1px solid #dde5f1!important;color:#33475f!important;
+}
+body .studio-layout .sonu-check-row.done{
+  background:#e7f6ed!important;border-color:#b9e2cb!important;color:#22583d!important;
+}
+body .studio-layout .sonu-check-row.done .sonu-mark{
+ background:#d2ecd9!important;color:#25543d!important;border-color:#9bcbad!important;
+}
+body .studio-layout .studio-about{background:#fcfbff!important;color:#36485f!important;border-color:#e0e3f1!important}
+body .studio-layout .studio-about summary{color:#485b74!important}
+body .studio-layout .studio-project-empty{background:linear-gradient(120deg,#f6f1ff,#eff6ff)!important;color:#6d5799!important}
+body .studio-layout .studio-project-details{background:#fff!important}
+body .studio-layout .studio-project-details strong{color:#293e58!important}
+body .studio-layout .studio-project-details small{color:#596d83!important}
+body .studio-layout .form-section,
+body .studio-layout .work-editor{background:#fff!important;color:#27364c!important}
+body .studio-layout :is(.form-section input,.form-section textarea,.form-section select,.work-editor input,.work-editor textarea){
+  background:#fff;color:#24374f;border-color:#ced9e8;
+}
+body .studio-layout :is(.quick-help,.optional-details,.music-style-brief,.work-create-media,.video-production){
+  background:#f9fbff!important;color:#30445d!important;border-color:#dfe5ef!important;
+}
+body .studio-layout :is(.quick-help summary,.optional-details>summary,.music-style-brief>summary){color:#445675!important}
+body .studio-layout .quick-finish{background:linear-gradient(120deg,#eff7ff,#f5efff)!important;color:#30435d!important}
+body .studio-layout .quick-finish :is(p,strong){color:#435873!important}
+body .studio-layout :is(.stat,.stats>div,.flow-grid>div){background:#f8faff!important;border-color:#e2e7f1!important;color:#293e5a!important}
+body .studio-layout :is(.stats>div span,.flow-grid p){color:#536780!important}
+body .studio-layout :is(.stats>div b,.flow-grid b){color:#273e5a!important}
+body .studio-layout .side-menu button[data-jump]:before{color:#694399!important}
+body :is(button,a):focus-visible{outline:3px solid #aa84df!important;outline-offset:3px}
+body button:disabled{opacity:.55;cursor:not-allowed}
+/* The standalone demo uses the same white sidebar and button family. */
+body .app{background:#fff!important}
+body .app .sidebar{background:#f8faff!important;color:#293a56!important}
+body .app .sidebar .brand b{color:#293b54!important}
+body .app .sidebar .brand small{color:#64768e!important}
+body .app .sidebar-foot{color:#607289!important}
+@media(max-width:700px){
+ body .studio-layout .sonu-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+ nav a:not(.brand):not(.logo){padding:8px 10px}
+}
+
+/* Exhibition website creator: pale lavender headline/title background. */
+body[data-studio-view="create"] .studio-layout .topbar{
+  background:#f2eaff!important;
+  border:1px solid #dfcff4!important;
+  border-radius:12px;
+  padding:19px 23px;
+  margin-bottom:24px;
+}
+body[data-studio-view="create"] .studio-layout .topbar h1{
+  color:#33254c!important;
+  font-weight:700;
+}
+body[data-studio-view="create"] .studio-layout .topbar .eyebrow{
+  color:#72569c!important;
+}
+body[data-studio-view="create"] .studio-layout #view-create .quick-hero{
+  background:linear-gradient(110deg,#f2eaff 0%,#f8f3ff 80%,#fff 100%)!important;
+  color:#33254c!important;
+  border:1px solid #dfcff4!important;
+  border-radius:12px;
+}
+body[data-studio-view="create"] .studio-layout #view-create .quick-hero h2{
+  color:#33254c!important;
+  font-weight:700;
+}
+body[data-studio-view="create"] .studio-layout #view-create .quick-hero p{
+  color:#4d4263!important;
+}
+
+/* Saved art exhibitions: replace legacy black filters/import controls with lilac. */
+body .studio-layout #view-projects .section-heading{
+  background:linear-gradient(115deg,#f5efff,#fbfaff)!important;
+  border:1px solid #e4d9f2!important;
+  border-radius:12px;padding:18px 20px;margin-bottom:17px;
+}
+body .studio-layout #view-projects .section-heading h2{
+  color:#34274d!important;
+}
+body .studio-layout #view-projects .tool-row{
+  background:#fbf9ff!important;
+  border:1px solid #e3d8f3!important;
+  border-radius:10px;
+  padding:16px;
+  align-items:flex-end;
+}
+body .studio-layout #view-projects .tool-row label{
+  color:#4b3674!important;
+  font-weight:700;
+}
+body .studio-layout #view-projects #projects-new,
+body .studio-layout #view-projects #status-filter,
+body .studio-layout #view-projects #import-json{
+  background:#ebe3fa!important;
+  background-image:none!important;
+  color:#4b3674!important;
+  border:1px solid #d6c5ee!important;
+  border-radius:9px!important;
+}
+body .studio-layout #view-projects #status-filter{
+  min-width:155px;cursor:pointer;
+  color-scheme:light;
+}
+body .studio-layout #view-projects #status-filter option{
+  background:#f7f1ff!important;color:#35264e!important;
+}
+body .studio-layout #view-projects #import-json{
+  max-width:100%;width:min(100%,345px);
+  padding:7px;
+}
+body .studio-layout #view-projects #import-json::file-selector-button,
+body .studio-layout #view-projects #import-json::-webkit-file-upload-button{
+  background:#ebe3fa!important;
+  border:1px solid #cbb8e9!important;
+  border-radius:7px!important;
+  color:#4b3674!important;
+  font-weight:700;
+  padding:8px 12px;
+  margin-right:12px;
+  cursor:pointer;
+}
+body .studio-layout #view-projects #projects-new:hover:not(:disabled),
+body .studio-layout #view-projects #status-filter:hover,
+body .studio-layout #view-projects #import-json::file-selector-button:hover{
+  background:#dfd1f4!important;
+}
+body .studio-layout #view-projects .project-list,
+body .studio-layout #view-projects .project-row{
+  background:#fff!important;
+  color:#293b55!important;
+  border-color:#e1ddec!important;
+}
+body .studio-layout #view-projects .project-info h3{
+  color:#283b56!important;
+}
+body .studio-layout #view-projects .project-info p{
+  color:#576781!important;
+}
+

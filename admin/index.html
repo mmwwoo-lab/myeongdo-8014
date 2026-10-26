@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="MYEONGDOJAE 미술작품 전시 홈페이지 제작기. 작가 약력, 작품 이미지, 작품별 설명과 음악·영상을 등록해 개인 전시관을 제작합니다.">
+<meta property="og:title" content="명도재 이명우의 창작실 | 미술작품 전시 홈페이지 제작방">
+<title>명도재 이명우의 창작실 | 미술작품 전시 홈페이지 제작방</title>
+<link rel="stylesheet" href="./style.css?v=20261026-builder1">
+<script src="./app.js?v=20261026-builder1" defer></script>
+<link rel="stylesheet" href="../design-system.css?v=20261026-projects1">
+<script src="./collaboration.js?v=20261026-collab1" defer></script>
+<script src="./starter.js?v=20261026-builder1" defer></script>
+<link rel="stylesheet" href="./collaboration.css?v=20261026-collab1">
+</head>
+<body>
+<div class="studio-layout">
+<aside class="sidebar" aria-label="작업 메뉴">
+  <a class="identity" href="../"><span class="seal">明道</span><span><b>MYEONGDOJAE</b><small>ART EXHIBITION STUDIO 3.0</small></span></a>
+  <nav class="side-menu" aria-label="제작 메뉴">
+    <button type="button" data-view="dashboard">대시보드</button>
+    <button type="button" data-view="create">새 전시 만들기</button>
+    <button type="button" data-view="create" data-jump="artist-portrait">작가 인물사진 등록</button>
+    <button type="button" data-view="create" data-jump="artist-optional">작가 소개 등록</button>
+    <button type="button" data-view="create" data-jump="artwork-list">작품 등록</button>
+    <button type="button" data-view="create" data-jump="music-controls">음악 만들기</button>
+    <button type="button" data-view="create" data-jump="video-controls">영상 만들기</button>
+    <button type="button" data-view="projects">프로젝트 목록</button>
+    <button type="button" data-view="guide">사용 방법</button>
+  </nav>
+  <div class="sidebar-bottom"><a href="../">공개 전시 메인으로 ↗</a><p>총괄 기획 · 명도재 이명우</p></div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><span class="eyebrow">MYEONGDOJAE · ART EXHIBITION</span><h1 id="page-heading">명도재 이명우의 창작실</h1></div></header>
+
+  <section class="view" id="view-dashboard">
+    <section class="sonu-heading" aria-label="명도재 창작실 3.0 안내">
+      <div><span class="eyebrow">AI ART EXHIBITION MANAGEMENT · MYEONGDOJAE</span><h2>명도재 창작실 <strong>3.0</strong></h2><p>개인 작가의 작품 등록부터 음악·영상 제작, 전시 홈페이지 완성까지 하나의 작업 공간에서 관리합니다.</p></div>
+      <button type="button" class="primary sonu-new" data-view="create">＋ 새 전시 만들기</button>
+    </section>
+    <div class="sonu-overview">
+      <section class="sonu-workflow" aria-label="전체 제작 작업">
+        <div class="sonu-panel-head"><span class="eyebrow">WORKFLOW</span><h3>전체 제작 작업</h3><span class="sonu-tip">6단계</span></div>
+        <div class="sonu-steps">
+          <button type="button" data-view="create" data-jump="title"><span class="sonu-step-no">1</span><b>전시 기본정보</b><small>제목 · 분야 · 전시 소개</small></button>
+          <button type="button" data-view="create" data-jump="artist-portrait"><span class="sonu-step-no">2</span><b>작가 등록</b><small>인물사진 · 약력 · 작가 노트</small></button>
+          <button type="button" data-view="create" data-jump="artwork-list"><span class="sonu-step-no">3</span><b>작품 등록</b><small>이미지 · 제목 · 해설</small></button>
+          <button type="button" data-view="create" data-jump="music-controls"><span class="sonu-step-no">4</span><b>음악 만들기</b><small>작품별 기악곡 생성</small></button>
+          <button type="button" data-view="create" data-jump="video-controls"><span class="sonu-step-no">5</span><b>영상 만들기</b><small>작품별 영상 제작</small></button>
+          <button type="button" data-view="create" data-jump="finish-section"><span class="sonu-step-no">6</span><b>전시 공개 준비</b><small>미리보기 · 파일 내보내기</small></button>
+        </div>
+      </section>
+      <aside class="sonu-checklist"><span class="eyebrow">CHECKLIST</span><h3>작업 목록</h3><p>최근 저장한 전시의 제작 진행 상황</p><div class="sonu-check-row" data-stage="basic"><span class="sonu-mark" aria-hidden="true">○</span>전시 기획·작가 정보</div><div class="sonu-check-row" data-stage="art"><span class="sonu-mark" aria-hidden="true">○</span>작품 이미지 등록</div><div class="sonu-check-row" data-stage="music"><span class="sonu-mark" aria-hidden="true">○</span>작품 음악 준비</div><div class="sonu-check-row" data-stage="video"><span class="sonu-mark" aria-hidden="true">○</span>작품 영상 준비</div><div class="sonu-check-row" data-stage="published"><span class="sonu-mark" aria-hidden="true">○</span>전시 홈페이지 공개</div><button class="subtle" type="button" data-view="projects">내 프로젝트 보기 ↗</button></aside>
+    </div>
+    <div class="panel dashboard-panel"><div class="panel-heading"><h2>프로젝트 목록 · 최근 작업</h2><button type="button" class="subtle" data-open-projects>전체 보기</button></div><div id="recent-projects" class="project-list"></div></div>
+    <div class="stats"><div><span>저장한 전시</span><b id="stat-all">0</b></div><div><span>작품 총수</span><b id="stat-works">0</b></div><div><span>검수 완료</span><b id="stat-approved">0</b></div></div>
+    <details class="studio-about"><summary>창작실 소개 · 전시 제작 방식과 작가별 참고 사이트 보기</summary>
+    <div class="dashboard-hero creative-room-hero">
+      <span class="eyebrow">MYEONGDOJAE · LEE MYEONGWOO ART STUDIO</span>
+      <h2>명도재 이명우의<br>창작실</h2>
+      <p class="hero-lead">붓 끝에서 태어난 작품에 디지털 전시의 새로운 공간을 선물합니다.</p>
+      <p>작가의 작품을 단순히 나열하는 것을 넘어, 작품의 탄생 배경과 조형 언어·미술평론·음악·영상을 연결해 누구나 감상할 수 있는 개인 온라인 미술관을 제작하는 공간입니다.</p>
+      <div class="hero-actions"><button id="start-create" class="primary" type="button">내 미술전시 홈페이지 제작하기</button><a href="../" class="outline-link">명도재 작가 홈페이지 보기 ↗</a></div>
+      <div class="room-signature">기획·제작 총괄: 명도재 이명우</div>
+    </div>
+    <section class="story-section" aria-label="창작실의 의미와 필요성">
+      <div class="section-heading"><span class="eyebrow">WHY DIGITAL EXHIBITION?</span><h2>작품을 기록하고, 해석하고, 함께 나누는 공간</h2><p>전시장 안에서만 머물던 예술을 언제 어디서나 만날 수 있는 디지털 전시로 확장합니다.</p></div>
+      <div class="why-grid">
+        <article><span class="why-icon" aria-hidden="true">01</span><h3>작품의 가치와 기록</h3><p>작품명, 제작연도, 재료, 규격과 작가의 작업 세계를 체계적으로 남겨 예술적 맥락을 보존합니다.</p></article>
+        <article><span class="why-icon" aria-hidden="true">02</span><h3>감상의 깊이 확장</h3><p>작품별 해설과 미술평론을 통해 색채·구도·상징을 이해하고, 음악과 영상으로 감상의 폭을 넓힙니다.</p></article>
+        <article><span class="why-icon" aria-hidden="true">03</span><h3>시간과 장소를 넘어</h3><p>전시가 종료된 후에도 온라인에서 작품을 소개할 수 있는 독립 홈페이지 파일을 제작합니다.</p></article>
+      </div>
+    </section>
+    <section class="story-section" aria-label="작가의 작품 소개">
+      <div class="section-heading"><span class="eyebrow">MEET THE ARTISTS</span><h2>작가와 작품을 만나는 방법</h2><p>다음은 작품 감상 방식의 참고가 되는 기존 작가 전시관입니다. 이름을 선택하면 해당 원본 전시 페이지가 열립니다.</p></div>
+      <div class="artist-showcase">
+        <a href="https://sonu-kwon-dohoon.sino1000.chatgpt.site/" rel="noopener noreferrer" target="_blank" class="artist-example"><div class="artist-motif motif-water" aria-hidden="true"></div><span class="genre">WATERCOLOR</span><h3>권도훈</h3><p>수채화의 색감과 화면을 감상하고 작품에 어울리는 음악을 연결하는 방식</p><span class="visit">기존 작품 전시 보기 ↗</span></a>
+        <a href="https://sonu-cha-jeongbo.sino1000.chatgpt.site/" rel="noopener noreferrer" target="_blank" class="artist-example"><div class="artist-motif motif-wood" aria-hidden="true"></div><span class="genre">WOOD SCULPTURE</span><h3>차정보</h3><p>조각의 형태와 재료, 작품 정보를 함께 소개하는 입체 작품 전시 방식</p><span class="visit">기존 작품 전시 보기 ↗</span></a>
+        <a href="https://sonu-roman-review.sino1000.chatgpt.site/" rel="noopener noreferrer" target="_blank" class="artist-example"><div class="artist-motif motif-print" aria-hidden="true"></div><span class="genre">VISUAL ART</span><h3>로만 로마니신</h3><p>작가 소개와 작품 감상, 음악적 해석이 연결되는 온라인 감상 방식</p><span class="visit">기존 작품 전시 보기 ↗</span></a>
+      </div>
+      <p class="example-note">※ 위 카드 배경은 원작이 아닌 추상 장식이며, 작품 이미지의 복제나 실제 전시 이관을 의미하지 않습니다.</p>
+    </section>
+    <div class="section-heading"><div><span class="eyebrow">HOW IT WORKS</span><h2>미술 전시 제작 흐름</h2></div></div>
+    <div class="flow-grid">
+      <div><span>01 · 작가</span><b>작가 정보 등록</b><p>약력, 프로필, 작가 노트</p></div>
+      <div><span>02 · 전시</span><b>전시 소개 작성</b><p>전시명, 기획 의도, 총평</p></div>
+      <div><span>03 · 작품</span><b>작품별 이미지 입력</b><p>제목, 크기, 연도, 재료, 해설</p></div>
+      <div><span>04 · 감상</span><b>음악·영상 연결</b><p>작품별 음악·영상 링크</p></div>
+      <div><span>05 · 완성</span><b>미리보기·내보내기</b><p>전시 페이지 HTML 생성</p></div>
+    </div>
+    </details>
+  </section>
+
+  <section class="view" id="view-create">
+    <div class="quick-hero">
+      <span class="eyebrow">MYEONGDOJAE · ONE-CLICK EXHIBITION</span>
+      <h2>작가 홈페이지 제작</h2>
+      <p>① 전시 제목·작가 입력 → ② 작가 인물사진·작품 등록 → ③ <b>작품 실행</b>으로 음악이 포함된 영상 제작·자동 등록 → ④ 전시 홈페이지 완성</p>
+    </div>
+    <div class="quick-steps"><span>1. 전시명·작가</span><span>2. 작가 사진·작품 등록</span><span>3. 20초 촬영기법 영상 만들기</span><span>4. 전시관 완성</span></div>
+    <details class="quick-help"><summary>도움말 · 작품 전시 홈페이지 만들기</summary><p>사진만 올려도 시작할 수 있습니다. 작품 정보와 작가 약력, 미술평론, Python 고화질 MP4 제작은 선택 기능입니다. 제작한 동영상은 이 브라우저에 저장되며, 전시 홈페이지를 다운로드하면 생성된 영상을 문서에 포함할 수 있습니다. 온라인 공개는 내려받은 파일을 별도 호스팅에 올려야 합니다.</p></details>
+    <form id="exhibition-form" novalidate>
+      <input id="project-id" type="hidden">
+      <div class="form-section"><div class="form-section-header"><span>01 · EXHIBITION</span><h2>전시 기본정보</h2><p>전시 제목과 작가 이름, 작가 인물사진 등 개인 홈페이지에 표시할 정보를 입력합니다.</p></div>
+        <label>전시 제목 <em>*필수</em><input id="title" maxlength="120" required placeholder="예: 자연을 바라보며, 나를 돌아보다"></label>
+        <div class="artist-portrait-section" id="artist-portrait" aria-labelledby="artist-portrait-heading">
+          <div class="artist-portrait-heading"><h3 id="artist-portrait-heading">작가 인물사진 등록</h3><p>인물사진을 등록한 다음 바로 아래에 작가 이름을 입력하세요. 완성된 개인 작가 홈페이지의 「작가 소개」에 사진이 표시됩니다.</p></div>
+          <div class="artist-photo-layout">
+            <div class="artist-photo-upload">
+              <label for="portrait-upload">작가 인물사진 선택 <span class="hint">JPG · PNG · WebP (25MB 이하)</span></label>
+              <input id="portrait-upload" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="portrait-help">
+              <p id="portrait-help" class="helper">사진을 선택하면 미리보기가 나타납니다. 재선택하면 교체되며 「프로젝트 저장」으로 보관할 수 있습니다.</p>
+              <p class="helper">개인 홈페이지에 공개해도 되는 작가 인물사진을 등록해 주세요.</p>
+            </div>
+            <div class="image-preview portrait-preview" id="portrait-preview" role="status" aria-live="polite">아직 작가 인물사진이 없습니다 · 사진을 선택해 주세요.</div>
+          </div>
+          <label class="artist-name-after-photo">작가 이름 <em>*필수</em><input id="artist" maxlength="100" required placeholder="예: 홍길동" autocomplete="name"></label>
+        </div>
+        <div class="field-grid">
+          <label>작품 분야<select id="genre"><option>한국화</option><option>서양화</option><option>수채화</option><option>판화</option><option>조각</option><option>사진예술</option><option>공예</option><option>복합매체</option><option>기타 미술</option></select></label>
+          <label>진행 상태<select id="status"><option value="기획">기획</option><option value="제작 중">제작 중</option><option value="검수">검수</option><option value="검수 완료">검수 완료</option></select></label>
+        </div>
+        <label>전시 부제·한 줄 소개<input id="subtitle" maxlength="180" placeholder="색과 여백, 그리고 음악의 만남"></label>
+        <label>전시 소개<textarea id="summary" rows="4" maxlength="3500" placeholder="이번 전시의 주제, 배경과 특징을 소개하세요."></textarea></label>
+        <label>전시 표지 이미지 <span class="hint">선택 · JPG/PNG/WebP</span><input id="cover-upload" type="file" accept="image/jpeg,image/png,image/webp"><div class="image-preview" id="cover-preview">표지 이미지 미등록 · 기본 배경 적용</div></label>
+      </div>
+
+      <details class="form-section optional-details" id="artist-optional"><summary>선택 사항 · 작가 소개·약력·작가 노트 입력</summary><div class="form-section-header"><span>ARTIST PROFILE</span><h2>작가 소개와 이력</h2><p>작가 약력, 전시 이력, 작가 노트를 입력합니다. 인물사진은 위의 「작가 인물사진 등록」에서 등록할 수 있습니다.</p></div>
+        <label>작가 소개 · 약력<textarea id="biography" rows="5" maxlength="5500" placeholder="작가 소개, 학력, 전시 경력, 수상 및 주요 활동"></textarea></label>
+        <label>작가 노트<textarea id="artist-note" rows="4" maxlength="5500" placeholder="작품을 통해 전하고 싶은 철학과 생각"></textarea></label>
+        <label>전시 문의 · 연락처<textarea id="contact" rows="2" maxlength="1300" placeholder="공개를 허락받은 전시 문의 정보만 입력하세요."></textarea></label>
+        <label>작가·전시 공식 사이트 (선택)<input id="official-url" type="url" placeholder="https://example.com"></label>
+      
+      </details>
+
+      <div class="form-section"><div class="form-section-header split"><div><span>03 · ARTWORKS & MEDIA</span><h2>미술작품 등록 · 음악·영상 제작</h2><p>작품 이미지를 등록하면 음악·영상 버튼이 활성화됩니다. 음악은 피아노·바이올린·클래식 앙상블 중에서 무작위 생성되며 작품마다 곡이 달라집니다. 생성된 음악을 사용하여 작품 영상을 제작할 수 있습니다.</p></div><button id="add-artwork" type="button" class="primary">+ 작품 추가</button></div>
+        <div class="batch-upload"><label for="batch-artwork-upload">▧ 작품 사진 여러 장 한 번에 올리기</label><p>JPG·PNG·WebP, 최대 20점. 제목은 파일명으로 자동 입력됩니다.</p><input id="batch-artwork-upload" type="file" accept="image/jpeg,image/png,image/webp" multiple></div>
+        <div id="artwork-list" class="artwork-list"></div>
+        <div id="artwork-count" class="helper">등록한 작품 0점 · 최대 20점</div>
+        <details class="optional-details advanced-production" id="python-optional"><summary>고급 · Python 영상 제작, 외부 영상 URL 등록</summary>
+        <section class="video-production" aria-label="파이썬 영상 제작 · 등록">
+          <div class="video-production-heading"><span class="eyebrow">PYTHON · ARTWORK VIDEO PRODUCTION</span><h3>작품별 영상 제작 · 등록 관리</h3><p>작품을 등록하고 JSON을 내려받아 Python으로 MP4를 제작한 뒤, 결과 파일을 이곳에 다시 등록하세요.</p></div>
+          <div class="video-stats" id="video-stats" aria-live="polite">작품 등록 0점 · 영상 제작 0점 · 공개 영상 링크 0점</div>
+          <div class="video-process">
+            <span>① 작품 이미지·자료 입력</span><span>② 프로젝트 JSON 저장</span><span>③ Python으로 MP4 제작</span><span>④ 결과 JSON 등록</span><span>⑤ MP4 업로드·공개 링크 연결</span>
+          </div>
+          <div class="video-tools">
+            <button type="button" class="subtle" id="video-project-export">영상 제작용 JSON 내려받기</button>
+            <a class="subtle video-document-link" href="https://github.com/mmwwoo-lab/myeongdo-8014/blob/main/tools/python-support/exhibition_video.py" target="_blank" rel="noopener noreferrer">Python 영상제작 프로그램 ↗</a>
+            <a class="subtle video-document-link" href="https://github.com/mmwwoo-lab/myeongdo-8014/blob/main/tools/python-support/VIDEO_GUIDE.md" target="_blank" rel="noopener noreferrer">영상 제작 방법 보기 ↗</a>
+          </div>
+          <label class="video-manifest-label">Python 영상 결과 등록 (video-manifest.json)
+            <input id="video-manifest-import" type="file" accept=".json,application/json">
+          </label>
+          <p class="helper">MP4 파일 자체는 GitHub Pages에서 자동으로 업로드되지 않습니다. 영상 폴더를 웹에 업로드하고 아래 URL을 연결해 주세요.</p>
+          <label>전체 전시 영상 공개 URL (HTTPS)
+            <input id="exhibition-video-url" type="url" placeholder="https://.../exhibition-film.mp4">
+          </label>
+          <div id="video-import-result" role="status" aria-live="polite" class="helper"></div>
+        </section>
+        </details>
+      </div>
+
+      <details class="form-section optional-details" id="review-optional"><summary>선택 사항 · 전문 미술평론 입력</summary><div class="form-section-header"><span>04 · CURATORIAL REVIEW</span><h2>미술평론 · 전시 안내</h2><p>전시의 예술적 의미를 전문적인 관점에서 설명합니다.</p></div>
+        <label>전시 전체 미술평론<textarea id="review" rows="7" maxlength="13000" placeholder="작품 세계, 색채, 구도, 재료, 조형성, 표현 의도와 감상 포인트를 기술하세요."></textarea></label>
+        
+        
+            </details>
+      <div class="quick-finish" id="finish-section"><div><strong>내 작품 전시관 완성</strong><p>완성된 영상은 저장되며, 전시관 HTML에 음악이 포함된 동영상을 함께 넣을 수 있습니다.</p></div><div class="quick-finish-actions"><button type="button" class="primary" id="quick-preview">전시관 바로 보기</button><button type="button" class="primary" id="quick-finish">전시 홈페이지 완성 · 다운로드</button></div></div>
+      <div class="quick-rights"><label class="check"><input type="checkbox" id="rights-confirm"> <span>작품 이미지와 음악·영상의 전시 이용 권한을 직접 확인했습니다.</span></label></div>
+      <div class="actionbar"><button type="submit" class="primary" id="save-project">전시 프로젝트 저장</button><button type="button" class="subtle" id="preview-project">전시 홈페이지 미리보기</button><button type="button" class="subtle" id="download-html">전시 홈페이지 HTML 내려받기</button><button type="button" class="subtle" id="export-project">프로젝트 백업(JSON)</button><button type="button" class="ghost" id="new-project">새 전시 입력</button></div>
+
+      <section class="publish-panel" aria-label="GitHub Pages 전시 홈페이지 공개">
+        <div class="publish-heading"><span class="eyebrow">PUBLIC EXHIBITION · GITHUB PAGES</span><h3>완성 전시 홈페이지 공개 · 주소 복사</h3><p>명도재 GitHub Pages에 완성된 작품과 음악 포함 영상을 등록해 공개 전시 주소를 만들 수 있습니다.</p></div>
+        <p class="publish-help">이 기능은 이 사이트의 소유자가 사용하는 GitHub 계정에서, 저장소 <b>mmwwoo-lab/myeongdo-8014</b>에 콘텐츠 쓰기 권한이 있는 <b>Fine-grained Personal Access Token</b>을 발급받아야 작동합니다. 전시 내용은 누구나 볼 수 있도록 공개됩니다. 토큰은 이 브라우저의 입력란에서 업로드 요청에만 사용하며 저장하지 않습니다.</p>
+        <div class="publish-token-row">
+          <label for="publish-token">GitHub 1회 공개용 토큰 (저장하지 않음)
+            <input id="publish-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_...">
+          </label>
+          <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener noreferrer" class="publish-help-link">GitHub 토큰 관리 열기 ↗</a>
+        </div>
+        <div class="publish-buttons">
+          <button id="publish-project" type="button" class="primary">🌐 전시 홈페이지 공개 등록</button>
+          <button id="copy-public-url" type="button" class="subtle" disabled>공개 주소 복사</button>
+          <a id="open-public-url" target="_blank" rel="noopener noreferrer" class="outline-link" hidden>공개 전시 열어보기 ↗</a>
+        </div>
+        <p id="publish-status" role="status" aria-live="polite" class="publish-status">공개 등록 전입니다. 먼저 작품을 등록하고 홈페이지를 완성해 주세요.</p>
+        <p class="helper">GitHub 업로드 성공 후 공개 주소를 복사할 수 있습니다. 실제 공개 반영은 GitHub Pages 배포 성공 여부에 따라 달라지므로 주소를 직접 열어 확인해 주세요. 토큰이 없다면 「전시 홈페이지 완성 · 다운로드」로 파일을 먼저 보관할 수 있습니다.</p>
+      </section>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+    </form>
+    <div class="panel preview-panel" id="preview-panel" hidden><div class="panel-heading"><h2>개인 전시관 미리보기</h2><button type="button" class="subtle" id="hide-preview">닫기</button></div><iframe id="site-preview" title="미술작품 전시 홈페이지 미리보기" sandbox="allow-same-origin" loading="lazy"></iframe></div>
+  </section>
+
+  <section class="view" id="view-projects">
+    <div class="section-heading split"><div><span class="eyebrow">SAVED EXHIBITIONS</span><h2>내 미술 전시 프로젝트</h2><p>미술 전시만 표시됩니다. 기존 문학·뉴스 데이터는 읽거나 삭제하지 않습니다.</p></div><button id="projects-new" class="primary" type="button">+ 새 전시</button></div>
+    <div class="panel"><div class="tool-row"><label>상태 <select id="status-filter"><option value="전체">전체</option><option>기획</option><option>제작 중</option><option>검수</option><option>검수 완료</option></select></label><label>백업 파일 가져오기 (JSON) <input type="file" id="import-json" accept=".json,application/json"></label></div><div id="project-list" class="project-list"></div></div>
+  </section>
+
+  <section class="view" id="view-guide"><div class="section-heading"><div><span class="eyebrow">SIMPLE ART EXHIBITION</span><h2>쉽게 만드는 나만의 미술 전시관</h2></div></div>
+<div class="panel guide">
+<p><b>① 전시 제목과 작가 이름</b>을 입력합니다.</p>
+<p><b>② 작품 사진을 등록</b>합니다. 여러 장을 한 번에 올려도 되고, 작품 카드를 하나씩 추가해도 됩니다. 작품명은 사진 파일명을 바탕으로 자동 입력되며 설명과 평론은 선택 사항입니다.</p>
+<p><b>③ 음악 만들기 · 랜덤 재생성:</b> 작품 이미지를 등록한 뒤 음악 버튼을 누르면 <b>피아노 독주 · 바이올린 독주 · 클래식 앙상블</b> 중 한 가지를 무작위로 선택합니다. 작품 제목과 이미지 정보에 따라 곡의 조성·선율·반주가 달라지고, 버튼을 다시 누르면 다른 악기로 새 음악이 만들어집니다. 결과는 약 20초의 브라우저 합성 기악곡(WAV)으로, 실제 악기 녹음이나 Suno AI 작곡은 아닙니다.</p><p><b>④ 영상 만들기:</b> 「▶ 작품 실행 · 음악+영상 제작·등록」을 누르면 해당 작품에 마지막으로 생성한 음악을 사용하고, 음악이 없을 경우 랜덤으로 작곡합니다. 작품을 천천히 좌우로 움직이는 팬(Pan), 상하 틸트(Tilt), 줌 인·아웃(Zoom), 흐린 배경과 페이드 효과로 약 20초의 작품 감상 영상을 만듭니다.</p>
+<p><b>⑤ 완성된 20초 영상은 이 브라우저의 IndexedDB에 저장</b>되고 프로젝트에 등록 상태가 표시됩니다. 다시 프로젝트를 열어 감상할 수 있지만 브라우저 저장소 정리나 기기 변경 시 사라질 수 있으니 동영상 파일도 내려받아 보관해 주세요.</p>
+<p><b>음악 스타일 프롬프트:</b> 각 작품 카드에서 음악을 생성하면 선택된 악기에 맞는 Suno 프롬프트가 표시됩니다. 「Suno 스타일 프롬프트 복사」 버튼으로 복사해 사용하세요.</p>
+<p><b>⑥ 「전시관 바로 보기」</b>로 작품 영상을 확인하고, 이용 권한에 체크한 뒤 <b>「전시 홈페이지 완성 · 다운로드」</b>를 누릅니다. 내려받는 독립 HTML 파일에는 등록된 영상이 파일 데이터로 포함되어, 방문자가 재생 버튼을 누르면 음악과 영상이 함께 재생됩니다. 영상 전체 크기가 36MB를 넘으면 별도 업로드와 URL 연결이 필요합니다.</p>
+<p><b>공개 안내:</b> HTML 파일 다운로드는 온라인 게시가 아닙니다. 본인이 관리하는 웹 호스팅에 올려야 공개 주소가 생깁니다. 음악과 영상은 브라우저의 자동재생 정책 때문에 대개 사용자가 재생 버튼을 눌러야 시작됩니다.</p>
+<p><b>고급 기능:</b> 작가 약력, 미술평론, 작품별 추가 데이터는 선택 입력란에서 작성하세요. 고화질 MP4 제작이나 외부 영상 불러오기는 Python 메뉴에서 사용할 수 있습니다. 기존 프로젝트는 브라우저에서 계속 편집할 수 있습니다.</p>
+</div></section>
+</main></div>
+</body></html>
