@@ -16,3 +16,5 @@
 .narration-help-actions a:hover,.narration-help-actions button:hover{background:#f5e2c9}
 .narration-help-actions :focus-visible{outline:3px solid #bb8b50}
 @media(max-width:430px){.narration-help{padding:13px}.narration-help-actions a,.narration-help-actions button{flex:1}}
+
+.native-audio-box{padding:20px;background:#f3f0e7;border:1px solid #d7cabc;margin:12px 0 19px;border-radius:9px;color:#31362d}.native-audio-title{font-weight:750;margin:8px 0}.native-poetry-audio{display:block;width:100%;min-height:52px}.native-audio-status{font-size:12px;margin:10px 0 0;color:#4e553d}.native-audio-note,.audio-support-tip{font-size:12px;color:#655f52;line-height:1.7}.audio-support-tip{border-left:3px solid #ad8066;padding-left:9px}.native-audio-note{margin-bottom:0}.native-audio-box .eyebrow{font-size:11px}@media(max-width:550px){.native-audio-box{padding:13px 11px}}
