@@ -34,6 +34,7 @@ window.MYEONGDO_AUDIO_TRACKS = Object.freeze({
   "32": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4d319b6f-385d-4e31-b431-8941afc542a7.mp3",
   "33": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/80b2cdb2-7e14-4fe6-9dd6-bc3d019df498.mp3",
   "34": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/cc354374-dc1a-4d26-9552-f999f2b3c7b2.mp3",
+  "35":"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7da1b210-f846-49b4-bcdf-9f132034eff7.mp3",
   "36": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/8f7b40e4-3d48-4dce-8cc5-f055288c1e6e.mp3",
   "37": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/da2e80d4-86a5-4006-bb40-654c0506138c.mp3",
   "38": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/96c486a8-eb01-485b-8b02-d44355a4a3f7.mp3",
