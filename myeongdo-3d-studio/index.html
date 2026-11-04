@@ -45,42 +45,23 @@ return text.normalize('NFC').replace(/\u00a0/g,' ').replace(/[ \t]{2,}/g,' ').re
 function fusedPoem(seed,chosen,type){
 const scene=$('#scene').value.trim();
 const words=extractImages([seed,scene].filter(Boolean).join(' '));
-const subject=words[0]||'빈자리';
-const context=words.slice(1,4);
-const theme=type==='fusion'?'fusion':type==='lyric'?'nature':type==='narrative'?'memory':type==='free'?'shift':'inner';
-const lenses={
-fusion:{detail:['낮은 노랫가락처럼 번지는 바람에','빛과 흙의 결이 만나는 곳에서','오래된 말의 온도를 품은 저녁에'],turn:['작은 생명이 먼 고향의 기억을 깨운다','서로 다른 계절이 하나의 숨결로 이어진다']},
-memory:{detail:['돌아오는 길을 기억하는 것은','먼 데서 들려오는 이름을 따라','오래된 말 한마디가'],turn:['잊었다고 여긴 자리가 다시 따뜻해진다','누군가 건너온 시간이 그곳에 남아 있다']},
-nature:{detail:['가만히 흔들리는 가장자리에','아직 마르지 않은 결을 따라','한낮의 그늘이 옮겨 가는 동안'],turn:['작은 움직임이 계절의 무게를 바꾼다','떠나지 않은 온기가 손끝에 닿는다']},
-shift:{detail:['늘 같은 방향으로 열리던 문이','누구도 묻지 않았던 틈에서','뒤집힌 하루의 가장자리에'],turn:['익숙한 순서가 잠깐 어긋난다','다른 길이 처음으로 눈에 들어온다']},
-inner:{detail:['아무도 이름 붙이지 않은 시간에','잠깐 멈춘 손끝을 바라보니','말하지 않은 부분이 남아서'],turn:['마음의 무게가 다른 쪽으로 기운다','침묵에도 조금씩 모양이 생긴다']}
-};
-const modes={
-fusion:{action:['나는 사물의 낮은 목소리를 따라 천천히 걸어간다','이름을 잊은 풍경에도 사람의 온기가 남아 있다'],ending:['저문 들판 너머에서\n아직 부르지 않은 노래가 자란다','돌아오지 않은 계절까지\n한 줌의 빛으로 여기에 머문다']},
-free:{action:['나는 그 앞에서 잠시 걸음을 늦춘다','한 번도 살피지 않던 쪽을 바라본다'],ending:['그날 이후 나는 같은 자리를\n전과 같은 이름으로 부르지 못한다','아직 움직이지 않은 것들이\n먼저 길을 내고 있었다']},
-lyric:{action:['손끝에 닿지 않은 빛까지 천천히 바라본다','한참 동안 그 곁의 소리를 듣는다'],ending:['저녁이 지나도\n그 작은 온도는 사라지지 않았다','바람이 멎자\n남은 빛이 천천히 제자리를 찾았다']},
-narrative:{action:['누군가 지나가다 멈춰 서서 뒤를 돌아본다','나는 돌아오는 길에 그 자리를 다시 찾는다'],ending:['다음 날 그곳에는 아무도 없었다\n그러나 발자국 하나는 남아 있었다','그가 떠난 뒤에야\n열려 있던 문이 조금씩 닫혔다']},
-reflective:{action:['무엇이 남고 무엇이 떠나는지 생각한다','나는 오래된 판단을 잠시 내려놓는다'],ending:['사라진 것은 사물보다\n그것을 바라보던 어제의 눈이었다','답은 오지 않았다\n다만 질문이 놓인 자리가 달라졌다']}
-};
-const lens=lenses[theme],mode=modes[type]||modes.free;
+const input=[seed,scene].join(' ');
 const n=serial++;
-const lyricFree=type==='free'||type==='lyric'||type==='fusion';
-const line1=lyricFree?pick([
-subject+'이 머무는 곳에서\n'+(context[0]||'바람')+'은 조금 다른 방향으로 흐른다',
-subject+'의 그늘을 지나\n'+(context[0]||'저녁빛')+'이 천천히 낮아진다',
-subject+' 앞에 서면\n아무도 가르쳐 주지 않은 계절의 소리가 들린다'
-],n):subject+' 곁에 '+(context[0]||'작은 빛')+'이 머문다';
-const line2=pick(lens.detail,n)+'\n'+(context[1]||'오래된 기척')+'이 '+(lyricFree?'제 빛깔을 되찾는다':'천천히 모습을 드러낸다');
-const line3=pick(mode.action,n+1)+'\n'+pick(lens.turn,n+2);
-const bridge=lyricFree?pick([
-'손을 뻗지 않아도\n가까워지는 것들이 있다',
-'그 사이를 지나온 바람은\n한 번도 같은 목소리로 울지 않았다',
-'멀리 있는 것은 멀리 있는 대로\n가까운 것은 가까운 대로 저마다의 온도를 가진다'
-],n+4):'';
-const line4=(context[2]?context[2]+'의 그림자가 길어지고\n':'')+pick(mode.ending,n+3);
-let poem=proofreadKorean([line1,line2,line3,bridge,line4].filter(Boolean).join('\n\n').replace(/사진|이야기/g,'풍경'));
+const themes=[
+{re:/가을|낙엽|단풍|홍시|감나무|찬바람|서리/,title:'가을이 머무는 자리',opening:[['찬바람이 지나간 마당','감나무 끝에 홍시 하나 남았다'],['낙엽이 돌담 아래 모이는 저녁','빈 가지에 붉은 열매 하나 매달렸다']],middle:[['햇볕은 담장 아래까지 물러나고','마른 풀잎만 바람을 따라 눕는다'],['바람이 지나갈 때마다','가지 끝에서 작은 그림자가 흔들린다']],turn:[['나는 빈 마당을 한동안 바라본다','누군가 다녀간 발자국은 없는데'],['문을 닫으려다 다시 돌아본다','저물어 가는 하늘 아래']],end:[['붉은 열매 하나가','떠난 사람의 저녁을 붙들고 있다'],['나무는 마지막 열매를','겨울이 올 때까지 놓지 않는다']]},
+{re:/비|빗방울|우산|장마/,title:'비가 지나간 자리',opening:[['처마 끝에서 물방울이 떨어진다','젖은 돌계단에 저녁이 고인다'],['비가 그친 골목에','우산 끝의 물방울이 하나씩 떨어진다']],middle:[['담벼락의 이끼가 짙어지고','젖은 흙에서 풀 냄새가 올라온다'],['창문에 맺힌 물기를 닦자','건너편 나무가 조금 또렷해진다']],turn:[['한동안 듣지 못한 발소리를','빗소리 속에서 다시 듣는다'],['나는 마른 신발을 문가에 놓고','아직 젖어 있는 길을 바라본다']],end:[['비는 이미 멎었는데','돌 틈에서는 작은 물소리가 이어진다'],['누군가 지나간 자리에','젖은 발자국만 오래 남는다']]},
+{re:/봄|꽃|매화|벚꽃|새싹/,title:'꽃이 피는 동안',opening:[['낮은 담장 너머','어제 없던 꽃 한 송이가 피었다'],['마른 가지 끝에서','작은 꽃잎이 먼저 봄을 연다']],middle:[['햇살이 꽃잎을 비추자','가지 아래 그림자도 환해진다'],['바람이 한 번 스치고','꽃가루가 돌계단에 내려앉는다']],turn:[['나는 피어난 자리보다','그 곁의 빈 가지를 오래 본다'],['누가 먼저 봄을 불렀을까','대답 대신 벌 한 마리가 다녀간다']],end:[['꽃이 지고 난 자리에도','연둣빛 잎은 자라고 있다'],['잠깐 머물렀던 향기가','열린 창문 안으로 들어온다']]},
+{re:/강|시냇물|신천|물결|바다|호수/,title:'물가에서',opening:[['강물 위로 늦은 햇살이 번진다','건너편 나무 그림자가 길어진다'],['물가에 서서','흘러가는 구름의 그림자를 본다']],middle:[['물결이 둑 아래 돌을 적시고','풀잎 하나가 물 쪽으로 기운다'],['바람이 지나가자','물 위의 빛이 잘게 부서진다']],turn:[['나는 오래 바라보던 곳에서','조금 더 아래쪽으로 걸어간다'],['건너편에서 들리던 소리는','물소리에 섞여 희미해진다']],end:[['물은 아무것도 붙잡지 않지만','저녁의 빛을 오래 데리고 간다'],['돌아오는 길에도','귓가에는 잔물결 소리가 남는다']]},
+{re:/겨울|눈|얼음|추위/,title:'겨울의 문턱',opening:[['밤새 내린 눈이','마당의 발자국을 덮었다'],['찬 새벽 창가에','하얀 성에가 얇게 앉았다']],middle:[['마른 나뭇가지 아래','참새 한 마리가 눈을 턴다'],['낮은 햇볕이 담을 넘어와','얼어붙은 물그릇을 비춘다']],turn:[['나는 장갑 낀 손으로','닫힌 대문을 천천히 연다'],['발밑에서 눈이 바스락거린다','멀리 아침 연기가 오른다']],end:[['발자국은 금세 희미해져도','걸어온 길은 몸에 남는다'],['추운 날에도 나무는','봄에 펼칠 잎을 품고 있다']]}
+];
+const theme=themes.find(t=>t.re.test(input))||{title:(words[0]||'오늘의 풍경').slice(0,22),opening:[['창가에 앉아','한동안 바깥을 바라본다'],['익숙한 길을 걷다가','문득 걸음을 늦춘다']],middle:[['빛이 조금씩 기울고','사물의 그림자가 길어진다'],['바람에 흔들린 잎 하나가','발끝에 내려앉는다']],turn:[['나는 지나온 길을 돌아본다','아직 할 말이 남은 듯하다'],['손에 쥔 것을 내려놓자','주변의 소리가 가까워진다']],end:[['말없이 지나온 오후가','저녁 창문에 오래 머문다'],['돌아오는 길','발걸음이 조금 느려졌다']]};
+const choose=(arr,offset)=>arr[(n+offset)%arr.length].join('\n');
+let stanzas=[choose(theme.opening,0),choose(theme.middle,1),choose(theme.turn,0),choose(theme.end,1)];
+if(type==='narrative')stanzas.splice(2,0,'그날 나는 잠시 멈춰 서서\n지나온 길을 다시 바라보았다');
+if(type==='reflective')stanzas.splice(2,0,'사라지는 것은 어디로 가는가\n나는 대답 대신 눈앞의 풍경을 본다');
+let poem=proofreadKorean(stanzas.join('\n\n'));
 const review=evaluateDraft(poem,words,type);
-return {title:subject.replace(/사진|이야기/g,'풍경').slice(0,22),poem,review};
+return {title:theme.title,poem,review};
 }
 function compose(seed,type){return fusedPoem(seed,[],type)}
 function writeCritique(poem,type){
