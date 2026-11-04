@@ -68,7 +68,7 @@ function writeCritique(poem,type){
 const lines=poem.split('\n').map(x=>x.trim()).filter(Boolean);
 const first=lines[0]||'첫 장면',last=lines[lines.length-1]||'마지막 행';
 const core=extractImages([$('#seed').value,$('#scene').value].join(' '))[0]||'중심 사물';
-const themes={free:'익숙한 대상을 낯설게 바라보는 인식의 변화',lyric:'감각적 장면을 통한 정서의 환기',narrative:'장면의 이동과 사건 이후의 변화',reflective:'구체적 사물에서 출발하는 존재론적 질문'};
+const themes={free:'익숙한 대상을 낯설게 바라보는 인식의 변화',lyric:'감각적 장면을 통한 정서의 환기',narrative:'장면의 이동과 사건 이후의 변화',reflective:'구체적 사물에서 출발하는 존재론적 질문',fusion:'자연과 기억을 결합한 서정적 관찰'};
 const lens=themes[type]||themes.free;
 const quotation=t=>[...t].slice(0,36).join('');
 const stanzas=poem.split(/\n\s*\n/).filter(Boolean).length;
@@ -80,25 +80,15 @@ $('#create').onclick=()=>{const seed=$('#seed').value.trim();if(!seed&&!imageDat
 if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;refreshCritique();$('#signature').textContent='— 명도재 이명우';$('#length').textContent='시 본문 '+[...lastPoem].length+' / 1200자';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
 function refinePoem(poem,seed,type){
 const blocks=poem.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
-const seen=new Set();let clean=blocks.filter(x=>{const k=x.replace(/\s/g,'');if(seen.has(k))return false;seen.add(k);return true});
-const weak=['그때 비로소 알았다','어쩌면 삶은 대답을 얻는 일이 아니라','나는 결론 대신','아무 말도 더하지 않았다'];
-clean=clean.map(b=>{for(const w of weak){if(b.startsWith(w))return b.replace(w,'');}return b}).filter(Boolean);
-const keywords=extractImages([seed,$('#scene').value.trim()].join(' '));
-const pivot=keywords.find(k=>k.length>1&&!poem.includes(k));
-if(pivot)clean.splice(Math.min(2,clean.length),0,pivot+particle(pivot,'의','의')+' 곁에 남은 것은\n말로 다 옮기지 못한 온도');
-const closures={
-free:['사물은 제자리로 돌아갔지만\n그것을 바라보는 눈은 달라졌다','나는 그 틈을 메우지 않았다\n거기서부터 새로운 방향이 시작되므로'],
-lyric:['남겨 둔 자리에는\n끝내 지워지지 않는 빛의 결','그늘은 조금씩 길어지고\n아직 피지 않은 잎이 바람을 듣는다'],
-narrative:['그는 돌아보지 않았다\n다만 문틈의 빛이 한동안 움직였다','마지막 발소리가 멎은 뒤\n마당에는 그날의 온도만 남았다'],
-reflective:['나는 그 작은 차이를 오래 들여다본다\n이름 붙이지 못한 것들도 살아 있으므로','남은 것은 답이 아니라\n다시 바라보게 하는 한 점의 흔들림']
-};
-clean=clean.slice(0,Math.max(3,clean.length-1));
-clean.push(pick(closures[type]||closures.lyric,serial++));
-let revised=clean.join('\n\n').replace(/사진|이야기/g,'풍경');
-return proofreadKorean([...revised].slice(0,1200).join(''));
+const unique=[...new Set(blocks)];
+if(unique.length<2)return poem;
+const replacement=compose(seed,type);
+const fresh=replacement.poem.split(/\n\s*\n/).filter(Boolean);
+const result=[unique[0],unique[1],fresh[2]||unique[2],fresh[fresh.length-1]].filter(Boolean);
+return proofreadKorean([...result.join('\n\n')].slice(0,1200).join(''));
 }
 $('#revise').onclick=()=>{
-if(!lastPoem){$('#status').textContent='먼저 자유시를 창작해 주세요.';return}
+if(!lastPoem){$('#status').textContent='먼저 시를 창작해 주세요.';return}
 const seed=$('#seed').value.trim(),type=$('#poemType').value;
 lastPoem=refinePoem(lastPoem,seed,type);
 $('#poem').textContent=lastPoem;refreshCritique();
@@ -110,5 +100,5 @@ $('#status').textContent='조사와 띄어쓰기, 중복 연을 점검하고 결
 $('#copy').onclick=async()=>{try{await navigator.clipboard.writeText($('#title').textContent+'\n\n'+$('#poem').textContent+'\n\n'+$('#signature').textContent);$('#status').textContent='시를 복사했습니다.'}catch{$('#status').textContent='복사 권한을 확인해 주세요.'}};
 $('#print').onclick=()=>window.print();
 $('#poemType').onchange=()=>{$('#typeHint').textContent={free:'새로운 시인의 탄생을 지향하며, 특정 시인의 문체 대신 소재의 낯선 발견과 독자적 언어를 우선합니다.',lyric:'감각적인 이미지와 정서를 중심으로 창작합니다.',narrative:'인물·사건·장면의 흐름을 중심으로 창작합니다.',reflective:'시간·존재·삶에 대한 질문을 중심으로 창작합니다.',fusion:'다섯 가지 시학적 특성을 하나의 서정적 화자·장면·리듬으로 융합합니다.'}[$('#poemType').value]};
-$('#clear').onclick=()=>{$('#poemType').value='free';$('#poemType').onchange();$('#seed').value='';$('#seedCount').textContent='0';$('#photo').value='';$('#scene').value='';$('#thumb').style.display='none';imageData='';photoMood='빛';photoDetail='';$('#title').textContent='시가 머무는 자리';$('#poem').textContent='새로운 시의 씨앗을 기다립니다.';lastPoem='';lastTitle='';$('#critique').textContent='시를 창작하면 작품의 이미지·구조·주제·표현을 살펴보는 시평이 이곳에 표시됩니다.';$('#signature').textContent='— 명도재 시 창작앱';$('#length').textContent='시 본문 0 / 1200자 제한';$('#review').textContent='좋은 시의 조건: 소재 충실성 · 이미지와 시어 · 독창성 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.';$('#status').textContent='새 원고를 준비했습니다.'};
+$('#clear').onclick=()=>{$('#poemType').value='free';$('#poemType').onchange();$('#seed').value='';$('#seedCount').textContent='0';$('#photo').value='';$('#scene').value='';$('#thumb').style.display='none';imageData='';photoMood='빛';photoDetail='';$('#title').textContent='시가 머무는 자리';$('#poem').textContent='새로운 시의 씨앗을 기다립니다.';lastPoem='';lastTitle='';$('#critique').textContent='시를 창작하면 작품의 이미지·구조·주제·표현을 살펴보는 시평이 이곳에 표시됩니다.';$('#signature').textContent='— 명도재 이명우';$('#length').textContent='시 본문 0 / 1200자 제한';$('#review').textContent='좋은 시의 조건: 소재 충실성 · 이미지와 시어 · 독창성 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.';$('#status').textContent='새 원고를 준비했습니다.'};
 </script></body></html>
