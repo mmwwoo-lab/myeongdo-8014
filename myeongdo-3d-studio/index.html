@@ -7,7 +7,7 @@
 사진 한 장을 건네주세요.
 
 당신의 풍경이
-한 편의 시로 피어납니다.</div><div class="poem-footer" id="signature">— 명도재 시 창작앱</div></article><section id="critiqueBox" style="margin-top:18px;padding:18px;border:1px solid #d5d0c4;border-radius:12px;background:#faf8f2"><h3 style="margin:0 0 10px;font-size:1.1rem">🖋️ 완성시 시평 <small style="font-weight:normal">(400자 이내)</small></h3><p id="critique" style="white-space:pre-wrap;line-height:1.8;margin:0" aria-live="polite">시를 창작하면 작품의 이미지·구조·주제·표현을 살펴보는 시평이 이곳에 표시됩니다.</p><p class="sub" style="margin-top:10px">작품의 실제 구절을 바탕으로 한 규칙 기반 비평 초안이며, 전문 평론가의 감수를 거친 글은 아닙니다.</p></section><div class="actions"><button id="copy" class="secondary">📋 시 복사</button><button id="print" class="secondary">📜 인쇄</button></div><p class="sub" id="review" aria-live="polite">좋은 시의 조건: 소재 충실성 · 시어의 새로움 · 상투성 절제 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.</p><p class="sub" id="length">시 본문 0 / 1200자 제한</p></section></main><footer>© 명도재 문화예술 · 브라우저 자유시 창작 스튜디오</footer><script>
+한 편의 시로 피어납니다.</div><div class="poem-footer" id="signature">— 명도재 이명우</div></article><section id="critiqueBox" style="margin-top:18px;padding:18px;border:1px solid #d5d0c4;border-radius:12px;background:#faf8f2"><h3 style="margin:0 0 10px;font-size:1.1rem">🖋️ 완성시 시평 <small style="font-weight:normal">(400자 이내)</small></h3><p id="critique" style="white-space:pre-wrap;line-height:1.8;margin:0" aria-live="polite">시를 창작하면 작품의 이미지·구조·주제·표현을 살펴보는 시평이 이곳에 표시됩니다.</p><p class="sub" style="margin-top:10px">작품의 실제 구절을 바탕으로 한 규칙 기반 비평 초안이며, 전문 평론가의 감수를 거친 글은 아닙니다.</p></section><div class="actions"><button id="copy" class="secondary">📋 시 복사</button><button id="print" class="secondary">📜 인쇄</button></div><p class="sub" id="review" aria-live="polite">좋은 시의 조건: 소재 충실성 · 시어의 새로움 · 상투성 절제 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.</p><p class="sub" id="length">시 본문 0 / 1200자 제한</p></section></main><footer>© 명도재 문화예술 · 브라우저 자유시 창작 스튜디오</footer><script>
 const $=s=>document.querySelector(s);let imageData='',lastTitle='',lastPoem='',photoMood='빛',photoDetail='';
 $('#seed').oninput=()=>$('#seedCount').textContent=$('#seed').value.length;
 $('#photo').onchange=async e=>{let f=e.target.files[0];imageData='';$('#thumb').style.display='none';if(!f)return;if(!['image/jpeg','image/png','image/webp'].includes(f.type)){ $('#status').textContent='PNG, JPG, WebP 사진만 사용할 수 있습니다.';return}if(f.size>8e6){$('#status').textContent='사진 크기는 8MB 이하로 선택해 주세요.';return}let url=URL.createObjectURL(f),im=new Image();im.onload=()=>{const c=document.createElement('canvas'),s=Math.min(1,1200/Math.max(im.width,im.height));c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);imageData=c.toDataURL('image/jpeg',.82);const px=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let rr=0,gg=0,bb=0,n=0;for(let i=0;i<px.length;i+=Math.max(4,Math.floor(px.length/16000/4)*4)){rr+=px[i];gg+=px[i+1];bb+=px[i+2];n++}rr/=n;gg/=n;bb/=n;const bright=(rr+gg+bb)/3;photoMood=bright<95?'그늘':bright>185?'햇살':bb>rr*1.15?'푸른빛':rr>bb*1.22?'노을빛':'빛';photoDetail=bright<95?'어둠 속에 남은 작은 윤곽':bright>185?'환한 여백의 숨결':bb>rr*1.15?'서늘하게 번지는 색의 물결':rr>bb*1.22?'따스한 색이 머무는 자리':'조용히 스며드는 색의 결';$('#thumb').src=imageData;$('#thumb').style.display='block';URL.revokeObjectURL(url);$('#status').textContent='사진이 준비되었습니다.'};im.onerror=()=>{$('#status').textContent='사진을 읽을 수 없습니다.';URL.revokeObjectURL(url)};im.src=url};
@@ -64,11 +64,21 @@ reflective:{action:['무엇이 남고 무엇이 떠나는지 생각한다','나�
 };
 const lens=lenses[theme],mode=modes[type]||modes.free;
 const n=serial++;
-const line1=subject+' 곁에 '+(context[0]||'작은 빛')+'이 머문다';
-const line2=pick(lens.detail,n)+'\n'+(context[1]||'낯선 기척')+'이 천천히 모습을 드러낸다';
-const line3=pick(mode.action,n+1)+'\n'+pick(lens.turn,n+2);
-const line4=(context[2]?context[2]+'의 그림자가 길어지고\n':'')+pick(mode.ending,n+3);
-let poem=proofreadKorean([line1,line2,line3,line4].join('\n\n').replace(/사진|이야기/g,'풍경'));
+const lyricFree=type==='free'||type==='lyric'||type==='fusion';
+const line1=lyricFree?pick([
+subject+'이 머무는 곳에서\\n'+(context[0]||'바람')+'은 조금 다른 방향으로 흐른다',
+subject+'의 그늘을 지나\\n'+(context[0]||'저녁빛')+'이 천천히 낮아진다',
+subject+' 앞에 서면\\n아무도 가르쳐 주지 않은 계절의 소리가 들린다'
+],n):subject+' 곁에 '+(context[0]||'작은 빛')+'이 머문다';
+const line2=pick(lens.detail,n)+'\\n'+(context[1]||'오래된 기척')+'이 '+(lyricFree?'제 빛깔을 되찾는다':'천천히 모습을 드러낸다');
+const line3=pick(mode.action,n+1)+'\\n'+pick(lens.turn,n+2);
+const bridge=lyricFree?pick([
+'손을 뻗지 않아도\\n가까워지는 것들이 있다',
+'그 사이를 지나온 바람은\\n한 번도 같은 목소리로 울지 않았다',
+'멀리 있는 것은 멀리 있는 대로\\n가까운 것은 가까운 대로 저마다의 온도를 가진다'
+],n+4):'';
+const line4=(context[2]?context[2]+'의 그림자가 길어지고\\n':'')+pick(mode.ending,n+3);
+let poem=proofreadKorean([line1,line2,line3,bridge,line4].filter(Boolean).join('\\n\\n').replace(/사진|이야기/g,'풍경'));
 const review=evaluateDraft(poem,words,type);
 return {title:subject.replace(/사진|이야기/g,'풍경').slice(0,22),poem,review};
 }
@@ -86,7 +96,7 @@ return [...note].slice(0,400).join('');
 }
 function refreshCritique(){if(lastPoem)$('#critique').textContent=writeCritique(lastPoem,$('#poemType').value)}
 $('#create').onclick=()=>{const seed=$('#seed').value.trim();if(!seed&&!imageData&&!$('#scene').value.trim()){$('#status').textContent='단어나 문장을 입력하거나 사진을 선택해 주세요.';return}
-if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;refreshCritique();$('#signature').textContent='— 명도재 창작 · '+({free:'자유시',lyric:'서정시',narrative:'서사시',reflective:'사색시',fusion:'융합서정시'}[type]);$('#length').textContent='시 본문 '+[...lastPoem].length+' / 1200자';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
+if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;refreshCritique();$('#signature').textContent='— 명도재 이명우';$('#length').textContent='시 본문 '+[...lastPoem].length+' / 1200자';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
 function refinePoem(poem,seed,type){
 const blocks=poem.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
 const seen=new Set();let clean=blocks.filter(x=>{const k=x.replace(/\s/g,'');if(seen.has(k))return false;seen.add(k);return true});
