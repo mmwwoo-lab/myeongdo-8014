@@ -7,7 +7,7 @@
 사진 한 장을 건네주세요.
 
 당신의 풍경이
-한 편의 시로 피어납니다.</div><div class="poem-footer" id="signature">— 명도재 시 창작앱</div></article><div class="actions"><button id="copy" class="secondary">📋 시 복사</button><button id="print" class="secondary">📜 인쇄</button></div><p class="sub" id="review" aria-live="polite">좋은 시의 조건: 소재 충실성 · 시어의 새로움 · 상투성 절제 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.</p><p class="sub" id="length">시 본문 0 / 1200자 제한</p></section></main><footer>© 명도재 문화예술 · 브라우저 자유시 창작 스튜디오</footer><script>
+한 편의 시로 피어납니다.</div><div class="poem-footer" id="signature">— 명도재 시 창작앱</div></article><div class="actions"><button id="copy" class="secondary">📋 시 복사</button><button id="print" class="secondary">📜 인쇄</button></div><p class="sub" id="review" aria-live="polite">좋은 시의 조건: 소재 충실성 · 시어의 새로움 · 상투성 절제 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.</p><section id="critiqueBox" style="margin-top:18px;padding:18px;border:1px solid #d5d0c4;border-radius:12px;background:#faf8f2"><h3 style="margin:0 0 10px;font-size:1.1rem">🖋️ 완성시 시평 <small style="font-weight:normal">(400자 이내)</small></h3><p id="critique" style="white-space:pre-wrap;line-height:1.8;margin:0" aria-live="polite">시를 창작하면 작품의 이미지·구조·주제·표현을 살펴보는 시평이 이곳에 표시됩니다.</p><p class="sub" style="margin-top:10px">작품의 실제 구절을 바탕으로 한 규칙 기반 비평 초안이며, 전문 평론가의 감수를 거친 글은 아닙니다.</p></section><p class="sub" id="length">시 본문 0 / 1200자 제한</p></section></main><footer>© 명도재 문화예술 · 브라우저 자유시 창작 스튜디오</footer><script>
 const poetList=[["김소월","민요적 운율·그리움·반복"],["윤동주","성찰·양심·별과 하늘"],["정지용","감각적 이미지·절제된 언어"],["서정주","생명력·신화적 상상"],["백석","향토적 풍경·생활의 온기"],["한용운","역설·기다림·내면의 신념"],["이상","실험적 이미지·낯설게 보기"],["박목월","자연 서정·간결한 운율"],["신동엽","공동체·역사의식·담백함"],["김수영","자유·일상·직설적 성찰"],["기형도","낯선 이미지·도시의 불안·비극적 서정"],["송재학","정밀한 언어·감각적 관찰·독창적 비유"],["최승호","그로테스크한 상상·생태적 감수성"],["황지우","형식 실험·풍자·사회적 성찰"],["이성복","상처와 사랑·철학적 사유·낯선 비유"],["문태준","고요한 자연 서정·절제된 감정"],["박준","일상의 섬세한 정서·여백과 공감"],["나희덕","생태적 감각·관계의 성찰·섬세한 이미지"],["도종환","따뜻한 서정·상실과 회복·자연의 위로"],["김혜순","몸의 이미지·초현실적 상상·언어 실험"],["서민경","과실·노을·묵죽의 감각, 그리움과 가족 기억, 자연물의 의인화"],["서지월","민족서정시·고향과 뿌리·우리말의 정서·역사와 공동체 기억"]];
 const $=s=>document.querySelector(s),selected=new Set();let imageData='',lastTitle='',lastPoem='',photoMood='빛',photoDetail='';
 poetList.forEach(([name,feature])=>{let el=document.createElement('label');el.className='poet';let input=document.createElement('input');input.type='checkbox';input.value=name;input.setAttribute('aria-label',name);input.onchange=()=>{if(input.checked){if(selected.size>=3){input.checked=false;$('#status').textContent='시인은 최대 3명까지 선택할 수 있습니다.';return}selected.add(name)}else selected.delete(name);$('#chosen').textContent=selected.size?'선택 '+selected.size+'/3: '+[...selected].map(n=>n+' ('+poetList.find(p=>p[0]===n)[1]+')').join(' · '):'시인을 선택하지 않으면 독창적인 현대 자유시로 작성합니다.';$('#status').textContent=''};let span=document.createElement('span');span.textContent=name;span.title=feature;span.setAttribute("aria-label",name+" — "+feature);el.append(input,span);$('#poets').append(el)});
@@ -142,8 +142,20 @@ if(!best||review.score>best.review.score)best={poem,review};
 }
 return {title:proofreadKorean(primary.replace(/사진|이야기/g,'풍경').slice(0,22)),poem:best.poem,review:best.review};
 }
+function writeCritique(poem,type){
+const lines=poem.split('\n').map(x=>x.trim()).filter(Boolean);
+const first=lines[0]||'첫 장면',last=lines[lines.length-1]||'마지막 행';
+const core=extractImages([$('#seed').value,$('#scene').value].join(' '))[0]||'중심 사물';
+const themes={free:'익숙한 대상을 낯설게 바라보는 인식의 변화',lyric:'감각적 장면을 통한 정서의 환기',narrative:'장면의 이동과 사건 이후의 변화',reflective:'구체적 사물에서 출발하는 존재론적 질문'};
+const lens=themes[type]||themes.free;
+const quotation=t=>[...t].slice(0,36).join('');
+const stanzas=poem.split(/\n\s*\n/).filter(Boolean).length;
+let note='이 작품은 '+core+'을 중심 이미지로 삼아 '+lens+'를 시도한다. 첫 행 “'+quotation(first)+'”은 독자의 시선을 구체적인 장면에 붙잡아 두며, '+stanzas+'개의 연은 관찰에서 내면의 반응으로 이동하는 리듬을 형성한다. 끝 행 “'+quotation(last)+'”은 앞선 장면을 다시 읽게 하는 여운을 남긴다. 다만 추상적 표현이 사물의 구체성을 압도하지 않는지 살펴보고, 설명적인 구절을 덜어 내면 작품의 긴장과 고유한 목소리가 더욱 선명해질 것이다.';
+return [...note].slice(0,400).join('');
+}
+function refreshCritique(){if(lastPoem)$('#critique').textContent=writeCritique(lastPoem,$('#poemType').value)}
 $('#create').onclick=()=>{const seed=$('#seed').value.trim();if(!seed&&!imageData&&!$('#scene').value.trim()){$('#status').textContent='단어나 문장을 입력하거나 사진을 선택해 주세요.';return}
-if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,[...selected],type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;$('#signature').textContent='— 명도재 창작 · '+({free:'자유시',lyric:'서정시',narrative:'서사시',reflective:'사색시'}[type])+' · '+(selected.size?[...selected].join(' · ')+' 미학 참고':'자유시');$('#length').textContent='시 본문 '+[...lastPoem].length+' / 1200자';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
+if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,[...selected],type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;refreshCritique();$('#signature').textContent='— 명도재 창작 · '+({free:'자유시',lyric:'서정시',narrative:'서사시',reflective:'사색시'}[type])+' · '+(selected.size?[...selected].join(' · ')+' 미학 참고':'자유시');$('#length').textContent='시 본문 '+[...lastPoem].length+' / 1200자';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
 function refinePoem(poem,seed,type){
 const blocks=poem.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
 const seen=new Set();let clean=blocks.filter(x=>{const k=x.replace(/\s/g,'');if(seen.has(k))return false;seen.add(k);return true});
@@ -167,7 +179,7 @@ $('#revise').onclick=()=>{
 if(!lastPoem){$('#status').textContent='먼저 자유시를 창작해 주세요.';return}
 const seed=$('#seed').value.trim(),type=$('#poemType').value;
 lastPoem=refinePoem(lastPoem,seed,type);
-$('#poem').textContent=lastPoem;
+$('#poem').textContent=lastPoem;refreshCritique();
 $('#length').textContent='시 본문 '+[...lastPoem].length+' / 1200자';
 const review=evaluateDraft(lastPoem,extractImages([seed,$('#scene').value.trim()].join(' ')),type);
 $('#review').textContent='퇴고 점검(참고용): '+review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+review.score+'/100. 실제 문학적 수준을 보증하지 않습니다.';
@@ -176,5 +188,5 @@ $('#status').textContent='조사와 띄어쓰기, 중복 연을 점검하고 결
 $('#copy').onclick=async()=>{try{await navigator.clipboard.writeText($('#title').textContent+'\n\n'+$('#poem').textContent+'\n\n'+$('#signature').textContent);$('#status').textContent='시를 복사했습니다.'}catch{$('#status').textContent='복사 권한을 확인해 주세요.'}};
 $('#print').onclick=()=>window.print();
 $('#poemType').onchange=()=>{$('#typeHint').textContent={free:'새로운 시인의 탄생을 지향하며, 특정 시인의 문체 대신 소재의 낯선 발견과 독자적 언어를 우선합니다.',lyric:'감각적인 이미지와 정서를 중심으로 창작합니다.',narrative:'인물·사건·장면의 흐름을 중심으로 창작합니다.',reflective:'시간·존재·삶에 대한 질문을 중심으로 창작합니다.'}[$('#poemType').value]};
-$('#clear').onclick=()=>{$('#poemType').value='free';$('#poemType').onchange();$('#seed').value='';$('#seedCount').textContent='0';$('#photo').value='';$('#scene').value='';$('#thumb').style.display='none';imageData='';photoMood='빛';photoDetail='';selected.clear();document.querySelectorAll('.poet input').forEach(e=>e.checked=false);$('#chosen').textContent='시인을 선택하지 않으면 독창적인 현대 자유시로 작성합니다.';$('#title').textContent='시가 머무는 자리';$('#poem').textContent='새로운 시의 씨앗을 기다립니다.';lastPoem='';lastTitle='';$('#signature').textContent='— 명도재 시 창작앱';$('#length').textContent='시 본문 0 / 1200자 제한';$('#review').textContent='좋은 시의 조건: 소재 충실성 · 이미지와 시어 · 독창성 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.';$('#status').textContent='새 원고를 준비했습니다.'};
+$('#clear').onclick=()=>{$('#poemType').value='free';$('#poemType').onchange();$('#seed').value='';$('#seedCount').textContent='0';$('#photo').value='';$('#scene').value='';$('#thumb').style.display='none';imageData='';photoMood='빛';photoDetail='';selected.clear();document.querySelectorAll('.poet input').forEach(e=>e.checked=false);$('#chosen').textContent='시인을 선택하지 않으면 독창적인 현대 자유시로 작성합니다.';$('#title').textContent='시가 머무는 자리';$('#poem').textContent='새로운 시의 씨앗을 기다립니다.';lastPoem='';lastTitle='';$('#critique').textContent='시를 창작하면 작품의 이미지·구조·주제·표현을 살펴보는 시평이 이곳에 표시됩니다.';$('#signature').textContent='— 명도재 시 창작앱';$('#length').textContent='시 본문 0 / 1200자 제한';$('#review').textContent='좋은 시의 조건: 소재 충실성 · 이미지와 시어 · 독창성 · 구성 · 여운. 목표 9.5/10(95/100), 자동 점수는 참고용입니다.';$('#status').textContent='새 원고를 준비했습니다.'};
 </script></body></html>
