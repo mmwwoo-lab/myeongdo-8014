@@ -66,19 +66,19 @@ const lens=lenses[theme],mode=modes[type]||modes.free;
 const n=serial++;
 const lyricFree=type==='free'||type==='lyric'||type==='fusion';
 const line1=lyricFree?pick([
-subject+'이 머무는 곳에서\\n'+(context[0]||'바람')+'은 조금 다른 방향으로 흐른다',
-subject+'의 그늘을 지나\\n'+(context[0]||'저녁빛')+'이 천천히 낮아진다',
-subject+' 앞에 서면\\n아무도 가르쳐 주지 않은 계절의 소리가 들린다'
+subject+'이 머무는 곳에서\n'+(context[0]||'바람')+'은 조금 다른 방향으로 흐른다',
+subject+'의 그늘을 지나\n'+(context[0]||'저녁빛')+'이 천천히 낮아진다',
+subject+' 앞에 서면\n아무도 가르쳐 주지 않은 계절의 소리가 들린다'
 ],n):subject+' 곁에 '+(context[0]||'작은 빛')+'이 머문다';
-const line2=pick(lens.detail,n)+'\\n'+(context[1]||'오래된 기척')+'이 '+(lyricFree?'제 빛깔을 되찾는다':'천천히 모습을 드러낸다');
-const line3=pick(mode.action,n+1)+'\\n'+pick(lens.turn,n+2);
+const line2=pick(lens.detail,n)+'\n'+(context[1]||'오래된 기척')+'이 '+(lyricFree?'제 빛깔을 되찾는다':'천천히 모습을 드러낸다');
+const line3=pick(mode.action,n+1)+'\n'+pick(lens.turn,n+2);
 const bridge=lyricFree?pick([
-'손을 뻗지 않아도\\n가까워지는 것들이 있다',
-'그 사이를 지나온 바람은\\n한 번도 같은 목소리로 울지 않았다',
-'멀리 있는 것은 멀리 있는 대로\\n가까운 것은 가까운 대로 저마다의 온도를 가진다'
+'손을 뻗지 않아도\n가까워지는 것들이 있다',
+'그 사이를 지나온 바람은\n한 번도 같은 목소리로 울지 않았다',
+'멀리 있는 것은 멀리 있는 대로\n가까운 것은 가까운 대로 저마다의 온도를 가진다'
 ],n+4):'';
-const line4=(context[2]?context[2]+'의 그림자가 길어지고\\n':'')+pick(mode.ending,n+3);
-let poem=proofreadKorean([line1,line2,line3,bridge,line4].filter(Boolean).join('\\n\\n').replace(/사진|이야기/g,'풍경'));
+const line4=(context[2]?context[2]+'의 그림자가 길어지고\n':'')+pick(mode.ending,n+3);
+let poem=proofreadKorean([line1,line2,line3,bridge,line4].filter(Boolean).join('\n\n').replace(/사진|이야기/g,'풍경'));
 const review=evaluateDraft(poem,words,type);
 return {title:subject.replace(/사진|이야기/g,'풍경').slice(0,22),poem,review};
 }
