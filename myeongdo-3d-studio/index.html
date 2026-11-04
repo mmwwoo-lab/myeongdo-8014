@@ -7,7 +7,7 @@
 사진 한 장을 건네주세요.
 
 당신의 풍경이
-한 편의 시로 피어납니다.</div><div class="poem-footer" id="signature">— 명도재 시 창작앱</div></article><div class="actions"><button id="copy" class="secondary">📋 시 복사</button><button id="print" class="secondary">📜 인쇄</button></div><p class="sub" id="length">시 본문 0 / 300자 제한</p></section></main><footer>© 명도재 문화예술 · 브라우저 자유시 창작 스튜디오</footer><script>
+한 편의 시로 피어납니다.</div><div class="poem-footer" id="signature">— 명도재 시 창작앱</div></article><div class="actions"><button id="copy" class="secondary">📋 시 복사</button><button id="print" class="secondary">📜 인쇄</button></div><p class="sub" id="length">시 본문 0 / 600자 제한</p></section></main><footer>© 명도재 문화예술 · 브라우저 자유시 창작 스튜디오</footer><script>
 const poetList=[["김소월","민요적 운율·그리움·반복"],["윤동주","성찰·양심·별과 하늘"],["정지용","감각적 이미지·절제된 언어"],["서정주","생명력·신화적 상상"],["백석","향토적 풍경·생활의 온기"],["한용운","역설·기다림·내면의 신념"],["이상","실험적 이미지·낯설게 보기"],["박목월","자연 서정·간결한 운율"],["신동엽","공동체·역사의식·담백함"],["김수영","자유·일상·직설적 성찰"],["기형도","낯선 이미지·도시의 불안·비극적 서정"],["송재학","정밀한 언어·감각적 관찰·독창적 비유"],["최승호","그로테스크한 상상·생태적 감수성"],["황지우","형식 실험·풍자·사회적 성찰"],["이성복","상처와 사랑·철학적 사유·낯선 비유"],["문태준","고요한 자연 서정·절제된 감정"],["박준","일상의 섬세한 정서·여백과 공감"],["나희덕","생태적 감각·관계의 성찰·섬세한 이미지"],["도종환","따뜻한 서정·상실과 회복·자연의 위로"],["김혜순","몸의 이미지·초현실적 상상·언어 실험"]];
 const $=s=>document.querySelector(s),selected=new Set();let imageData='',lastTitle='',lastPoem='',photoMood='빛',photoDetail='';
 poetList.forEach(([name,feature])=>{let el=document.createElement('label');el.className='poet';let input=document.createElement('input');input.type='checkbox';input.value=name;input.setAttribute('aria-label',name);input.onchange=()=>{if(input.checked){if(selected.size>=3){input.checked=false;$('#status').textContent='시인은 최대 3명까지 선택할 수 있습니다.';return}selected.add(name)}else selected.delete(name);$('#chosen').textContent=selected.size?'선택 '+selected.size+'/3: '+[...selected].map(n=>n+' ('+poetList.find(p=>p[0]===n)[1]+')').join(' · '):'시인을 선택하지 않으면 독창적인 현대 자유시로 작성합니다.';$('#status').textContent=''};let span=document.createElement('span');span.textContent=name;span.title=feature;span.setAttribute("aria-label",name+" — "+feature);el.append(input,span);$('#poets').append(el)});
@@ -35,13 +35,13 @@ const openings=[subject+'의 가장자리에\n한 줄의 저녁이 앉는다.',s
 const bridges=['손끝에 닿지 않는 것은\n오히려 오래 마음에 남고,','나는 사라지는 것들의\n느린 걸음을 오래 듣는다.','말보다 먼저 도착한 침묵이\n낡은 시간을 한 겹 벗긴다.'];
 const endings=['그렇게 오늘도\n빈 곳에서 한 계절이 자란다.','끝내 남는 것은\n작고 분명한 숨 하나.','나는 그 빛을 접어\n내일의 책갈피에 꽂는다.'];
 let lines=[pick(openings,serial),photoDetail?palette+'.':pick(bridges,serial+1),...a,pick(endings,serial+chosen.length+2)];
-let poem=lines.join('\n\n');if([...poem].length>300)poem=[...poem].slice(0,300).join('').trim();
+let poem=lines.join('\n\n');if([...poem].length>600)poem=[...poem].slice(0,600).join('').trim();
 let title=words?subject.slice(0,22):pick(['빛의 안쪽','사진이 남긴 문장','한 장의 고요','색의 여백'],serial);
 return {title,poem};
 }
 $('#create').onclick=()=>{const seed=$('#seed').value.trim();if(!seed&&!imageData){$('#status').textContent='단어나 문장을 입력하거나 사진을 선택해 주세요.';return}
-const result=compose(seed,[...selected]);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;$('#signature').textContent='— 명도재 창작 · '+(selected.size?[...selected].join(' · ')+' 미학 참고':'자유시');$('#length').textContent='시 본문 '+[...lastPoem].length+' / 300자';$('#status').textContent='자유시를 완성했습니다. 다시 누르면 다른 표현으로 창작합니다.'};
+const result=compose(seed,[...selected]);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;$('#signature').textContent='— 명도재 창작 · '+(selected.size?[...selected].join(' · ')+' 미학 참고':'자유시');$('#length').textContent='시 본문 '+[...lastPoem].length+' / 600자';$('#status').textContent='자유시를 완성했습니다. 다시 누르면 다른 표현으로 창작합니다.'};
 $('#copy').onclick=async()=>{try{await navigator.clipboard.writeText($('#title').textContent+'\n\n'+$('#poem').textContent+'\n\n'+$('#signature').textContent);$('#status').textContent='시를 복사했습니다.'}catch{$('#status').textContent='복사 권한을 확인해 주세요.'}};
 $('#print').onclick=()=>window.print();
-$('#clear').onclick=()=>{$('#seed').value='';$('#seedCount').textContent='0';$('#photo').value='';$('#thumb').style.display='none';imageData='';photoMood='빛';photoDetail='';selected.clear();document.querySelectorAll('.poet input').forEach(e=>e.checked=false);$('#chosen').textContent='시인을 선택하지 않으면 독창적인 현대 자유시로 작성합니다.';$('#title').textContent='시가 머무는 자리';$('#poem').textContent='새로운 시의 씨앗을 기다립니다.';$('#signature').textContent='— 명도재 시 창작앱';$('#length').textContent='시 본문 0 / 300자 제한';$('#status').textContent='새 원고를 준비했습니다.'};
+$('#clear').onclick=()=>{$('#seed').value='';$('#seedCount').textContent='0';$('#photo').value='';$('#thumb').style.display='none';imageData='';photoMood='빛';photoDetail='';selected.clear();document.querySelectorAll('.poet input').forEach(e=>e.checked=false);$('#chosen').textContent='시인을 선택하지 않으면 독창적인 현대 자유시로 작성합니다.';$('#title').textContent='시가 머무는 자리';$('#poem').textContent='새로운 시의 씨앗을 기다립니다.';$('#signature').textContent='— 명도재 시 창작앱';$('#length').textContent='시 본문 0 / 600자 제한';$('#status').textContent='새 원고를 준비했습니다.'};
 </script></body></html>
