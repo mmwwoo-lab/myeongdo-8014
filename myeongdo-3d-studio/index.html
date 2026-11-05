@@ -37,7 +37,7 @@ const checks=[
 {name:'시어와 이미지의 다양성',score:Math.min(20,8+Math.min(12,new Set((poem.match(/[가-힣]{2,}/g)||[])).size/10)),max:20},
 {name:'참신성·상투성 절제',score:Math.max(0,20-repeats*6-stockCount*5-Math.max(0,recurring-3)*2),max:20},
 {name:'구성과 전개',score:Math.min(20,8+Math.min(12,Math.floor(lines.length/2))),max:20},
-{name:'압축과 여운',score:length<=1200&&length>=100?16:10,max:20}
+{name:'압축과 여운',score:length<=1200&&length>=300?16:10,max:20}
 ];return {score:Math.round(checks.reduce((a,b)=>a+b.score,0)),checks,covered,repeats};
 }
 function hasBatchim(word){const c=[...word.trim()].pop()||'';const n=c.charCodeAt(0)-0xAC00;return n>=0&&n<11172&&n%28!==0}
@@ -63,7 +63,26 @@ const choose=(arr,offset)=>arr[(n+offset)%arr.length].join('\n');
 let stanzas=[choose(theme.opening,0),choose(theme.middle,1),choose(theme.turn,0),choose(theme.end,1)];
 if(type==='narrative')stanzas.splice(2,0,'그날 나는 잠시 멈춰 서서\n지나온 길을 다시 바라보았다');
 if(type==='reflective')stanzas.splice(2,0,'사라지는 것은 어디로 가는가\n나는 대답 대신 눈앞의 풍경을 본다');
-let poem=proofreadKorean(stanzas.join('\n\n'));
+// 300~1200자: 관찰 → 감각 → 기억 → 전환 → 여운의 서정적 전개
+const subject=(words.find(w=>w.length>=2)||theme.title).slice(0,18);
+const extra=[
+[`나는 ${subject} 앞에서 걸음을 늦춘다`, '서두르던 발끝에 오래된 흙냄새가 묻고', '햇빛이 닿지 않는 쪽에도', '어제의 온기가 아주 조금 남아 있다'],
+['문득 바람의 방향이 달라진다', '보이지 않던 잎맥까지 환해지는 순간', '가까이 있던 것들이 저마다의 거리를 되찾고', '나는 이름 붙이지 못한 소리에 귀를 기울인다'],
+['어린 날에는 이런 저녁이 끝없이 이어질 줄 알았다', '대문을 닫고도 한참을 마당에 서 있던 사람', '그 사람이 남긴 말보다', '말없이 건네던 손길이 먼저 떠오른다'],
+['돌아보면 계절은 늘 같은 길로 오지 않았다', '먼저 식어 버린 돌과 늦게까지 따뜻한 벽', '그 사이를 지나는 작은 생명들의 움직임이', '하루의 무게를 조용히 바꾸어 놓았다'],
+['멀리서 누군가 문을 여닫는 소리가 들린다', '잠시 끊겼던 생각이 다시 이어지고', '나는 지금 이곳에 있는 것과', '이미 지나간 것을 억지로 나누지 않는다'],
+[`${subject} 곁에는 아직 말하지 않은 이야기가 있다`, '한 번쯤 손을 뻗었다가 거두었던 마음', '그 마음을 다 설명하지 않아도', '저녁의 사물들은 제 모습을 잃지 않는다'],
+['조금씩 어두워지는 길에 발을 디딘다', '발밑의 작은 돌 하나가 제자리로 돌아가고', '오늘 끝내 부르지 못한 이름은', '내일의 빛 속에서 다른 울림을 얻으리라']
+];
+// 처음과 끝을 보존하고 중간에 새 장면을 배치해 흐름을 유지한다.
+let insertAt=Math.max(1,stanzas.length-1);
+for(const lines of extra){stanzas.splice(insertAt++,0,lines.join('\\n'));if([...stanzas.join('\\n\\n')].length>=340)break;}
+let poem=proofreadKorean(stanzas.join('\\n\\n'));
+// 분량이 모자라는 소재에도 최소 300자 충족
+for(let i=0;[...poem].length<300&&i<extra.length;i++){
+const block=extra[i].join('\\n');if(!poem.includes(block))poem=proofreadKorean(poem+'\\n\\n'+block);
+}
+poem=[...poem].slice(0,1200).join('');
 const review=evaluateDraft(poem,words,type);
 return {title:theme.title,poem,review};
 }
@@ -89,7 +108,7 @@ if(unique.length<2)return poem;
 const replacement=compose(seed,type);
 const fresh=replacement.poem.split(/\n\s*\n/).filter(Boolean);
 const result=[unique[0],unique[1],fresh[2]||unique[2],fresh[fresh.length-1]].filter(Boolean);
-return proofreadKorean([...result.join('\n\n')].slice(0,1200).join(''));
+const revised=proofreadKorean(result.join('\n\n'));\nreturn [...revised].length>=300?revised:fusedPoem(seed,[],type).poem;
 }
 $('#revise').onclick=()=>{
 if(!lastPoem){$('#status').textContent='먼저 시를 창작해 주세요.';return}
