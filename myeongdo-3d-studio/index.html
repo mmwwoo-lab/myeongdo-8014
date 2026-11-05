@@ -76,11 +76,11 @@ const extra=[
 ];
 // 처음과 끝을 보존하고 중간에 새 장면을 배치해 흐름을 유지한다.
 let insertAt=Math.max(1,stanzas.length-1);
-for(const lines of extra){stanzas.splice(insertAt++,0,lines.join('\\n'));if([...stanzas.join('\\n\\n')].length>=340)break;}
-let poem=proofreadKorean(stanzas.join('\\n\\n'));
+for(const lines of extra){stanzas.splice(insertAt++,0,lines.join('\n'));if([...stanzas.join('\n\n')].length>=340)break;}
+let poem=proofreadKorean(stanzas.join('\n\n'));
 // 분량이 모자라는 소재에도 최소 300자 충족
 for(let i=0;[...poem].length<300&&i<extra.length;i++){
-const block=extra[i].join('\\n');if(!poem.includes(block))poem=proofreadKorean(poem+'\\n\\n'+block);
+const block=extra[i].join('\n');if(!poem.includes(block))poem=proofreadKorean(poem+'\n\n'+block);
 }
 poem=[...poem].slice(0,1200).join('');
 const review=evaluateDraft(poem,words,type);
@@ -108,7 +108,8 @@ if(unique.length<2)return poem;
 const replacement=compose(seed,type);
 const fresh=replacement.poem.split(/\n\s*\n/).filter(Boolean);
 const result=[unique[0],unique[1],fresh[2]||unique[2],fresh[fresh.length-1]].filter(Boolean);
-const revised=proofreadKorean(result.join('\n\n'));\nreturn [...revised].length>=300?revised:fusedPoem(seed,[],type).poem;
+const revised=proofreadKorean(result.join('\n\n'));
+return [...revised].length>=300?revised:fusedPoem(seed,[],type).poem;
 }
 $('#revise').onclick=()=>{
 if(!lastPoem){$('#status').textContent='먼저 시를 창작해 주세요.';return}
