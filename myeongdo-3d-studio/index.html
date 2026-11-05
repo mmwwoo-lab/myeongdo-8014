@@ -47,30 +47,31 @@ return text.normalize('NFC').replace(/\u00a0/g,' ').replace(/[ \t]{2,}/g,' ').re
 .replace(/\b한번도\b/g,'한 번도').replace(/\b오랫동안\b/g,'오랫동안').replace(/\b할수\b/g,'할 수').replace(/\b될수\b/g,'될 수').replace(/\b것같/g,'것 같').replace(/\b그때마다\b/g,'그때마다').trim();
 }
 function fusedPoem(seed,chosen,type){
- const scene=$('#scene').value.trim(), source=(seed+' '+scene).trim();
- const phrases=source.split(/[.!?。！？,，;；\n]+/).map(x=>x.trim()).filter(Boolean);
- const words=extractImages(source);
- const key=(words.find(w=>!['그리고','그러나','하지만','오늘','나는'].includes(w))||'마음').slice(0,15);
- const first=(phrases[0]||key).slice(0,55);
- const title=(type==='narrative'?key+'의 어느 날':type==='reflective'?key+'에게 묻다':type==='lyric'?key+'의 노래':type==='fusion'?key+'의 두 계절':first.length<=18?first:key+'의 시간').slice(0,26);
- const n=serial++;
- const imagery=/비|우산|빗방울/.test(source)?['젖은 소매 끝에서 물방울 하나가 떨어진다','골목의 낮은 지붕마다 빗소리가 달라진다','마르지 않은 발자국이 문턱 앞에 남는다']:/가을|낙엽|단풍|홍시/.test(source)?['마른 잎 하나가 신발 밑에서 접힌다','감나무는 빈 가지 끝에 붉은 점을 남겼다','저녁 볕이 담벼락 아래로 천천히 물러간다']:/바다|강|신천|물결/.test(source)?['물가의 돌은 하루 종일 젖어 있다','건너편 불빛이 물살에 길게 찢어진다','젖은 모래 위에 발자국의 가장자리만 남는다']:/어머니|아버지|가족|그리움/.test(source)?['식탁 한쪽에 비워 둔 그릇이 있다','낡은 옷소매에 남은 주름을 편다','부르지 않은 이름이 문간에서 오래 맴돈다']:['문틈으로 들어온 빛이 바닥을 조금 옮겨 간다','손에 쥔 작은 물건이 뜻밖에 무겁다','먼 곳의 소리가 가까워졌다가 다시 멀어진다'];
- const variants={
- free:[['말보다 먼저 도착한 것은',imagery[0],'그 뒤에야 하루의 윤곽이 보인다'],[imagery[1],'아무도 그 자리를 설명하지 않는다','나는 비어 있는 쪽을 바라본다'],['잠시 놓친 것을 되찾으려다',imagery[2],'손을 펴고 그대로 서 있는다']],
- lyric:[[imagery[0],'그 작은 소리에 마음이 돌아앉는다','오래 전해지지 못한 안부처럼'],['익숙한 이름을 입 밖에 내지 않고',imagery[1],'가까운 풍경을 다시 바라본다'],[imagery[2],'이토록 사소한 것이 남아서','저녁마다 나를 불러 세운다']],
- narrative:[['그날은 평소보다 조금 늦게 나섰다',imagery[0],'나는 걸음을 멈추었다'],['돌아가는 길에 문득',imagery[1],'오래전의 일이 떠올랐다'],['아무 말도 하지 못하고 돌아왔지만',imagery[2],'그날 이후 그 길을 다르게 걷는다']],
- reflective:[['무엇이 사라지고 무엇이 남는가',imagery[0],'나는 한동안 답을 미룬다'],[imagery[1],'보이는 것이 전부라면','왜 빈자리는 더 무거운가'],[imagery[2],'끝내 알지 못하는 것을','서둘러 이름 붙이지 않기로 한다']],
- fusion:[['오래전의 저녁이 오늘의 창에 겹친다',imagery[0],'서로 다른 시간이 같은 자리에 선다'],[imagery[1],'기억은 사라진 것이 아니라','새로운 빛을 받아 모양을 바꾼다'],[imagery[2],'지나간 계절과 아직 오지 않은 날이','잠깐 같은 숨을 쉰다']]
+ const source=[seed,$('#scene').value.trim()].filter(Boolean).join(' ').trim();
+ const words=extractImages(source), n=serial++;
+ const clean=source.replace(/\s+/g,' ').replace(/[.!?]+$/,'').trim();
+ const motif=/비|빗방울|우산/.test(source)?'rain':/가을|낙엽|단풍|홍시/.test(source)?'autumn':/강|바다|신천|물결/.test(source)?'water':/어머니|아버지|가족|그리움/.test(source)?'family':/꽃|봄|매화/.test(source)?'flower':'daily';
+ const scenes={
+ rain:{titles:['빗물의 필체','젖은 문턱','비가 지나간 다음'],free:[['처마는 제 그림자를','물방울의 간격으로 세고 있다'],['골목 끝 우체통에','젖은 소식 하나 붙어 있다'],['나는 우산을 접는다','비가 그친 뒤에도','소매는 한동안 어제를 입는다']],lyric:[['빗방울이 창을 두드릴 때','오래 닫아 둔 이름이 젖는다'],['작은 처마 아래서','서로의 어깨를 피하던 저녁'],['비가 멎어도','문턱에 남은 물소리처럼','그대의 안부가 늦게 온다']]},
+ autumn:{titles:['마지막 붉은 점','감나무 아래','잎이 떠난 자리'],free:[['감나무 끝 홍시 하나','나무가 아직 지우지 못한','늦은 마침표'],['낙엽은 발밑에서 접히고','골목은 제 소리를 낮춘다'],['빈 가지 사이로','저녁이 먼저 지나간다','붉은 점 하나는 남겨 둔 채']],lyric:[['마당 끝 감나무에','붉은 저녁 한 알 매달렸다'],['누군가 오기를 기다리듯','바람도 그 앞에서 느려진다'],['잎은 다 떠났어도','나무는 마지막 온기를','차마 놓지 못한다']]},
+ water:{titles:['물의 뒷면','건너편의 불빛','강가의 저녁'],free:[['강물은 불빛을 받아','한 번도 같은 모양으로 돌려주지 않는다'],['돌 하나가 물속에서','오래된 침묵을 닳게 한다'],['건너편으로 가는 것은','내 그림자뿐','나는 이쪽 둑에 남는다']],lyric:[['물결에 부서지는 저녁빛','그대의 목소리도 저렇게','멀어지며 반짝였을까'],['강가의 돌에 앉아','흘러간 말을 다시 듣는다'],['물은 돌아오지 않아도','젖은 발끝에는','오래 그리운 온기가 남는다']]},
+ family:{titles:['빈 그릇','소매의 주름','식탁의 한쪽'],free:[['식탁 한쪽의 빈 그릇은','치워도 자꾸 제자리로 돌아온다'],['낡은 소매를 펼치면','팔꿈치가 닿던 자리에','작은 산맥이 남아 있다'],['나는 그 주름을 펴지 않는다','누군가 살았던 시간이','거기에 접혀 있으므로']],lyric:[['밥을 푸는 저녁이면','빈 그릇 하나가 먼저 떠오른다'],['따뜻하던 손의 자리를','숟가락이 조용히 지나간다'],['이제 부를 수 없는 이름을','오늘도 밥상 앞에서','마음속으로 불러 본다']]},
+ flower:{titles:['꽃잎의 뒷면','봄의 작은 문','가지 끝에서'],free:[['어제까지 비어 있던 가지에','꽃 한 송이가 제 무게를 건다'],['바람은 꽃의 이름을 묻지 않고','그 곁을 지나간다'],['떨어진 꽃잎의 뒷면에도','한낮의 빛이 남아 있다']],lyric:[['작은 꽃 하나 피어','오래 닫힌 창을 밝힌다'],['잊었다 여긴 목소리가','향기처럼 문틈에 스민다'],['꽃은 오래 머물지 않아도','그대가 다녀간 자리마다','봄은 한 번 더 온다']]},
+ daily:{titles:['작은 자리','문턱의 빛','남겨 둔 말'],free:[['창가에 놓인 작은 물건이','오후의 그림자를 조금 옮긴다'],['먼 곳의 발소리가','닫힌 문 앞에서 멎는다'],['아무 일도 없었다는 말은','저녁의 주름을','끝내 다 펴지 못한다']],lyric:[['창가에 기운 햇살을 보며','오래 잊었던 이름을 떠올린다'],['말하지 못한 마음은','작은 물건 곁에 앉아','저물도록 움직이지 않는다'],['문을 닫고 돌아서도','그날의 따뜻한 빛이','한동안 손에 남는다']]}
  };
- const selected=variants[type]||variants.free;
- const inputLines=phrases.slice(1,3).map(p=>p.slice(0,55));
- const styleOpening={free:'아직 그 말의 끝을 정하지 못했다',lyric:'그 말을 오래 마음에 두었다',narrative:'그날 나는 그곳에 있었다',reflective:'그 말의 뜻을 다시 묻는다',fusion:'두 계절이 한순간에 포개진다'};
- const blocks=[[first,styleOpening[type]||styleOpening.free],selected[n%3],inputLines.length?inputLines:selected[(n+1)%3],selected[(n+2)%3]];
- let poem=proofreadKorean(blocks.map(b=>b.join('\n')).join('\n\n'));
+ const pack=scenes[motif], genre=type==='lyric'?'lyric':'free';
+ const inputSubject=clean.split(/[,.!?。！？\n]/)[0].trim();
+ const key=words.find(w=>w.length>=2&&w.length<=9&&!/^(나는|오늘|그리고|그런데)$/.test(w));
+ const title=(inputSubject.length>=2&&inputSubject.length<=11&&n%3===2?inputSubject:pack.titles[(n+(genre==='lyric'?1:0))%pack.titles.length]).slice(0,25);
+ const core=pack[genre];
+ const blocks=[core[n%3],core[(n+1)%3],core[(n+2)%3]].map(st=>[...st]);
+ // 소재가 일반 장면이 아닐 때에도 입력의 중심 단어를 작품 안에 남긴다.
+ if(motif==='daily'&&key)blocks[0][0]=key+' 곁에 '+blocks[0][0];
+ let poem=proofreadKorean(blocks.map(st=>st.join('\n')).join('\n\n'));
  const max=500-[...title].length-2;
- while([...poem].length>max&&blocks.length>2){blocks.splice(blocks.length-2,1);poem=proofreadKorean(blocks.map(b=>b.join('\n')).join('\n\n'));}
+ while([...poem].length>max&&blocks.length>1){blocks.pop();poem=proofreadKorean(blocks.map(st=>st.join('\n')).join('\n\n'));}
  if([...poem].length>max)poem=[...poem].slice(0,max).join('').trimEnd();
- return {title,poem,review:evaluateDraft(poem,words,type)};
+ return {title,poem,review:evaluateDraft(poem,words,genre)};
 }
 function compose(seed,type){return fusedPoem(seed,[],type)}
 function writeCritique(poem,type){
