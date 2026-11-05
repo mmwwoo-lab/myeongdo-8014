@@ -46,44 +46,29 @@ function proofreadKorean(text){
 return text.normalize('NFC').replace(/\u00a0/g,' ').replace(/[ \t]{2,}/g,' ').replace(/[ \t]+\n/g,'\n').replace(/\n[ \t]+/g,'\n').replace(/\n{3,}/g,'\n\n')
 .replace(/\b한번도\b/g,'한 번도').replace(/\b오랫동안\b/g,'오랫동안').replace(/\b할수\b/g,'할 수').replace(/\b될수\b/g,'될 수').replace(/\b것같/g,'것 같').replace(/\b그때마다\b/g,'그때마다').trim();
 }
-function subjectFallback(words,fallback){return words[0]||fallback}
 function fusedPoem(seed,chosen,type){
-const scene=$('#scene').value.trim();
-const words=extractImages([seed,scene].filter(Boolean).join(' '));
-const input=[seed,scene].join(' ');
-const n=serial++;
-const themes=[
-{re:/가을|낙엽|단풍|홍시|감나무|찬바람|서리/,title:'가을이 머무는 자리',opening:[['찬바람이 지나간 마당','감나무 끝에 홍시 하나 남았다'],['낙엽이 돌담 아래 모이는 저녁','빈 가지에 붉은 열매 하나 매달렸다']],middle:[['햇볕은 담장 아래까지 물러나고','마른 풀잎만 바람을 따라 눕는다'],['바람이 지나갈 때마다','가지 끝에서 작은 그림자가 흔들린다']],turn:[['나는 빈 마당을 한동안 바라본다','누군가 다녀간 발자국은 없는데'],['문을 닫으려다 다시 돌아본다','저물어 가는 하늘 아래']],end:[['붉은 열매 하나가','떠난 사람의 저녁을 붙들고 있다'],['나무는 마지막 열매를','겨울이 올 때까지 놓지 않는다']]},
-{re:/비|빗방울|우산|장마/,title:'비가 지나간 자리',opening:[['처마 끝에서 물방울이 떨어진다','젖은 돌계단에 저녁이 고인다'],['비가 그친 골목에','우산 끝의 물방울이 하나씩 떨어진다']],middle:[['담벼락의 이끼가 짙어지고','젖은 흙에서 풀 냄새가 올라온다'],['창문에 맺힌 물기를 닦자','건너편 나무가 조금 또렷해진다']],turn:[['한동안 듣지 못한 발소리를','빗소리 속에서 다시 듣는다'],['나는 마른 신발을 문가에 놓고','아직 젖어 있는 길을 바라본다']],end:[['비는 이미 멎었는데','돌 틈에서는 작은 물소리가 이어진다'],['누군가 지나간 자리에','젖은 발자국만 오래 남는다']]},
-{re:/봄|꽃|매화|벚꽃|새싹/,title:'꽃이 피는 동안',opening:[['낮은 담장 너머','어제 없던 꽃 한 송이가 피었다'],['마른 가지 끝에서','작은 꽃잎이 먼저 봄을 연다']],middle:[['햇살이 꽃잎을 비추자','가지 아래 그림자도 환해진다'],['바람이 한 번 스치고','꽃가루가 돌계단에 내려앉는다']],turn:[['나는 피어난 자리보다','그 곁의 빈 가지를 오래 본다'],['누가 먼저 봄을 불렀을까','대답 대신 벌 한 마리가 다녀간다']],end:[['꽃이 지고 난 자리에도','연둣빛 잎은 자라고 있다'],['잠깐 머물렀던 향기가','열린 창문 안으로 들어온다']]},
-{re:/강|시냇물|신천|물결|바다|호수/,title:'물가에서',opening:[['강물 위로 늦은 햇살이 번진다','건너편 나무 그림자가 길어진다'],['물가에 서서','흘러가는 구름의 그림자를 본다']],middle:[['물결이 둑 아래 돌을 적시고','풀잎 하나가 물 쪽으로 기운다'],['바람이 지나가자','물 위의 빛이 잘게 부서진다']],turn:[['나는 오래 바라보던 곳에서','조금 더 아래쪽으로 걸어간다'],['건너편에서 들리던 소리는','물소리에 섞여 희미해진다']],end:[['물은 아무것도 붙잡지 않지만','저녁의 빛을 오래 데리고 간다'],['돌아오는 길에도','귓가에는 잔물결 소리가 남는다']]},
-{re:/겨울|눈|얼음|추위/,title:'겨울의 문턱',opening:[['밤새 내린 눈이','마당의 발자국을 덮었다'],['찬 새벽 창가에','하얀 성에가 얇게 앉았다']],middle:[['마른 나뭇가지 아래','참새 한 마리가 눈을 턴다'],['낮은 햇볕이 담을 넘어와','얼어붙은 물그릇을 비춘다']],turn:[['나는 장갑 낀 손으로','닫힌 대문을 천천히 연다'],['발밑에서 눈이 바스락거린다','멀리 아침 연기가 오른다']],end:[['발자국은 금세 희미해져도','걸어온 길은 몸에 남는다'],['추운 날에도 나무는','봄에 펼칠 잎을 품고 있다']]}
-];
-const theme=themes.find(t=>t.re.test(input))||{title:(words[0]||'오늘의 풍경').slice(0,22),opening:[['창가에 앉아','한동안 바깥을 바라본다'],['익숙한 길을 걷다가','문득 걸음을 늦춘다']],middle:[['빛이 조금씩 기울고','사물의 그림자가 길어진다'],['바람에 흔들린 잎 하나가','발끝에 내려앉는다']],turn:[['나는 지나온 길을 돌아본다','아직 할 말이 남은 듯하다'],['손에 쥔 것을 내려놓자','주변의 소리가 가까워진다']],end:[['말없이 지나온 오후가','저녁 창문에 오래 머문다'],['돌아오는 길','발걸음이 조금 느려졌다']]};
-const choose=(arr,offset)=>arr[(n+offset)%arr.length].join('\n');
-let stanzas=[choose(theme.opening,0),choose(theme.middle,1),choose(theme.turn,0),choose(theme.end,1)];
-if(type==='narrative')stanzas.splice(2,0,'그날 나는 잠시 멈춰 서서\n지나온 길을 다시 바라보았다');
-if(type==='reflective')stanzas.splice(2,0,'사라지는 것은 어디로 가는가\n나는 대답 대신 눈앞의 풍경을 본다');
-// 입력한 글을 중심으로 제목과 본문을 새로 구성한다. 제목+본문 합계 500자 이하.
-const cleanInput=input.replace(/\\s+/g,' ').trim();
-const phrases=cleanInput.split(/[.!?。！？,，;；\\n]+/).map(x=>x.trim()).filter(Boolean);
-const focus=(phrases[0]||subjectFallback(words,theme.title)).slice(0,38);
-const key=(words.find(w=>w.length>=2&&!/^(나는|오늘|그리고|하지만|그런데|그래서)$/.test(w))||theme.title).slice(0,16);
-const title=(focus.length<=22?focus:key+'의 안쪽').slice(0,26);
-const snippets=phrases.slice(0,4).map(p=>p.replace(/[.!?]+$/,'').slice(0,54));
-const motif=snippets[0]||key;
-const opening=[motif, '그 말이 머문 자리를 오래 바라본다'];
-const memory=[snippets[1]||key+' 곁에서 지나온 시간을 헤아리면', '말하지 못한 마음이 조금씩 모습을 드러낸다'];
-const senses=[snippets[2]||'손끝에 닿는 작은 온기 하나', '가까운 것들은 저마다 다른 빛을 품는다'];
-const turn=[snippets[3]||'한때는 지나가는 줄만 알았던 순간이', '돌아보는 발길 앞에서 새롭게 깊어진다'];
-const ending=type==='reflective'?['끝내 남는 것은 무엇일까',key+'은 오늘도 그 물음 곁에 있다']:type==='narrative'?['나는 다시 그 자리로 돌아간다',key+'이 남긴 흔적을 따라']:type==='lyric'?['차마 다 부르지 못한 이름처럼',key+'이 내 안에서 천천히 밝아진다']:type==='fusion'?['오래된 기억이 새로운 계절을 건너',key+'의 빛으로 다시 피어난다']:['아직 끝나지 않은 한 줄의 이야기',key+'이 조용히 다음 행을 연다'];
-let blocks=[opening,memory,senses,turn,ending];
-let poem=proofreadKorean(blocks.map(lines=>lines.join('\\n')).join('\\n\\n'));
-const maxBody=500-[...title].length-2;
-while([...poem].length>maxBody&&blocks.length>3){blocks.splice(blocks.length-2,1);poem=proofreadKorean(blocks.map(lines=>lines.join('\\n')).join('\\n\\n'));}
-if([...poem].length>maxBody)poem=[...poem].slice(0,maxBody).join('').trimEnd();
-const review=evaluateDraft(poem,words,type);
-return {title,poem,review};
+ const scene=$('#scene').value.trim(), source=(seed+' '+scene).trim();
+ const phrases=source.split(/[.!?。！？,，;；\n]+/).map(x=>x.trim()).filter(Boolean);
+ const words=extractImages(source);
+ const key=(words.find(w=>!['그리고','그러나','하지만','오늘','나는'].includes(w))||'마음').slice(0,15);
+ const first=(phrases[0]||key).slice(0,55);
+ const title=(first.length<=18?first:key+'의 시간').slice(0,26);
+ const n=serial++;
+ const variants={
+ free:[['그 이름을 입안에 잠시 머금는다','아직 말이 되지 않은 하루가','가까운 곳에서 천천히 움직인다'],['눈앞에 놓인 것은 작지만','그 곁의 빈자리까지 헤아리면','하나의 계절이 된다'],['나는 서둘러 뜻을 붙이지 않는다','다만 지나온 것들의 온도를','오래 손바닥에 남겨 둔다']],
+ lyric:[['낮은 햇살이 창가에 스미고','멀리서 불어온 바람은','잊었던 목소리를 데려온다'],['손끝에 남은 따스한 기척','그리움은 큰 소리로 오지 않고','작은 숨결로 곁에 머문다'],['저물어 가는 빛을 바라보며','나는 오래 부르지 못한 이름을','마음속에서 가만히 불러 본다']],
+ narrative:[['그날 나는 익숙한 길을 나섰다','모퉁이를 돌자 오래전 풍경이','뜻밖에도 눈앞에 나타났다'],['잠시 멈추어 지난 일을 떠올렸다','그때 미처 건네지 못한 말들이','걸음마다 하나씩 따라왔다'],['돌아오는 길은 조금 달라졌다','바뀐 것은 길이 아니라','그 길을 바라보는 나의 마음이었다']],
+ reflective:[['무엇이 오래 남는 것일까','손에 쥐었다 놓은 것들이','오히려 더 또렷해지는 저녁'],['시간은 어디에 머무는가','지나간 자리를 들여다볼수록','지금의 숨소리가 가까워진다'],['대답을 서둘러 적지 않는다','알지 못한다는 사실까지 품고','나는 다시 오늘을 살아간다']],
+ fusion:[['바람은 오래된 기억의 결을 따라','오늘의 창문을 조용히 두드린다','낯선 빛이 익숙한 이름에 닿는다'],['한때 멀어졌던 마음과 계절이','같은 물결 위에서 만나고','잊었던 목소리가 새롭게 열린다'],['지나온 시간은 사라지지 않고','지금 이 순간의 숨결과 섞여','다음 날의 작은 꽃이 된다']]
+ };
+ const selected=variants[type]||variants.free;
+ const inputLines=phrases.slice(1,3).map(p=>p.slice(0,55));
+ const blocks=[[first,'그 장면 앞에서 잠시 걸음을 멈춘다'],selected[n%3],inputLines.length?inputLines:selected[(n+1)%3],selected[(n+2)%3]];
+ let poem=proofreadKorean(blocks.map(b=>b.join('\n')).join('\n\n'));
+ const max=500-[...title].length-2;
+ while([...poem].length>max&&blocks.length>2){blocks.splice(blocks.length-2,1);poem=proofreadKorean(blocks.map(b=>b.join('\n')).join('\n\n'));}
+ if([...poem].length>max)poem=[...poem].slice(0,max).join('').trimEnd();
+ return {title,poem,review:evaluateDraft(poem,words,type)};
 }
 function compose(seed,type){return fusedPoem(seed,[],type)}
 function writeCritique(poem,type){
@@ -99,7 +84,7 @@ return [...note].slice(0,400).join('');
 }
 function refreshCritique(){if(lastPoem)$('#critique').textContent=writeCritique(lastPoem,$('#poemType').value)}
 $('#create').onclick=()=>{const seed=$('#seed').value.trim();if(!seed&&!imageData&&!$('#scene').value.trim()){$('#status').textContent='단어나 문장을 입력하거나 사진을 선택해 주세요.';return}
-if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;refreshCritique();$('#paper').classList.add('clean-poem');$('#paper').classList.add('clean-poem');$('#outputHeading').hidden=true;$('#critiqueBox').hidden=true;$('#review').hidden=true;$('#length').hidden=true;$('#signature').hidden=true;$('#length').textContent='제목+시 본문 '+([...lastTitle].length+[...lastPoem].length+2)+' / 500자(제목 포함)';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
+if(imageData&&!seed&&!$('#scene').value.trim()){$('#status').textContent='사진 속 실제 내용을 반영하려면 장면 설명을 입력해 주세요. 현재 버전은 사물 자동 인식을 지원하지 않습니다.';return}const type=$('#poemType').value;const result=compose(seed,type);lastTitle=result.title;lastPoem=result.poem;$('#title').textContent=lastTitle;$('#poem').textContent=lastPoem;refreshCritique();$('#paper').classList.add('clean-poem');$('#outputHeading').hidden=true;$('#critiqueBox').hidden=true;$('#review').hidden=true;$('#length').hidden=true;$('#signature').hidden=true;$('#length').textContent='제목+시 본문 '+([...lastTitle].length+[...lastPoem].length+2)+' / 500자(제목 포함)';$('#status').textContent='한 장면과 하나의 화자를 중심으로 창작했습니다. 조사·띄어쓰기·반복·구성을 기본 점검했습니다. 다시 누르면 다른 표현으로 창작합니다.';$('#review').textContent='자동 점검(참고용): '+result.review.checks.map(x=>x.name+' '+Math.round(x.score)+'/'+x.max).join(' · ')+' | 내부 규칙 점수 '+result.review.score+'/100. 문학적 완성도 95점 이상을 보증하는 평가는 아닙니다.'};
 function refinePoem(poem,seed,type){
 const blocks=poem.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
 const unique=[...new Set(blocks)];
