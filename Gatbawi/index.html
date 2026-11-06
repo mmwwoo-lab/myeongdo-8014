@@ -23,8 +23,28 @@ footer{text-align:center;font-size:12px;color:#b6cbd0;padding:0 15px 24px}.toast
 #bowing.bow{animation:bow 1s ease-in-out;transform-origin:50% 95%;transform-box:fill-box}@keyframes bow{50%{transform:rotate(30deg) translateY(10px)}}
 @media(max-width:1000px){main{grid-template-columns:1fr}.scene{min-height:0}.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 @media(max-width:600px){header{padding:13px}.scene{aspect-ratio:4/5}.overlay{padding:9px}.overlay h2{font-size:17px}.bottom button{padding:8px;font-size:11px}.side{display:block}.panel{margin-bottom:9px}main{padding:7px}}
-</style></head>
-<body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 명도재 디지털 법당</h1></div><p>팔공산 갓바위 · 걸어 올라가는 퀼트 인형들의 순례</p></header>
+</style><style>
+html{scroll-behavior:smooth}
+.site-nav{max-width:1450px;margin:auto;padding:0 20px 15px;display:flex;flex-wrap:wrap;gap:9px}
+.site-nav a{text-decoration:none;color:#f5dfb8;border:1px solid #ecd1a66b;border-radius:50px;padding:9px 16px;font-size:13px}
+.welcome{max-width:1450px;margin:0 auto 20px;padding:0 18px;display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.welcome-copy{padding:clamp(25px,4vw,60px);border:1px solid #dbc39a69;border-radius:20px;background:linear-gradient(140deg,#28505b,#132c36);display:flex;flex-direction:column;align-items:start;justify-content:center}
+.welcome-copy small{color:#e5c08a;letter-spacing:2px}.welcome-copy h2{font-size:clamp(28px,4vw,52px);line-height:1.24;letter-spacing:-.05em;margin:14px 0}
+.welcome-copy h2 span{color:#f0d19d}.welcome-copy p{line-height:1.9;color:#e0e8dd;font-size:15px}
+.welcome-copy a{background:#f0d2a0;border-radius:12px;color:#19353f;text-decoration:none;font-weight:700;padding:13px 17px;margin-top:11px}
+.welcome-art{position:relative;border:1px solid #e6c8a676;border-radius:20px;min-height:320px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#f3c9ac,#6d9395)}
+.welcome-art svg{width:100%;max-height:350px}
+.feature-strip{max-width:1450px;margin:0 auto 17px;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.feature-strip article{padding:16px;border:1px solid #dcc3a168;border-radius:14px;background:#ffffff0b;font-size:13px;line-height:1.7;color:#e3eadf}
+.feature-strip strong{display:block;color:#f8ddb3;font-size:17px;margin-bottom:4px}
+.section-lead{max-width:1450px;margin:8px auto 2px;padding:0 20px;color:#f6d4a5;font-size:21px}
+#experience{scroll-margin-top:15px}
+@media(max-width:800px){.welcome{grid-template-columns:1fr}.welcome-art{min-height:240px}.feature-strip{grid-template-columns:1fr}}
+</style><meta property="og:title" content="명도재 디지털 법당 · 갓바위 퀼트 순례"></head>
+<body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 명도재 디지털 법당</h1></div><p>팔공산 갓바위 · 걸어 올라가는 퀼트 인형들의 순례</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
+<section class="welcome" id="home"><div class="welcome-copy"><small>PALGONGSAN · GATBAWI · QUILT TEMPLE</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길과 숲길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 촛불을 밝히고, 합장하며 소원을 올려보세요.</p><a href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
+<div class="welcome-art" role="img" aria-label="퀼트 인형 갓바위 부처님 일러스트"><svg viewBox="0 0 500 350"><defs><pattern id="hp" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#b7a48f"/><path d="M0 0H20V20H0ZM20 20H40V40H20Z" fill="#7895a3"/><path d="M20 0V40M0 20H40" stroke="#f5e2c8" stroke-width="2" stroke-dasharray="3 4"/></pattern></defs><path d="M0 265L80 119L175 260L266 91L380 250L453 135L500 223V350H0" fill="#628785"/><ellipse cx="250" cy="313" rx="166" ry="40" fill="#e6d3b8"/><path d="M172 290Q155 198 201 170Q250 130 300 170Q343 207 324 290Z" fill="url(#hp)" stroke="#f2dbc1" stroke-width="6" stroke-dasharray="6 5"/><ellipse cx="250" cy="150" rx="55" ry="64" fill="#e7c6a7" stroke="#f8dcc2" stroke-width="5"/><ellipse cx="250" cy="100" rx="115" ry="23" fill="url(#hp)" stroke="#f7dfc2" stroke-width="5" stroke-dasharray="6 5"/><path d="M219 150q12 -8 25 0m12 0q12 -8 25 0" stroke="#67564d" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M240 174q10 10 20 0" fill="none" stroke="#aa8175" stroke-width="3"/><circle cx="250" cy="136" r="3" fill="#a38467"/><g fill="#f7e9d8"><rect x="110" y="271" width="14" height="43" rx="5"/><rect x="378" y="271" width="14" height="43" rx="5"/></g><g fill="#ffce78"><path d="M117 266q-12 -20 0 -29q13 15 0 29"/><path d="M385 266q-12 -20 0 -29q13 15 0 29"/></g><g fill="url(#hp)" stroke="#f6ddc2" stroke-width="3" stroke-dasharray="5 4"><ellipse cx="77" cy="330" rx="44" ry="27"/><ellipse cx="426" cy="330" rx="44" ry="27"/></g><g fill="#e5c4a5"><circle cx="77" cy="265" r="29"/><circle cx="426" cy="265" r="29"/></g><g fill="url(#hp)"><path d="M48 259q-4 -30 29 -34q33 4 29 34"/><path d="M397 259q-4 -30 29 -34q33 4 29 34"/></g></svg></div></section>
+<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>세 명의 퀼트 인형이 계단길과 숲길을 따라 갓바위 정상으로 걸어갑니다.</article><article><strong>🙏 갓바위 참배</strong>108배, 염주 돌리기, 양쪽 촛불 밝히기와 범종 소리를 체험합니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 갓바위 산길 체험 · 디지털 법당</h2>
 <main><section class="scene" aria-label="퀼트 인형 신도들이 팔공산 갓바위로 오르는 애니메이션">
 <svg id="world" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid slice">
 <defs>
