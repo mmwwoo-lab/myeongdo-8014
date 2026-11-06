@@ -575,6 +575,33 @@ const prayerChromeLink=$('openPrayerChrome');
   prayerChromeLink.textContent='🌐 홈페이지 새 창으로 열기';
  }
 })();
+(function autoOpenChromeOnFirstEntry(){
+ // Apps may block scheme navigation without user interaction. The visible manual link remains available.
+ const ua=navigator.userAgent||'';
+ const android=/Android/i.test(ua),ios=/iPhone|iPad|iPod/i.test(ua);
+ if(!android&&!ios)return;
+ if(/(?:Chrome\/|CriOS\/)/i.test(ua)&&!/; wv|FBAN|FBAV|FB_IAB|Instagram|KAKAOTALK|NAVER|Line\/|SamsungBrowser/i.test(ua))return;
+ const currentUrl=new URL(window.location.href);
+ if(currentUrl.searchParams.has('chrome_opened'))return;
+ const onceKey='myeongdo-gatbawi-auto-chrome-v1';
+ try{if(sessionStorage.getItem(onceKey)==='1')return;sessionStorage.setItem(onceKey,'1');}catch(e){}
+ const finalUrl=new URL(prayerSiteUrl);
+ finalUrl.searchParams.set('chrome_opened','1');
+ const destination=finalUrl.href;
+ $('copyPrayerStatus').textContent='크롬 앱으로 자동 연결을 시도합니다. 열리지 않으면 위 버튼을 눌러 주세요.';
+ window.setTimeout(()=>{
+  try{
+   if(android){
+    const tail=destination.replace(/^https:\/\//,'');
+    window.location.href='intent://'+tail+'#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(destination)+';end';
+   }else{
+    window.location.href='googlechromes://'+destination.replace(/^https:\/\//,'');
+   }
+  }catch(e){
+   $('copyPrayerStatus').textContent='자동 연결이 제한되었습니다. 크롬 버튼을 누르거나 주소를 복사해 주세요.';
+  }
+ },350);
+})();
 async function copyPrayerSiteAddress(){
  try{
   if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('Clipboard API not available');
