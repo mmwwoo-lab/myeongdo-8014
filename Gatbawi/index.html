@@ -46,10 +46,10 @@ html{scroll-behavior:smooth}
 .summit-visual .summit-prayer{position:absolute;bottom:95px;left:50%;transform:translateX(-50%);max-width:90%;padding:9px 17px;border-radius:25px;background:#193840e8;color:#ffebc6;border:1px solid #e0c495;text-align:center;font-size:13px}
 .summit-visual.praying .summit-prayer{animation:prayerPulse 1.1s ease-in-out}@keyframes prayerPulse{50%{transform:translateX(-50%) scale(1.1)}}
 .scene .overlay,.scene .bottom{z-index:4}@media(max-width:600px){.summit-visual .summit-prayer{bottom:88px;font-size:11px}}
-</style></head>
+</style><style>.welcome-art img{width:100%;height:100%;min-height:320px;object-fit:cover;display:block}.summit-visual img{object-fit:cover}@media(max-width:800px){.welcome-art img{min-height:240px}}</style></head>
 <body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 명도재 디지털 법당</h1></div><p>팔공산 갓바위 · 걸어 올라가는 퀼트 인형들의 순례</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
 <section class="welcome" id="home"><div class="welcome-copy"><small>PALGONGSAN · GATBAWI · QUILT TEMPLE</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 촛불을 밝히고, 합장하며 소원을 올려보세요.</p><a href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
-<div class="welcome-art" role="img" aria-label="퀼트 인형 갓바위 부처님 일러스트"><svg viewBox="0 0 500 350"><defs><pattern id="hp" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#b7a48f"/><path d="M0 0H20V20H0ZM20 20H40V40H20Z" fill="#7895a3"/><path d="M20 0V40M0 20H40" stroke="#f5e2c8" stroke-width="2" stroke-dasharray="3 4"/></pattern></defs><path d="M0 265L80 119L175 260L266 91L380 250L453 135L500 223V350H0" fill="#628785"/><ellipse cx="250" cy="313" rx="166" ry="40" fill="#e6d3b8"/><path d="M172 290Q155 198 201 170Q250 130 300 170Q343 207 324 290Z" fill="url(#hp)" stroke="#f2dbc1" stroke-width="6" stroke-dasharray="6 5"/><ellipse cx="250" cy="150" rx="55" ry="64" fill="#e7c6a7" stroke="#f8dcc2" stroke-width="5"/><ellipse cx="250" cy="100" rx="115" ry="23" fill="url(#hp)" stroke="#f7dfc2" stroke-width="5" stroke-dasharray="6 5"/><path d="M219 150q12 -8 25 0m12 0q12 -8 25 0" stroke="#67564d" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M240 174q10 10 20 0" fill="none" stroke="#aa8175" stroke-width="3"/><circle cx="250" cy="136" r="3" fill="#a38467"/><g fill="#f7e9d8"><rect x="110" y="271" width="14" height="43" rx="5"/><rect x="378" y="271" width="14" height="43" rx="5"/></g><g fill="#ffce78"><path d="M117 266q-12 -20 0 -29q13 15 0 29"/><path d="M385 266q-12 -20 0 -29q13 15 0 29"/></g><g fill="url(#hp)" stroke="#f6ddc2" stroke-width="3" stroke-dasharray="5 4"><ellipse cx="77" cy="330" rx="44" ry="27"/><ellipse cx="426" cy="330" rx="44" ry="27"/></g><g fill="#e5c4a5"><circle cx="77" cy="265" r="29"/><circle cx="426" cy="265" r="29"/></g><g fill="url(#hp)"><path d="M48 259q-4 -30 29 -34q33 4 29 34"/><path d="M397 259q-4 -30 29 -34q33 4 29 34"/></g></svg></div></section>
+<div class="welcome-art" aria-label="완성된 갓바위 부처님과 가족들의 퀼트 법당 그림" role="img"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님 앞에서 기도하는 가족들의 퀼트 인형 모습" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='🪷 명도재 갓바위 디지털 법당';"></div></section>
 <section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>세 명의 퀼트 인형이 계단길을 따라 갓바위 정상으로 걸어갑니다.</article><article><strong>🙏 갓바위 참배</strong>108배, 염주 돌리기, 양쪽 촛불 밝히기와 범종 소리를 체험합니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 갓바위 산길 체험 · 디지털 법당</h2>
 <main><section class="scene" aria-label="퀼트 인형 신도들이 팔공산 갓바위로 오르는 애니메이션">
 <svg id="world" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid slice">
@@ -86,14 +86,11 @@ html{scroll-behavior:smooth}
 <g opacity=".92"><use href="#pine" transform="translate(108 485) scale(1.35)"/><use href="#pine" transform="translate(266 445) scale(.95)"/><use href="#pine" transform="translate(756 425) scale(1.05)"/><use href="#pine" transform="translate(934 487) scale(1.25)"/></g>
 <path id="stairsShape" d="M30 688Q209 622 296 575Q421 503 491 456T658 320Q767 233 838 198" fill="none" stroke="#e0cfb7" stroke-width="88" stroke-linecap="round"/>
 <path id="stairsMark" d="M30 688Q209 622 296 575Q421 503 491 456T658 320Q767 233 838 198" fill="none" stroke="#9e9889" stroke-width="76" stroke-dasharray="4 29"/>
-<path id="forestShape" d="M30 688Q170 530 286 605Q417 625 450 503Q501 398 622 455Q740 501 765 354Q800 235 838 198" fill="none" stroke="#bdad91" stroke-width="85" stroke-linecap="round" stroke-dasharray="6 9"/>
-<path id="forestEdge" d="M30 688Q170 530 286 605Q417 625 450 503Q501 398 622 455Q740 501 765 354Q800 235 838 198" fill="none" stroke="#e6d7bb" stroke-width="58" stroke-linecap="round" stroke-dasharray="7 7"/>
 <g id="summit" transform="translate(836 199)"><ellipse cy="68" rx="170" ry="45" fill="url(#patch)" stroke="#ead7b7" stroke-width="6" stroke-dasharray="6 5"/><use href="#buddha" transform="translate(0 -21) scale(.65)"/><g id="candles" opacity=".22"><rect x="-95" y="20" width="11" height="33" rx="5" fill="#faf0dc"/><rect x="85" y="20" width="11" height="33" rx="5" fill="#faf0dc"/><path class="flame" d="M-90 19Q-102 3 -89 -6Q-77 9 -90 19" fill="#ffd36b"/><path class="flame" d="M90 19Q78 3 91 -6Q104 9 90 19" fill="#ffd36b"/></g><g><rect x="-63" y="47" width="130" height="23" rx="4" fill="url(#patch)" stroke="#f0d9bc" stroke-width="3"/><circle cx="-36" cy="40" r="12" fill="#b7745d"/><ellipse cx="0" cy="40" rx="14" ry="10" fill="#f6ecd8"/><circle cx="36" cy="40" r="12" fill="#cfaa69"/></g></g>
 <g id="walker" transform="translate(35 665) scale(.72)"><use href="#doll"/><use href="#dollWoman" transform="translate(-72 12) scale(.88)"/><use href="#dollChild" transform="translate(75 19) scale(.75)"/></g>
 <g id="bowing" opacity="0" transform="translate(658 265) scale(.52)"><use href="#doll"/></g>
 <path id="stairsPath" d="M30 688Q209 622 296 575Q421 503 491 456T658 320Q767 233 838 198" fill="none" stroke="none"/>
-<path id="forestPath" d="M30 688Q170 530 286 605Q417 625 450 503Q501 398 622 455Q740 501 765 354Q800 235 838 198" fill="none" stroke="none"/>
-</svg><div id="summitVisual" class="summit-visual" aria-hidden="true"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님께 기도하는 가족들의 퀼트 인형 법당 그림"><div class="summit-prayer" id="summitPrayer">🙏 갓바위 부처님 앞에서 두 손을 모읍니다</div></div><div class="overlay"><h2 id="sceneTitle">산 아래에서 출발합니다</h2><div id="sceneText">계단 올라가기 버튼을 눌러보세요.</div></div>
+</svg><div id="summitVisual" class="summit-visual" aria-hidden="true"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님께 기도하는 가족들의 퀼트 인형 법당 그림" onerror="this.style.display='none';document.getElementById('summitPrayer').textContent='법당 이미지가 표시되지 않습니다. 새로고침 후 다시 시도해 주세요.'"><div class="summit-prayer" id="summitPrayer">🙏 갓바위 부처님 앞에서 두 손을 모읍니다</div></div><div class="overlay"><h2 id="sceneTitle">산 아래에서 출발합니다</h2><div id="sceneText">계단 올라가기 버튼을 눌러보세요.</div></div>
 <div class="bottom"><button id="startBtn" class="primary">🪨 계단 올라가기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="resetBtn">↺ 다시 출발</button><button id="summitBtn">🪷 정상 바로가기</button></div>
 </section>
 <aside class="side">
@@ -110,17 +107,13 @@ html{scroll-behavior:smooth}
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const state={route:'stairs',p:0,playing:false,last:0,speed:2,bows:0,beads:0,lit:false,ctx:null};
-const paths={stairs:$('stairsPath'),forest:$('forestPath')};
-const supported=!!(paths.stairs&&typeof paths.stairs.getTotalLength==='function');
+const state={p:0,playing:false,last:0,speed:2,bows:0,beads:0,lit:false,ctx:null};
+const stairsPath=$('stairsPath');
+const supported=!!(stairsPath&&typeof stairsPath.getTotalLength==='function');
 
 function toast(message){document.querySelector('.toast')?.remove();let el=document.createElement('div');el.className='toast';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),2800)}
 function render(){
- $('stairsShape').style.display=state.route==='stairs'?'':'none';
- $('stairsMark').style.display=state.route==='stairs'?'':'none';
- $('forestShape').style.display=state.route==='forest'?'':'none';
- $('forestEdge').style.display=state.route==='forest'?'':'none';
- const path=paths[state.route];
+ const path=stairsPath;
  const length=supported?path.getTotalLength():1;
  const point=supported?path.getPointAtLength(length*state.p):{x:30+808*state.p,y:688-490*state.p};
  const next=supported?path.getPointAtLength(Math.min(length,length*state.p+2)):{x:point.x+2,y:point.y-1};
@@ -129,7 +122,7 @@ function render(){
  $('walker').classList.toggle('walking',state.playing);
  $('progressText').textContent=Math.round(state.p*100)+'%';$('trip').value=state.p*100;
  $('sceneTitle').textContent=state.p>=1?'갓바위 부처님 앞에 도착했습니다':state.p===0?'산 아래에서 출발합니다':state.p<.5?'퀼트 인형들과 걷는 길':'관봉 정상으로 오르는 마지막 길';
- $('sceneText').textContent=state.p>=1?'합장하고 기도를 올려보세요.':state.playing?'인형들이 '+(state.route==='stairs'?'계단길':'산길')+'을 올라가는 중입니다.':'걷기 버튼을 누르면 인형들이 움직입니다.';
+ $('sceneText').textContent=state.p>=1?'합장하고 기도를 올려보세요.':state.playing?'가족 인형들이 계단을 올라가는 중입니다.':'걷기 버튼을 누르면 인형들이 움직입니다.';
  $('startBtn').textContent=state.playing?'🚶‍♂️ 계단 오르는 중':'🪨 계단 올라가기';
  $('candles').style.opacity=state.lit?'1':'.22';
  const isSummit=state.p>=1;
@@ -138,8 +131,7 @@ function render(){
 }
 function tick(t){if(state.playing){if(state.last){state.p=Math.min(1,state.p+Math.min(100,t-state.last)*.000027*state.speed)}if(state.p>=1){state.playing=false;toast('관봉 정상에 도착했습니다. 갓바위 부처님께 기도해 보세요.');ding(440,.9)}render()}state.last=t;requestAnimationFrame(tick)}
 function ding(freq,duration){try{state.ctx??=new (window.AudioContext||window.webkitAudioContext)();state.ctx.resume();const o=state.ctx.createOscillator(),g=state.ctx.createGain();o.type='sine';o.frequency.setValueAtTime(freq,state.ctx.currentTime);o.frequency.exponentialRampToValueAtTime(freq*.72,state.ctx.currentTime+duration);g.gain.setValueAtTime(.001,state.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.15,state.ctx.currentTime+.03);g.gain.exponentialRampToValueAtTime(.001,state.ctx.currentTime+duration);o.connect(g).connect(state.ctx.destination);o.start();o.stop(state.ctx.currentTime+duration+.05)}catch(e){}}
-function choose(route){state.route=route;state.p=0;state.playing=false;render()}
-function arrived(){if(state.p<1){toast('먼저 인형들과 산길을 올라 정상에 도착해 주세요.');return false}return true}
+function arrived(){if(state.p<1){toast('먼저 계단을 올라 정상에 도착해 주세요.');return false}return true}
 
 $('startBtn').onclick=()=>{if(state.p>=1)state.p=0;state.playing=true;state.last=0;render()};
 $('pauseBtn').onclick=()=>{state.playing=false;render()};
