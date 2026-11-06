@@ -31,7 +31,7 @@ footer{max-width:1250px;margin:auto;text-align:center;font-size:11px;color:#bdd0
 @media(max-width:550px){header{padding:15px}.scene{aspect-ratio:4/5}.prayer-card{right:6px;top:5%;width:60%;max-height:82%;padding:10px}.prayer-card h3{font-size:13px}.prayer-card p{font-size:12px;line-height:1.55}.tts-controls button{padding:7px;font-size:10px}.summit-prayer{font-size:11px;bottom:10px}}
 </style></head>
 <body>
-<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="background-audio" aria-label="나무아미타불 염불"><button id="bgStart" type="button">🙏 나무아미타불 염불</button><button id="bgStop" type="button" disabled>■ 나무아미타불 끄기</button><small id="bgStatus" role="status" aria-live="polite">나무아미타불 염불만 재생합니다</small></div></header>
+<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="background-audio" aria-label="나무아미타불 염불"><button id="bgStart" type="button">🙏 나무아미타불 염불</button><button id="bgStop" type="button" disabled>■ 나무아미타불 끄기</button><button id="heartStart" type="button">📖 반야심경 읽기</button><button id="heartStop" type="button" disabled>■ 반야심경 끄기</button><small id="bgStatus" role="status" aria-live="polite">나무아미타불 염불만 재생합니다</small></div></header>
 <main>
 <section class="scene" aria-label="팔공산 갓바위 부처님 기도 그림">
 <img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들" onerror="this.alt='이미지를 불러오지 못했습니다';">
@@ -81,6 +81,54 @@ function createWishMessage(wish){
  return intro+personal+middle.slice(0,Math.max(0,available))+close;
 }
 const bg={active:false,token:0,timer:null};
+const heart={active:false,token:0,utterance:null};
+const heartLines=[
+'마하반야바라밀다심경',
+'관자재보살 행심반야바라밀다시, 조견오온개공 도일체고액.',
+'사리자 색불이공 공불이색, 색즉시공 공즉시색, 수상행식 역부여시.',
+'사리자 시제법공상 불생불멸 불구부정 부증불감.',
+'시고 공중무색 무수상행식, 무안이비설신의 무색성향미촉법.',
+'무안계 내지 무의식계, 무무명 역무무명진, 내지 무노사 역무노사진.',
+'무고집멸도 무지역무득, 이무소득고.',
+'보리살타 의반야바라밀다고 심무가애, 무가애고 무유공포, 원리전도몽상 구경열반.',
+'삼세제불 의반야바라밀다고 득아뇩다라삼먁삼보리.',
+'고지반야바라밀다 시대신주 시대명주 시무상주 시무등등주.',
+'능제일체고 진실불허. 고설반야바라밀다주 즉설주왈.',
+'아제아제 바라아제 바라승아제 모지 사바하.'
+];
+function stopHeartSutra(){
+ heart.active=false;heart.token++;
+ if(heart.utterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
+ heart.utterance=null;
+ $('heartStart').disabled=false;$('heartStop').disabled=true;
+ if($('bgStatus').textContent.includes('반야심경'))$('bgStatus').textContent='반야심경 정지';
+}
+function startHeartSutra(){
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
+  $('bgStatus').textContent='이 브라우저에서는 반야심경 읽기를 지원하지 않습니다.';return;
+ }
+ stopBackground();stopPrayerSpeech();stopHeartSutra();
+ const synth=window.speechSynthesis,token=++heart.token;
+ heart.active=true;
+ $('heartStart').disabled=true;$('heartStop').disabled=false;
+ const voice=synth.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
+ let i=0;
+ function next(){
+  if(!heart.active||token!==heart.token)return;
+  if(i>=heartLines.length){stopHeartSutra();$('bgStatus').textContent='반야심경 읽기 완료';return}
+  const u=new SpeechSynthesisUtterance(heartLines[i++]);
+  u.lang='ko-KR';u.rate=.82;u.pitch=.92;u.volume=.9;
+  if(voice)u.voice=voice;
+  heart.utterance=u;
+  $('bgStatus').textContent='📖 반야심경 낭독 중 ('+i+'/'+heartLines.length+')';
+  u.onend=()=>{if(heart.active&&token===heart.token)next()};
+  u.onerror=()=>{if(heart.active&&token===heart.token){stopHeartSutra();$('bgStatus').textContent='반야심경 음성 재생 실패. 한국어 음성 설정을 확인해 주세요.'}};
+  try{synth.speak(u)}catch(e){stopHeartSutra();$('bgStatus').textContent='반야심경 읽기를 시작하지 못했습니다.'}
+ }
+ next();
+}
+$('heartStart').onclick=startHeartSutra;
+$('heartStop').onclick=stopHeartSutra;
 function stopBackground(){
  bg.active=false;bg.token++;
  if(bg.timer){clearTimeout(bg.timer);bg.timer=null;}
@@ -90,6 +138,7 @@ function stopBackground(){
  $('bgStatus').textContent='염불 정지';
 }
 function startChant(){
+ stopHeartSutra();
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
   $('bgStatus').textContent='이 브라우저에서는 염불 음성을 지원하지 않습니다.';
   return;
@@ -132,6 +181,7 @@ function stopPrayerSpeech(){
  $('prayerAudioStatus').textContent='읽어주기 버튼을 눌러 기도문을 들어보세요.';
 }
 function speakPrayer(){
+ stopHeartSutra();
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
  $('prayerAudioStatus').textContent='이 브라우저에서는 음성 읽기를 지원하지 않습니다. Chrome 또는 Edge를 이용해 주세요.';return;
  }
@@ -155,8 +205,9 @@ function speakPrayer(){
 $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
 $('hidePrayer').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
-window.addEventListener('pagehide',()=>{stopBackground();stopPrayerSpeech()});
+window.addEventListener('pagehide',()=>{stopHeartSutra();stopBackground();stopPrayerSpeech()});
 function showPrayer(message, isAdmission){
+ stopHeartSutra();
  if(bg.active)stopBackground();
  stopPrayerSpeech();
  $('prayerHeading').textContent=isAdmission?'🎓 팔공산 갓바위 부처님 대학진학 기도문':'🪷 팔공산 갓바위 부처님 소원 기도문';
