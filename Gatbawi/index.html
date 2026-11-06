@@ -132,15 +132,6 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 .prayer-card.chant-mode .chant-explanation{color:#254433!important;font-size:14px;line-height:1.9}
 .prayer-card .sutra-line.is-reading{background:#f7df96!important;color:#243d2e!important}
 
-/* 페이스북 등 앱 내 브라우저에서 Chrome 외부 실행 안내 */
-.chrome-guide{display:none;max-width:1250px;margin:10px auto 0;padding:12px 16px;border:2px solid #9c722a;border-radius:14px;background:#fff9df;color:#28472f;box-shadow:0 5px 16px #24402e35}
-.chrome-guide.is-visible{display:block}
-.chrome-guide strong{display:block;font-size:15px;margin-bottom:5px}
-.chrome-guide p{margin:5px 0 10px;font-size:13px;line-height:1.65;color:#334b39}
-.chrome-guide-actions{display:flex;flex-wrap:wrap;gap:8px}
-.chrome-guide-actions button{padding:9px 14px}
-.chrome-guide small{display:block;margin-top:8px;line-height:1.5;color:#50624a}
-
 /* 스마트폰 전용: 염불 버튼과 기도 메시지창을 화면에 맞게 축소 */
 @media (max-width:600px){
  html,body{overflow-x:hidden}
@@ -186,10 +177,6 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
  button.primary.full{padding:8px 10px;font-size:12px;margin-top:7px;min-height:35px}
  .admission-wish{margin-top:11px;padding-top:10px}
  .admission-help{font-size:10px;margin:6px 0 0}
- .chrome-guide{margin:7px 10px 0;padding:9px 10px}
- .chrome-guide strong{font-size:12px}
- .chrome-guide p,.chrome-guide small{font-size:10px;line-height:1.5}
- .chrome-guide-actions button{font-size:10px;padding:6px 9px}
  footer{font-size:10px;padding:3px 10px 15px}
 }
 @media(max-width:360px){
@@ -207,12 +194,6 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
-<section class="chrome-guide" id="chromeGuide" aria-label="음성 지원을 위한 크롬 브라우저 안내" role="region">
-<strong>🔊 기도문 음성 지원을 위해 크롬 브라우저로 이동합니다.</strong>
-<p id="chromeGuideText">염불과 반야심경, 소원 기도문을 더욱 원활하게 들으실 수 있도록 크롬 브라우저에서 열겠습니다. 아래 ‘계속하기’를 선택해 주세요.</p>
-<div class="chrome-guide-actions"><button type="button" id="openChrome">계속하기 · 크롬으로 열기</button><button type="button" id="copyChromeUrl">🔗 주소 복사</button></div>
-<small>일부 앱이나 휴대전화에서는 자동 연결이 제한될 수 있습니다. 이 경우 주소를 복사해 크롬에서 열어 주세요. 음성 지원은 기기와 브라우저 설정에 따라 달라질 수 있습니다.</small>
-</section>
 <main>
 <section class="scene" aria-label="팔공산 갓바위 부처님 기도 그림">
 <img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들" onerror="this.alt='이미지를 불러오지 못했습니다';">
@@ -239,37 +220,6 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 </main>
 <footer>© 명도재 이명우 · 비공식 창작 기도 체험</footer>
 <script>
-
-/* 앱 내 브라우저: 이용자가 계속하기를 선택하면 Chrome 전환을 시도합니다. */
-(function(){
- const guide=document.getElementById('chromeGuide');
- const open=document.getElementById('openChrome');
- const copy=document.getElementById('copyChromeUrl');
- const message=document.getElementById('chromeGuideText');
- if(!guide||!open||!copy||!message)return;
- const ua=typeof navigator==='undefined'?'':(navigator.userAgent||'');
- const android=/Android/i.test(ua);
- const ios=/iPhone|iPad|iPod/i.test(ua);
- const inApp=/FBAN|FBAV|FB_IAB|Instagram|KAKAOTALK|NAVER|Line|; wv/i.test(ua);
- const url='https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html';
- const target='intent://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(url)+';end';
- function launchChrome(){
-  if(android){window.location.href=target;}
-  else if(ios){guide.classList.add('is-visible');message.textContent='아이폰에서는 크롬으로 자동 전환되지 않을 수 있습니다. 주소 복사를 누른 뒤 크롬에서 열거나 앱 메뉴의 ‘브라우저에서 열기’를 선택해 주세요.';}
-  else{window.open(url,'_blank','noopener,noreferrer');}
- }
- open.addEventListener('click',launchChrome);
- copy.addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(url);message.textContent='홈페이지 주소가 복사되었습니다. 크롬 주소창에 붙여넣어 주세요.';}
-  catch(e){message.textContent='주소를 복사해 크롬에서 열어 주세요: '+url;}
- });
- if(inApp){
-  guide.classList.add('is-visible');
-  if(ios){
-   message.textContent='기도문 음성 지원을 위해 크롬 브라우저 이용을 권장합니다. 아이폰에서는 아래 ‘계속하기’를 선택하거나, 앱 메뉴의 ‘브라우저에서 열기’를 이용해 주세요.';
-  }
- }
-})();
 
 (function(){
 const $=id=>document.getElementById(id);
@@ -514,7 +464,7 @@ function stopPrayerSpeech(){
 function speakPrayer(){
  stopHeartSutra();
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
- $('prayerAudioStatus').textContent='이 브라우저에서는 음성 읽기를 지원하지 않습니다. Chrome 또는 Edge를 이용해 주세요.';return;
+ $('prayerAudioStatus').textContent='이 브라우저에서는 음성 읽기를 지원하지 않습니다. 기기의 브라우저 음성 지원 여부를 확인해 주세요.';return;
  }
  if(bg.active)stopBackground();
  const synth=window.speechSynthesis;
