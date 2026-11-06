@@ -46,6 +46,45 @@ footer{max-width:1250px;margin:auto;text-align:center;font-size:11px;color:#bdd0
 .toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#112a30ed;color:#ffe7c0;border:1px solid #e0be83;border-radius:24px;padding:12px 20px;z-index:20;text-align:center;max-width:90vw}
 @media(max-width:880px){main{grid-template-columns:1fr}.side{max-width:100%}.scene{aspect-ratio:16/10}.prayer-card{width:min(42%,350px)}}
 @media(max-width:550px){.prayer-card.sutra-mode{top:3%;max-height:91%;width:65%}.prayer-card.sutra-mode #prayerText{font-size:12px;line-height:1.85}.prayer-card.sutra-mode h3{font-size:15px}header{padding:15px}.scene{aspect-ratio:4/5}.prayer-card{right:6px;top:5%;width:60%;max-height:82%;padding:10px}.prayer-card h3{font-size:13px}.prayer-card p{font-size:12px;line-height:1.55}.tts-controls button{padding:7px;font-size:10px}.summit-prayer{font-size:11px;bottom:10px}}
+
+/* 선명한 밝은 버튼과 2단계 밝기의 기도문 카드 */
+button,.chant-controls button,.tts-controls button{
+ background:linear-gradient(145deg,#f5deaa,#dfb967)!important;
+ border:1px solid #fff0bb!important;
+ color:#163d30!important;
+ box-shadow:0 2px 7px #001e155e,inset 0 1px #fff6d5;
+}
+button:hover,.chant-controls button:hover,.tts-controls button:hover{
+ background:linear-gradient(145deg,#fff1c9,#ecc77b)!important;
+ color:#103a2c!important;
+}
+button[aria-pressed="true"]{
+ background:linear-gradient(145deg,#c8ebcd,#87c2a2)!important;
+ border-color:#f9df96!important;
+ color:#133a2b!important;
+}
+button:focus-visible{outline:3px solid #ffe8a3;outline-offset:2px}
+.prayer-card{
+ background:linear-gradient(155deg,rgba(224,243,224,.98),rgba(185,219,196,.98))!important;
+ border:2px solid #dfbe72!important;
+ color:#183d2e!important;
+ box-shadow:0 14px 32px #00251eac,inset 0 1px #ffffffbd;
+ scrollbar-color:#b69550 #d5ead6;
+}
+.prayer-card h3,.prayer-card.sutra-mode h3{color:#165039!important}
+.prayer-card p,.prayer-card.sutra-mode #prayerText{color:#17382e!important}
+.prayer-card .tts-status{color:#395f4b!important}
+.prayer-card .sutra-line:first-child{color:#15543c!important}
+.prayer-card .sutra-line.is-reading{
+ background:#f7e5b5!important;
+ color:#163d2c!important;
+ box-shadow:inset 4px 0 #bb9035;
+}
+.panel{
+ background:linear-gradient(150deg,rgba(17,93,67,.98),rgba(4,59,43,.98))!important;
+}
+textarea,input{background:#e7f1df!important;color:#173d2c!important;border:1px solid #c9ab67!important}
+textarea::placeholder,input::placeholder{color:#557464}
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
