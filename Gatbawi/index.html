@@ -191,6 +191,12 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 .admission-stats p{font-size:12px!important;line-height:1.6!important;margin:4px 0 6px!important;color:#283e31!important}
 .admission-stats a{display:inline-block;padding:6px 9px;margin:3px 6px 0 0;border:1px solid #b58d43;border-radius:7px;color:#154b3c;background:#fff7d6;font-weight:700;text-decoration:none;font-size:11px}
 @media(max-width:600px){.admission-stats{margin-top:7px;padding:7px;font-size:10.5px}.admission-stats strong{font-size:11px}.admission-stats p{font-size:10.5px!important;line-height:1.5!important}.admission-stats a{font-size:10px;padding:5px 6px}}
+/* 음성 읽기 불가 시에만 표시되는 크롬 전환 안내 */
+.prayer-browser-help[hidden]{display:none!important}
+.prayer-browser-help{margin:9px 0;padding:9px 10px;background:#fff6df;color:#244837;border:1px solid #d1ae66;border-radius:9px;font-size:12px;line-height:1.6}
+.prayer-browser-help p{margin:0 0 7px}
+.prayer-browser-help button{font-size:12px;padding:7px 12px;border-radius:8px;background:#165c43;color:#fff7e8}
+@media(max-width:600px){.prayer-browser-help{font-size:11px;padding:7px}.prayer-browser-help button{font-size:11px}}
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
@@ -202,6 +208,10 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 <h3 id="prayerHeading">🪷 팔공산 갓바위 부처님 소원 기도문</h3>
 <div class="tts-controls"><button id="readPrayer" type="button">🔊 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button><button id="hidePrayer" type="button">✕ 사라지기</button></div>
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기를 눌러보세요.</div>
+<div id="prayerBrowserHelp" class="prayer-browser-help" hidden>
+<p id="prayerBrowserMessage">음성 읽기를 시작할 수 없습니다. 크롬에서 다시 시도해 보세요.</p>
+<button type="button" id="openPrayerChrome">🌐 크롬으로 열기</button>
+</div>
 <div id="prayerText"></div>
 <div id="admissionStats" class="admission-stats" aria-label="2025학년도 대학 입시 성적 참고" hidden></div>
 </section>
@@ -455,7 +465,17 @@ function startChant(){
 }
 $('bgStart').onclick=()=>{if(bg.active)stopBackground();else startChant()};
 let currentUtterance=null;
+let prayerAudioWatchdog=null;
+function hidePrayerChromeHelp(){
+ $('prayerBrowserHelp').hidden=true;
+}
+function showPrayerChromeHelp(reason){
+ const help=$('prayerBrowserHelp');
+ $('prayerBrowserMessage').textContent=reason||'음성 읽기를 시작할 수 없습니다. 크롬에서 다시 시도해 보세요.';
+ help.hidden=false;
+}
 function stopPrayerSpeech(){
+ if(prayerAudioWatchdog){clearTimeout(prayerAudioWatchdog);prayerAudioWatchdog=null;}
  if(currentUtterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
  currentUtterance=null;
  $('readPrayer').textContent='🔊 기도문 읽어주기';
@@ -463,31 +483,82 @@ function stopPrayerSpeech(){
 }
 function speakPrayer(){
  stopHeartSutra();
+ hidePrayerChromeHelp();
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
- $('prayerAudioStatus').textContent='이 브라우저에서는 음성 읽기를 지원하지 않습니다. 기기의 브라우저 음성 지원 여부를 확인해 주세요.';return;
+  $('prayerAudioStatus').textContent='이 브라우저에서는 기도문 음성 읽기가 지원되지 않습니다.';
+  showPrayerChromeHelp('음성 읽기를 지원하지 않는 브라우저입니다. 크롬에서 다시 시도해 주세요.');
+  return;
  }
  if(bg.active)stopBackground();
  const synth=window.speechSynthesis;
- if(synth.speaking && !synth.paused){synth.pause();$('readPrayer').textContent='▶ 이어 읽기';$('prayerAudioStatus').textContent='낭독 일시정지';return;}
- if(synth.paused){synth.resume();$('readPrayer').textContent='⏸ 잠시 멈춤';$('prayerAudioStatus').textContent='기도문 낭독 중';return;}
+ if(synth.speaking&&!synth.paused){
+  synth.pause();$('readPrayer').textContent='▶ 이어 읽기';$('prayerAudioStatus').textContent='낭독 일시정지';return;
+ }
+ if(synth.paused){
+  synth.resume();$('readPrayer').textContent='⏸ 잠시 멈춤';$('prayerAudioStatus').textContent='기도문 낭독 중';return;
+ }
  const text=$('prayerText').textContent.trim();
  if(!text)return;
- synth.cancel();
- const utterance=new SpeechSynthesisUtterance(text);
+ try{synth.cancel();}catch(e){}
+ let utterance;
+ try{utterance=new SpeechSynthesisUtterance(text);}catch(e){
+  $('prayerAudioStatus').textContent='음성 읽기를 시작할 수 없습니다.';
+  showPrayerChromeHelp('음성 읽기를 시작하지 못했습니다. 크롬에서 다시 시도해 보세요.');
+  return;
+ }
  utterance.lang='ko-KR';utterance.rate=.87;utterance.pitch=1;utterance.volume=1;
- const koVoices=synth.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
- if(koVoices.length)utterance.voice=koVoices.find(v=>/female|woman|여성|sunhi|yuna|heami/i.test(v.name))||koVoices[0];
+ try{
+  const koVoices=synth.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
+  if(koVoices.length)utterance.voice=koVoices.find(v=>/female|woman|여성|sunhi|yuna|heami/i.test(v.name))||koVoices[0];
+ }catch(e){}
  currentUtterance=utterance;
- utterance.onstart=()=>{if(currentUtterance===utterance){$('readPrayer').textContent='⏸ 잠시 멈춤';$('prayerAudioStatus').textContent='기도문 낭독 중';}};
- utterance.onend=()=>{if(currentUtterance===utterance)stopPrayerSpeech();};
- utterance.onerror=e=>{if(currentUtterance===utterance){stopPrayerSpeech();if(e.error!=='interrupted'&&e.error!=='canceled')$('prayerAudioStatus').textContent='음성 재생에 실패했습니다. 기기 음성 설정을 확인해 주세요.';}};
- synth.speak(utterance);
+ const fail=()=>{
+  if(currentUtterance!==utterance)return;
+  stopPrayerSpeech();
+  $('prayerAudioStatus').textContent='기도문 음성 재생에 실패했습니다.';
+  showPrayerChromeHelp('기도문 읽어주기가 작동하지 않습니다. 크롬으로 열어서 다시 시도해 주세요.');
+ };
+ utterance.onstart=()=>{
+  if(currentUtterance!==utterance)return;
+  if(prayerAudioWatchdog){clearTimeout(prayerAudioWatchdog);prayerAudioWatchdog=null;}
+  hidePrayerChromeHelp();
+  $('readPrayer').textContent='⏸ 잠시 멈춤';
+  $('prayerAudioStatus').textContent='기도문 낭독 중';
+ };
+ utterance.onend=()=>{if(currentUtterance===utterance){stopPrayerSpeech();hidePrayerChromeHelp();}};
+ utterance.onerror=e=>{
+  if(currentUtterance!==utterance)return;
+  if(e.error==='interrupted'||e.error==='canceled'){stopPrayerSpeech();return;}
+  fail();
+ };
+ try{
+  synth.speak(utterance);
+  prayerAudioWatchdog=setTimeout(()=>{
+   if(currentUtterance===utterance&&!synth.speaking&&!synth.paused)fail();
+  },8000);
+ }catch(e){fail();}
 }
+$('openPrayerChrome').onclick=()=>{
+ const url=location.origin+location.pathname+location.search;
+ const ua=navigator.userAgent||'';
+ if(/Android/i.test(ua)){
+  // Explicit tap only. Android may still block intents from an in-app browser.
+  const fallback=encodeURIComponent(url);
+  const target='intent://'+location.host+location.pathname+location.search+'#Intent;scheme='+location.protocol.replace(':','')+';package=com.android.chrome;S.browser_fallback_url='+fallback+';end';
+  location.href=target;
+ }else if(/iPad|iPhone|iPod/i.test(ua)){
+  $('prayerBrowserMessage').textContent='아이폰은 자동으로 크롬으로 이동하지 않을 수 있습니다. 공유 메뉴에서 “브라우저에서 열기”를 선택하거나 주소를 복사해 크롬에서 열어 주세요.';
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(url).then(()=>{$('prayerBrowserMessage').textContent+=' 주소가 복사되었습니다.';}).catch(()=>{});
+ }else{
+  window.open(url,'_blank','noopener,noreferrer');
+ }
+};
 $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
-$('hidePrayer').onclick=()=>{stopHeartSutra();stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
+$('hidePrayer').onclick=()=>{stopHeartSutra();stopPrayerSpeech();hidePrayerChromeHelp();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
 window.addEventListener('pagehide',()=>{stopHeartSutra();stopBackground();stopPrayerSpeech()});
 function showPrayer(message, isAdmission){
+ hidePrayerChromeHelp();
  stopHeartSutra();
  if(bg.active)stopBackground();
  $('prayerCard').classList.remove('sutra-mode','chant-mode');
