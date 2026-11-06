@@ -50,7 +50,7 @@ async function run(){
   await page.waitForTimeout(1100);
   const laterFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
   assert.notEqual(firstFrame,laterFrame,'Candle and clouds must keep moving without a toggle button');
-  // Hovering a valley cloud should produce additional cloud pixels, and preserve the original image.
+  // The mountain mist grows visibly when hovering over the valley cloud.
   const hoverPoint=await page.evaluate(()=>{
     const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
     const r=scene.getBoundingClientRect(),scale=Math.max(r.width/img.naturalWidth,r.height/img.naturalHeight);
@@ -58,27 +58,20 @@ async function run(){
             y:r.top+(r.height-img.naturalHeight*scale)/2+.388*img.naturalHeight*scale};
   });
   await page.mouse.move(hoverPoint.x,hoverPoint.y);
-  await page.waitForTimeout(160);
-  assert.equal(await page.locator('.scene').evaluate(el=>el.style.cursor),'pointer','Cloud hover should show an interaction cursor');
-  await page.mouse.move(hoverPoint.x+500,hoverPoint.y+200);
-
-  // Hit the illustrated second worshipper's face in object-fit:cover coordinates.
-  const clickSpot=await page.evaluate(()=>{
+  await page.waitForTimeout(720);
+  const fogFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
+  await page.waitForTimeout(400);
+  const fogDriftFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
+  assert.notEqual(fogFrame,fogDriftFrame,'Hover fog should drift sideways and change in size');
+  assert.equal(await page.locator('.scene').getAttribute('data-face-motion'),null,'Face click animation should be absent');
+  const facePoint=await page.evaluate(()=>{
     const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
-    const r=scene.getBoundingClientRect(),iw=img.naturalWidth,ih=img.naturalHeight;
-    const scale=Math.max(r.width/iw,r.height/ih);
-    return {x:r.left+(r.width-iw*scale)/2+.310*iw*scale,
-            y:r.top+(r.height-ih*scale)/2+.684*ih*scale};
+    const r=scene.getBoundingClientRect(),scale=Math.max(r.width/img.naturalWidth,r.height/img.naturalHeight);
+    return {x:r.left+(r.width-img.naturalWidth*scale)/2+.310*img.naturalWidth*scale,
+            y:r.top+(r.height-img.naturalHeight*scale)/2+.684*img.naturalHeight*scale};
   });
-  await page.mouse.click(clickSpot.x,clickSpot.y);
-  assert.equal(await page.locator('.scene').getAttribute('data-face-motion'),'2','Clicking second face must trigger her eyes and mouth');
-  assert.equal(await page.locator('.scene').getAttribute('data-face-motion-count'),'1','Face animation should start once');
-  const faceStart=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
-  await page.waitForTimeout(350);
-  const faceLater=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
-  assert.notEqual(faceStart,faceLater,'Clicked face animation should change frames');
-
-
+  await page.mouse.click(facePoint.x,facePoint.y);
+  assert.equal(await page.locator('.scene').getAttribute('data-face-motion-count'),null,'Face click should no longer change expression state');
 
   const card=page.locator('#prayerCard');
   assert.equal(await card.isHidden(),true);
