@@ -39,6 +39,8 @@
  const faceCenters=[[.152,.654],[.310,.684],[.760,.684],[.875,.688]];
  const mouthPositions=[[.157,.713],[.320,.742],[.758,.748],[.873,.743]];
  const faceAnimationUntil=[0,0,0,0];
+ let hoveredCloud=-1;
+ let hoveredFace=-1;
  const faceStartAt=[0,0,0,0];
  scene.dataset.faceMotionCount='0';
 
@@ -181,17 +183,27 @@
   const bounds=scene.getBoundingClientRect(),p=photoGeometry();
   const nx=(event.clientX-bounds.left-p.dx)/(p.iw*p.scale);
   const ny=(event.clientY-bounds.top-p.dy)/(p.ih*p.scale);
-  scene.style.cursor=faceCenters.some(([x,y])=>((nx-x)/.075)**2+((ny-y)/.135)**2<=1)?'pointer':'';
+  hoveredCloud=-1;
+  const clouds=config.clouds;
+  clouds.forEach((xy,i)=>{
+    if(hoveredCloud>=0||!Array.isArray(xy)||xy.length!==2)return;
+    if(((nx-xy[0])/.105)**2+((ny-xy[1])/.085)**2<=1)hoveredCloud=i;
+  });
+  hoveredFace=-1;
+  faceCenters.forEach(([x,y],i)=>{
+    if(hoveredFace<0&&((nx-x)/.075)**2+((ny-y)/.135)**2<=1)hoveredFace=i;
+  });
+  scene.style.cursor=hoveredFace>=0||hoveredCloud>=0?'pointer':'';
  },{passive:true});
- scene.addEventListener('pointerleave',()=>{scene.style.cursor='';});
+ scene.addEventListener('pointerleave',()=>{scene.style.cursor='';hoveredCloud=-1;hoveredFace=-1;});
  function draw(time){
   if(!visible||!motionEnabled)return;
   const t=time/1000;
   ctx.clearRect(0,0,width,height);
   // 배경은 움직이지 않고 반투명 구름층만 조용히 계곡 방향으로 흐름.
-  config.clouds.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);cloud(x,y,t,i)}});
+  config.clouds.forEach((xy,i)=>{if(i===hoveredCloud&&Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);cloud(x,y,t,i)}});
   config.flames.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);candle(x,y,t,i)}});
-  config.eyes.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);blinking(x,y,t,i)}});
+  config.eyes.forEach((xy,i)=>{if(i===hoveredFace&&faceAnimationUntil[i]<time&&Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);blinking(x,y,t,i)}});
   faceCenters.forEach((_,i)=>animateFace(i,time));
   animationId=requestAnimationFrame(draw);
  }
