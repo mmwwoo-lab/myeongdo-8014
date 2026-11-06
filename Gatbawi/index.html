@@ -26,7 +26,12 @@ main{max-width:1250px;margin:auto;padding:12px 17px 26px;display:grid;grid-templ
 .prayer-card[hidden]{display:none!important}
 .prayer-card.sutra-mode{top:5%;max-height:88%;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#d9ba85 #214148}
 .prayer-card.sutra-mode h3{font-size:18px;text-align:center;margin-bottom:14px}
-.prayer-card.sutra-mode .tts-controls,.prayer-card.sutra-mode .tts-status{display:none}
+.prayer-card.sutra-mode .tts-controls,.prayer-card.sutra-mode .tts-status,.prayer-card.chant-mode .tts-controls,.prayer-card.chant-mode .tts-status{display:none}
+.prayer-card.chant-mode{top:9%;max-height:79%;overflow-y:auto}
+.prayer-card.chant-mode h3{text-align:center;font-size:19px}
+.prayer-card.chant-mode #prayerText{line-height:1.95;white-space:normal;word-break:keep-all}
+.chant-phrase{font-size:21px;font-weight:750;text-align:center;margin:15px 0 20px;border-bottom:1px solid #c6a45f;padding-bottom:15px;color:#18543d}
+.chant-explanation{margin:12px 0;font-size:14px;line-height:1.85}
 .prayer-card.sutra-mode #prayerText{margin:0;font-size:14px;line-height:1.95;white-space:normal;word-break:keep-all;overflow-wrap:break-word}
 .sutra-line{margin:0 0 15px;padding:6px 4px;border-radius:7px;text-align:left}
 .sutra-line.is-reading{background:rgba(247,211,151,.15);color:#ffe4ae;box-shadow:inset 3px 0 #e5c184;padding-left:10px}
@@ -257,19 +262,46 @@ function startHeartSutra(mode='original'){
 }
 $('heartStart').onclick=()=>{if(heart.active&&heart.mode==='original')stopHeartSutra();else startHeartSutra('original')};
 $('heartKoreanStart').onclick=()=>{if(heart.active&&heart.mode==='korean')stopHeartSutra();else startHeartSutra('korean')};
+function showChantCard(){
+ const card=$('prayerCard'),body=$('prayerText');
+ card.classList.remove('sutra-mode');
+ card.classList.add('chant-mode');
+ card.setAttribute('aria-label','나무아미타불 염불과 뜻풀이');
+ $('prayerHeading').textContent='🙏 나무아미타불';
+ body.replaceChildren();
+ const parts=[
+  ['나무아미타불','chant-phrase'],
+  ['뜻풀이 · 아미타부처님께 귀의합니다.','chant-explanation'],
+  ['나무(南無)는 부처님께 귀의하고 공경한다는 뜻입니다. 아미타불(阿彌陀佛)은 한량없는 빛과 한량없는 생명의 부처님을 가리킵니다.','chant-explanation'],
+  ['나무아미타불을 염송하는 것은 아미타부처님을 마음에 새기며 자비와 지혜, 평안을 기원하는 불교의 수행입니다.','chant-explanation']
+ ];
+ for(const [value,className] of parts){
+  const p=document.createElement('p');
+  p.className=className;p.textContent=value;body.appendChild(p);
+ }
+ card.hidden=false;card.scrollTop=0;
+ $('summitPrayer').textContent='🙏 나무아미타불 염불을 올립니다';
+}
 function stopBackground(){
  bg.active=false;bg.token++;
  if(bg.timer){clearTimeout(bg.timer);bg.timer=null;}
  if('speechSynthesis' in window&&bg.utterance)window.speechSynthesis.cancel();
  bg.utterance=null;
+ if($('prayerCard').classList.contains('chant-mode')){
+  $('prayerCard').hidden=true;
+  $('prayerCard').classList.remove('chant-mode');
+  $('prayerCard').setAttribute('aria-label','소원 기도문');
+  $('summitPrayer').textContent='🙏 팔공산 갓바위 부처님께 기도합니다';
+ }
  $('bgStart').textContent='🙏 나무아미타불 염불';
  $('bgStart').setAttribute('aria-pressed','false');
  if($('bgStatus').textContent.includes('나무아미타불')||$('bgStatus').textContent.includes('염불'))$('bgStatus').textContent='염불 정지';
 }
 function startChant(){
  stopHeartSutra();stopPrayerSpeech();
+ showChantCard();
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
-  $('bgStatus').textContent='이 브라우저에서는 염불 음성을 지원하지 않습니다.';return;
+  $('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 이 브라우저에서는 염불 음성을 지원하지 않습니다.';return;
  }
  const synth=window.speechSynthesis;
  bg.active=true;const token=++bg.token;
@@ -330,9 +362,9 @@ $('hidePrayer').onclick=()=>{stopHeartSutra();stopPrayerSpeech();$('prayerCard')
 window.addEventListener('pagehide',()=>{stopHeartSutra();stopBackground();stopPrayerSpeech()});
 function showPrayer(message, isAdmission){
  stopHeartSutra();
- $('prayerCard').classList.remove('sutra-mode');
- $('prayerCard').setAttribute('aria-label','소원 기도문');
  if(bg.active)stopBackground();
+ $('prayerCard').classList.remove('sutra-mode','chant-mode');
+ $('prayerCard').setAttribute('aria-label','소원 기도문');
  stopPrayerSpeech();
  $('prayerHeading').textContent=isAdmission?'🎓 팔공산 갓바위 부처님 대학진학 기도문':'🪷 팔공산 갓바위 부처님 소원 기도문';
  $('prayerText').textContent=message;
