@@ -19,7 +19,7 @@ assert(html.includes('speechSynthesis'),'기도문 음성 낭독 기능이 없�
 assert(html.includes('startChant'),'나무아미타불 염불 기능이 없습니다');
 assert(html.includes('startHeartSutra')&&html.includes('stopHeartSutra')&&html.includes('마하반야바라밀다심경'),'반야심경 낭독 기능이 없습니다');
 assert(html.includes('showHeartSutra')&&html.includes('sutra-mode')&&html.includes('markHeartLine'),'반야심경 본문·스크롤 표시 기능이 없습니다');
-assert(html.includes('u.rate=.6')&&html.includes('utterance.rate=.6')===false&&html.includes('u.lang=\'ko-KR\';u.rate=.6'),'낭독 속도 0.6 설정이 없습니다');
+assert((html.match(/u\.rate=\.6/g)||[]).length>=2,'염불과 반야심경 모두 0.6배 속도로 설정되지 않았습니다');
 assert(!/id="(?:bgStop|heartStop)"/.test(html),'별도의 끄기 버튼이 남아 있습니다');
 assert(html.includes("if(heart.active)stopHeartSutra()")&&html.includes("if(bg.active)stopBackground()"),'한 버튼으로 켜고 끄는 기능이 없습니다');
 assert(!html.includes('startInstrumental')&&!html.includes('AudioContext'),'삭제된 경음악 기능이 남아 있습니다');
