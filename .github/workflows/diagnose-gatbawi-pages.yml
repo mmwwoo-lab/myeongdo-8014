@@ -1,0 +1,27 @@
+name: Diagnose Gatbawi Pages 404
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-gatbawi-pages.yml'
+permissions:
+  contents: read
+  pages: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify site source, Pages settings, and live HTTP status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Local file:"
+          ls -l Gatbawi/index.html gatbawi/index.html .nojekyll
+          echo "GitHub Pages configuration:"
+          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, cname, source, build_type, public, https_enforced}' || true
+          echo "HTTP status for published URLs:"
+          for url in "https://mmwwoo-lab.github.io/myeongdo-8014/" "https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html" "https://mmwwoo-lab.github.io/myeongdo-8014/gatbawi/index.html"; do
+            echo "$url"
+            curl -sSL -o /dev/null -w "HTTP %{http_code} FINAL %{url_effective}\n" --max-time 25 "$url" || true
+          done
