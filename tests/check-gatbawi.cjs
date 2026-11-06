@@ -24,7 +24,7 @@ assert(html.includes('showHeartSutra')&&html.includes('sutra-mode')&&html.includ
 assert(html.includes('heartKoreanLines')&&html.includes("startHeartSutra('korean')")&&html.includes('반야심경 한글 끄기'),'우리말 반야심경 표시·낭독·끄기 기능이 없습니다');
 assert(html.includes('card.scrollTo({top:target')&&!html.includes('lines[index].scrollIntoView'),'반야심경 내부 스크롤 방식이 올바르지 않습니다');
 assert(html.includes('heart.utterance=null')&&html.includes("heart.mode==='original')stopHeartSutra()")&&html.includes("heart.mode==='korean')stopHeartSutra()"),'반야심경 두 읽기 버튼의 전환·정지 기능이 없습니다');
-assert((html.match(/u\.rate=(?:0\.)?6/g)||[]).length>=2&&html.includes('audio.playbackRate=0.6'),'독경 음성과 MP3 모두 0.6배 속도로 설정되지 않았습니다');
+assert((html.match(/u\.rate=0?\.6/g)||[]).length>=2&&html.includes('audio.playbackRate=0.6'),'독경 음성과 MP3 모두 0.6배 속도로 설정되지 않았습니다');
 assert(!/id="(?:bgStop|heartStop)"/.test(html),'별도의 끄기 버튼이 남아 있습니다');
 assert(html.includes("if(heart.active&&heart.mode==='original')stopHeartSutra()")&&html.includes("if(heart.active&&heart.mode==='korean')stopHeartSutra()")&&html.includes("if(bg.active)stopBackground()"),'하나의 버튼에서 각 낭독의 켜기·끄기가 동작하지 않습니다');
 assert(!html.includes('startInstrumental')&&!html.includes('AudioContext'),'삭제된 경음악 기능이 남아 있습니다');
