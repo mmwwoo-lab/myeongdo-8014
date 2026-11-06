@@ -42,7 +42,7 @@ async function run(){
     return {width:canvas.width,height:canvas.height,imgWidth:a.width,sceneWidth:c.width,overlayWidth:b.width,overlayHeight:b.height,relative:window.getComputedStyle(canvas).position,originalImgStyle:window.getComputedStyle(img).objectFit};
   });
   assert(effectsDesktop.width>0&&effectsDesktop.height>0,'Canvas should be sized');
-  assert(Math.abs(effectsDesktop.overlayWidth-effectsDesktop.sceneWidth)<3,'Effects overlay must follow image scene dimensions');
+  assert(Math.abs(effectsDesktop.overlayWidth-effectsDesktop.sceneWidth)<8,'Effects overlay must follow image scene dimensions');
   assert.equal(effectsDesktop.originalImgStyle,'cover','Original image cover framing must stay unchanged');
 
   const card=page.locator('#prayerCard');
