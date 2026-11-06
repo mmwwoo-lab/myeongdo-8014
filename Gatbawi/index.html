@@ -399,10 +399,10 @@ function startHeartSutra(mode='original'){
   const current=i++;
   markHeartLine(current);
   const u=new SpeechSynthesisUtterance(lines[current]);
-  u.lang='ko-KR';u.rate=.6;u.pitch=.92;u.volume=.9;
+  u.lang='ko-KR';u.rate=0.6;u.pitch=.92;u.volume=.9; // 반야심경 독송: 0.6배속 고정
   if(voice)u.voice=voice;
   heart.utterance=u;
-  $('bgStatus').textContent=(mode==='korean'?'📜 반야심경 한글':'📖 반야심경')+' 천천히 낭독 중 ('+i+'/'+lines.length+')';
+  $('bgStatus').textContent=(mode==='korean'?'📜 반야심경 한글':'📖 반야심경')+' 0.6배속 천천히 낭독 중 ('+i+'/'+lines.length+')';
   u.onend=()=>{if(heart.active&&token===heart.token)next()};
   u.onerror=e=>{
    if(heart.active&&token===heart.token){
