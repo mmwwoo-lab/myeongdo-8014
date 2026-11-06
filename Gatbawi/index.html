@@ -68,6 +68,7 @@ html{scroll-behavior:smooth}
 .bow-overlay .figure.three{left:69%;background-position:76% 97%;clip-path:ellipse(47% 49% at 50% 50%)}
 .bow-overlay .figure.four{left:82%;background-position:100% 97%;clip-path:ellipse(46% 48% at 50% 50%)}
 .summit-visual.bowing-family .figure{opacity:1;animation:devoteeBow 1.45s ease-in-out 1 both}
+.summit-visual.bowing-family .figure:after{content:"";position:absolute;inset:0;border:2px dashed #e9d7bd50;border-radius:50%;pointer-events:none}
 .summit-visual.bowing-family .figure.two{animation-delay:.12s}
 .summit-visual.bowing-family .figure.three{animation-delay:.2s}
 .summit-visual.bowing-family .figure.four{animation-delay:.28s}
@@ -84,7 +85,7 @@ html{scroll-behavior:smooth}
 <body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 명도재 디지털 법당</h1></div><p>팔공산 갓바위 · 걸어 올라가는 퀼트 인형들의 순례</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
 <section class="welcome" id="home"><div class="welcome-copy"><small>PALGONGSAN · GATBAWI · QUILT TEMPLE</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 촛불을 밝히고, 합장하며 소원을 올려보세요.</p><a href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
 <div class="welcome-art" aria-label="완성된 갓바위 부처님과 가족들의 퀼트 법당 그림" role="img"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님 앞에서 기도하는 가족들의 퀼트 인형 모습" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='🪷 명도재 갓바위 디지털 법당';"></div></section>
-<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>세 명의 퀼트 인형이 계단길을 따라 갓바위 정상으로 걸어갑니다.</article><article><strong>🙏 갓바위 참배</strong>108배, 염주 돌리기, 양쪽 촛불 밝히기와 범종 소리를 체험합니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 갓바위 산길 체험 · 디지털 법당</h2>
+<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>가족 퀼트 인형들이 계단길을 따라 갓바위 정상으로 걸어갑니다.</article><article><strong>🙏 갓바위 참배</strong>108배 가족 절하기와 양쪽 촛불 켜기·끄기, 소원 기도문 낭독을 체험합니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 갓바위 산길 체험 · 디지털 법당</h2>
 <main><section class="scene" aria-label="퀼트 인형 신도들이 팔공산 갓바위로 오르는 애니메이션">
 <svg id="world" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid slice">
 <defs>
@@ -167,9 +168,11 @@ function render(){
  $('candles').style.opacity=state.lit?'1':'.22';
  $('candleLayer').classList.toggle('lit',state.lit);
  $('candleStatus').textContent='촛불 상태: '+(state.lit?'켜짐 🔥':'꺼짐 · 디지털 촛불입니다.');
- $('candleOnBtn').disabled=state.lit;
- $('candleOffBtn').disabled=!state.lit;
+
  const isSummit=state.p>=1;
+ $('bowBtn').disabled=!isSummit||state.bows>=108;
+ $('candleOnBtn').disabled=!isSummit||state.lit;
+ $('candleOffBtn').disabled=!isSummit||!state.lit;
  $('summitVisual').classList.toggle('active',isSummit);
  $('summitVisual').setAttribute('aria-hidden',isSummit?'false':'true');
 }
@@ -179,12 +182,13 @@ function arrived(){if(state.p<1){toast('먼저 계단을 올라 정상에 도착
 
 $('startBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;if(state.p>=1)state.p=0;state.playing=true;state.last=0;render()};
 $('pauseBtn').onclick=()=>{state.playing=false;render()};
-$('resetBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;render()};
+$('resetBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;state.bows=0;state.lit=false;$('bowCount').textContent='0';$('summitVisual').classList.remove('bowing-family','praying');$('summitPrayer').textContent='🙏 갓바위 부처님 앞에서 두 손을 모읍니다';render()};
 $('summitBtn').onclick=()=>{state.p=1;state.playing=false;state.last=0;render();toast('갓바위 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
 $('speed').oninput=e=>{state.speed=+e.target.value;$('speedText').textContent=['','느리게','보통','빠르게','매우 빠르게'][state.speed]};
 let familyBowTimeout=null;
 $('bowBtn').onclick=()=>{
  if(!arrived())return;
+ if(state.bows>=108){toast('108배를 모두 마쳤습니다. 다시 절하려면 새 수행을 시작해 주세요.');return;}
  if(familyBowTimeout){clearTimeout(familyBowTimeout);familyBowTimeout=null}
  state.bows=Math.min(108,state.bows+1);
  $('bowCount').textContent=state.bows;
