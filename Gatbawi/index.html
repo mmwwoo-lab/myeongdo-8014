@@ -295,7 +295,7 @@ function createWishMessage(wish){
  return intro+personal+middle.slice(0,Math.max(0,available))+close;
 }
 const bg={active:false,token:0,timer:null,utterance:null,audio:null};
-const heart={active:false,token:0,utterance:null,mode:null};
+const heart={active:false,token:0,utterance:null,audio:null,mode:null};
 const heartLines=[
 '마하반야바라밀다심경',
 '관자재보살 행심반야바라밀다시, 조견오온개공 도일체고액.',
@@ -361,6 +361,7 @@ function stopHeartSutra(hide=true){
  heart.active=false;heart.mode=null;heart.token++;
  if(heart.utterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
  heart.utterance=null;
+ if(heart.audio){heart.audio.pause();heart.audio.currentTime=0;heart.audio=null;}
  $('heartStart').textContent='📖 반야심경 읽기';
  $('heartStart').setAttribute('aria-pressed','false');
  $('heartKoreanStart').textContent='📜 반야심경 한글 읽기';
@@ -381,6 +382,19 @@ function startHeartSutra(mode='original'){
  const button=$(mode==='korean'?'heartKoreanStart':'heartStart');
  button.textContent=mode==='korean'?'■ 반야심경 한글 끄기':'■ 반야심경 끄기';
  button.setAttribute('aria-pressed','true');
+ if(mode==='original'&&typeof Audio==='function'){
+  const audio=new Audio('./heart-sutra-male.mp3');
+  audio.playbackRate=0.6;
+  audio.loop=false;audio.volume=.9;
+  heart.audio=audio;
+  $('bgStatus').textContent='📖 반야심경 · 중후한 남성 독경 0.6배속 재생 중';
+  audio.addEventListener('ended',()=>{if(heart.active&&token===heart.token){$('bgStatus').textContent='반야심경 읽기 완료 · 끄기를 누르면 본문도 사라집니다.';$('prayerText').querySelectorAll('.sutra-line').forEach(p=>p.classList.remove('is-reading'));}});
+  audio.addEventListener('error',()=>{if(heart.active&&token===heart.token)$('bgStatus').textContent='반야심경 MP3를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.';});
+  markHeartLine(0);
+  const playing=audio.play();
+  if(playing&&typeof playing.catch==='function')playing.catch(()=>{if(heart.active&&token===heart.token)$('bgStatus').textContent='자동 재생이 제한되었습니다. 반야심경 버튼을 다시 눌러 주세요.';});
+  return;
+ }
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
   $('bgStatus').textContent='반야심경 본문 표시 중 · 이 기기는 음성 낭독을 지원하지 않습니다.';return;
  }
