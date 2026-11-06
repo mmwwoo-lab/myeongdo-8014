@@ -1,31 +1,32 @@
-name: Repair Gatbawi Pages 404
+name: Verify Gatbawi Pages public URL
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/diagnose-gatbawi-pages.yml'
+  workflow_dispatch:
 permissions:
   contents: read
-  pages: write
+  pages: read
 jobs:
-  diagnose:
+  verify:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - name: Verify site source, Pages settings, and live HTTP status
+      - name: Verify root and Gatbawi page after Pages publication
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Local file:"
-          ls -l Gatbawi/index.html gatbawi/index.html .nojekyll
-          echo "GitHub Pages configuration BEFORE:"
-          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, cname, source, build_type, public, https_enforced}'
-          echo "Set Pages source to main repository root:"
-          gh api -X PUT "repos/${{ github.repository }}/pages" -f 'source[branch]=main' -f 'source[path]=/' -f 'build_type=legacy'
-          echo "GitHub Pages configuration AFTER:"
-          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, cname, source, build_type, public, https_enforced}'
-          echo "HTTP status for published URLs:"
-          for url in "https://mmwwoo-lab.github.io/myeongdo-8014/" "https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html" "https://mmwwoo-lab.github.io/myeongdo-8014/gatbawi/index.html"; do
-            echo "$url"
-            curl -sSL -o /dev/null -w "HTTP %{http_code} FINAL %{url_effective}\n" --max-time 25 "$url" || true
+          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, source}'
+          url="https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html"
+          echo "Checking $url"
+          for attempt in $(seq 1 24); do
+            code=$(curl -L -s -o /tmp/page.html -w '%{http_code}' --max-time 18 "$url")
+            echo "Attempt $attempt: HTTP $code"
+            if [ "$code" = "200" ] && grep -q '팔공산 갓바위 부처님' /tmp/page.html; then
+              echo "PASS: live Gatbawi page is published"
+              exit 0
+            fi
+            sleep 5
           done
+          echo "::error::Gatbawi public URL still unavailable"
+          exit 1
