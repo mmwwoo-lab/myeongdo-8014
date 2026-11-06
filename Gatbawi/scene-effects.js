@@ -49,6 +49,13 @@
  if(!ctx)return;
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
  let width=0,height=0,ratio=1,frame=0,animationId=0,visible=!document.hidden;
+ // Face click/tap interactions are timed and independent for all four worshippers.
+ const faceCenters=[[.152,.654],[.310,.684],[.760,.684],[.875,.688]];
+ const mouthPositions=[[.157,.713],[.320,.742],[.758,.748],[.873,.743]];
+ const faceAnimationUntil=[0,0,0,0];
+ const faceStartAt=[0,0,0,0];
+ scene.dataset.faceMotionCount='0';
+
  // Object-fit:cover로 잘리는 부분을 고려해 원본 이미지 좌표를 장면 좌표로 변환.
  function photoGeometry(){
   const iw=picture.naturalWidth||1,ih=picture.naturalHeight||1;
@@ -125,6 +132,72 @@
   }
   ctx.restore();
  }
+
+ function animateFace(i,time){
+  const started=faceStartAt[i],remaining=faceAnimationUntil[i]-time;
+  if(!started||remaining<=0)return;
+  const seconds=(time-started)/1000;
+  const s=clamp(width/720,.55,1.55);
+  const strength=clamp(remaining/450,0,1);
+  const eye=point(config.eyes[i]||defaults.eyes[i]);
+  const mouth=point(mouthPositions[i]);
+  // Blink twice as the expression changes; eyelid appears only during the blink.
+  const phase=seconds%0.82;
+  const closed=phase<.32?Math.sin(Math.PI*phase/.32):0;
+  if(closed>0.025){
+   ctx.save();
+   ctx.translate(eye[0],eye[1]);
+   const radius=9*s;
+   ctx.fillStyle='rgba(236,179,139,'+(Math.min(.68,closed*.66)*strength).toFixed(3)+')';
+   for(const offset of [-5.1,5.1]){
+    ctx.beginPath();ctx.ellipse(offset*s,0,3.1*s,2.3*s*closed,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(80,53,46,'+(.80*closed*strength).toFixed(3)+')';
+    ctx.lineWidth=1.5*s;ctx.lineCap='round';ctx.beginPath();
+    ctx.moveTo((offset-3.1)*s,0);
+    ctx.quadraticCurveTo(offset*s,1.9*s*closed,(offset+3.1)*s,0);
+    ctx.stroke();
+   }
+   ctx.restore();
+  }
+  // A small rounded mouth gently opens and closes without changing the source image.
+  const openAmount=Math.pow(Math.max(0,Math.sin(seconds*8.3)),2)*strength;
+  ctx.save();ctx.translate(mouth[0],mouth[1]);
+  const w=clamp(5*s,2.4,8.1),h=clamp((1.2+2.8*openAmount)*s,.8,6.3);
+  ctx.fillStyle='rgba(95,49,46,'+(0.28+0.52*openAmount*strength).toFixed(3)+')';
+  ctx.beginPath();ctx.ellipse(0,0,w,h,0,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='rgba(173,91,79,'+(.6*strength).toFixed(3)+')';
+  ctx.lineWidth=1.25*s;ctx.beginPath();ctx.moveTo(-w,0);
+  ctx.quadraticCurveTo(0,2*s*openAmount,w,0);ctx.stroke();
+  ctx.restore();
+ }
+ function clickFace(event){
+  if(!motionEnabled||!visible||new URLSearchParams(location.search).get('effects')==='edit')return;
+  if(event.target.closest?.('.prayer-card,.gatbawi-motion-toggle'))return;
+  const bounds=scene.getBoundingClientRect();
+  const xx=event.clientX-bounds.left,yy=event.clientY-bounds.top;
+  const p=photoGeometry();
+  const nx=(xx-p.dx)/(p.iw*p.scale),ny=(yy-p.dy)/(p.ih*p.scale);
+  let closest=-1,min=Infinity;
+  faceCenters.forEach(([x,y],i)=>{
+    const dx=(nx-x)/.075,dy=(ny-y)/.135;
+    const distance=dx*dx+dy*dy;
+    if(distance<min){min=distance;closest=i;}
+  });
+  if(min>1||closest<0)return;
+  faceStartAt[closest]=performance.now();
+  faceAnimationUntil[closest]=faceStartAt[closest]+3200;
+  scene.dataset.faceMotion=String(closest+1);
+  scene.dataset.faceMotionCount=String(Number(scene.dataset.faceMotionCount||0)+1);
+ }
+ scene.addEventListener('pointerdown',clickFace);
+ scene.addEventListener('pointermove',event=>{
+  if(event.target.closest?.('.prayer-card,.gatbawi-motion-toggle'))return;
+  const bounds=scene.getBoundingClientRect(),p=photoGeometry();
+  const nx=(event.clientX-bounds.left-p.dx)/(p.iw*p.scale);
+  const ny=(event.clientY-bounds.top-p.dy)/(p.ih*p.scale);
+  scene.style.cursor=faceCenters.some(([x,y])=>((nx-x)/.075)**2+((ny-y)/.135)**2<=1)?'pointer':'';
+ },{passive:true});
+ scene.addEventListener('pointerleave',()=>{scene.style.cursor='';});
  function draw(time){
   if(!visible||!motionEnabled)return;
   const t=time/1000;
@@ -133,6 +206,7 @@
   config.clouds.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);cloud(x,y,t,i)}});
   config.flames.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);candle(x,y,t,i)}});
   config.eyes.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);blinking(x,y,t,i)}});
+  faceCenters.forEach((_,i)=>animateFace(i,time));
   animationId=requestAnimationFrame(draw);
  }
  function start(){cancelAnimationFrame(animationId);if(!visible)return;resize();if(!motionEnabled){ctx.clearRect(0,0,width,height);return;}animationId=requestAnimationFrame(draw);}
