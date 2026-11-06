@@ -113,6 +113,14 @@ async function run(){
   assert((await page.locator('#readPrayer').innerText()).includes('이어 읽기'),'Pause');
   await page.locator('#readPrayer').click();
   await page.locator('#stopPrayer').click();
+  assert.equal(await page.locator('#prayerBrowserHelp').isHidden(),true,'Chrome help should be hidden when normal reading works');
+  await page.locator('#readPrayer').click();
+  await page.evaluate(()=>{
+    const spoken=window.speechSynthesis.queue.at(-1);
+    spoken.onerror?.({error:'synthesis-failed'});
+  });
+  assert.equal(await page.locator('#prayerBrowserHelp').isVisible(),true,'Failed prayer speech should show Chrome handoff button');
+  assert.equal(await page.locator('#openPrayerChrome').isVisible(),true,'Chrome handoff must be available on audio failure');
   await page.locator('#hidePrayer').click();
   assert.equal(await card.isHidden(),true,'Close wish');
   await page.locator('#admissionName').fill('길동');
