@@ -96,6 +96,13 @@ assert(!get('prayerCard').classList.contains('chant-mode')&&get('prayerText').te
 assert(!get('admissionStats').hidden,'대학 진학 기도문 아래 입시 안내가 표시되지 않습니다');
 assert(get('admissionStats').textContent.includes('2025학년도')&&get('admissionStats').textContent.includes('수시')&&get('admissionStats').textContent.includes('정시'),'수시·정시 입시 결과 참고 안내 누락');
 assert(get('admissionStats').textContent.includes('공식 결과 확인 필요'),'검증되지 않은 입결을 임의로 표시하면 안 됩니다');
+assert(get('prayerBrowserHelp').hidden,'Chrome handoff must be hidden while prayer speech is not failing');
+get('readPrayer').onclick();
+assert(get('prayerBrowserHelp').hidden,'Chrome handoff should remain hidden during speech playback');
+assert(lastSpoken,'Speech utterance should have been created');
+lastSpoken.onerror({error:'synthesis-failed'});
+assert(!get('prayerBrowserHelp').hidden,'Chrome button must appear only after prayer speech failure');
+get('stopPrayer').onclick();
 get('wish').value='가족의 평안';get('wishBtn').onclick();
 assert(get('admissionStats').hidden,'일반 소원 기도문에는 입시 안내가 숨겨져야 합니다');
 console.log('PASS: 염불·반야심경·한글 반야심경·소원 버튼 클릭 흐름');
