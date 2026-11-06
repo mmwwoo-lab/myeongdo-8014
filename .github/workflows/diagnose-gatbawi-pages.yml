@@ -12,18 +12,21 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     steps:
-      - name: Verify root and Gatbawi page after Pages publication
+      - name: Verify Facebook preview image and live Gatbawi page
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, source}'
           url="https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html"
+          image_url="https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/gatbawi-facebook-preview.jpg"
           echo "Checking $url"
           for attempt in $(seq 1 24); do
             code=$(curl -L -s -o /tmp/page.html -w '%{http_code}' --max-time 18 "$url")
             echo "Attempt $attempt: HTTP $code"
-            if [ "$code" = "200" ] && grep -q '팔공산 갓바위 부처님' /tmp/page.html; then
-              echo "PASS: live Gatbawi page is published"
+            image_code=$(curl -L -s -o /tmp/preview.jpg -w '%{http_code}' --max-time 18 "$image_url")
+            echo "Image HTTP $image_code"
+            if [ "$code" = "200" ] && [ "$image_code" = "200" ] && grep -q 'gatbawi-facebook-preview.jpg' /tmp/page.html && test "$(wc -c </tmp/preview.jpg)" -gt 50000; then
+              echo "PASS: live page and Facebook preview JPEG are published"
               exit 0
             fi
             sleep 5
