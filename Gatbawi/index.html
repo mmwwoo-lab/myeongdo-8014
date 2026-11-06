@@ -195,6 +195,7 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 .prayer-browser-actions{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .prayer-browser-actions a,.prayer-browser-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:6px 10px;border-radius:8px;border:1px solid #cfaf69;font-size:12px;text-decoration:none;font-weight:600;line-height:1.4;background:#135a40;color:#fff8e9;cursor:pointer}
 .prayer-browser-actions a:hover,.prayer-browser-actions button:hover{background:#207652}
+.prayer-browser-actions small{align-self:center;color:#fff0c2;font-size:11px}
 .prayer-browser-help strong{font-weight:700}
 @media(max-width:600px){.prayer-browser-actions a,.prayer-browser-actions button{font-size:11px;min-height:32px;padding:6px 8px}}
 
@@ -205,7 +206,11 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 @media(max-width:600px){.prayer-browser-help{font-size:11px;padding:7px}.prayer-browser-help button{font-size:11px}}
 </style></head>
 <body>
-<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
+<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><nav class="prayer-browser-actions" aria-label="브라우저 및 기도문 음성 지원">
+<a id="openPrayerChrome" class="prayer-chrome-link" href="https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html" target="_blank" rel="noopener noreferrer">🌐 크롬으로 열기</a>
+<button type="button" id="copyPrayerLink">🔗 주소 복사</button>
+<small id="copyPrayerStatus" role="status" aria-live="polite"></small>
+</nav><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
 <main>
 <section class="scene" aria-label="팔공산 갓바위 부처님 기도 그림">
 <img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들" onerror="this.alt='이미지를 불러오지 못했습니다';">
@@ -214,10 +219,7 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 <h3 id="prayerHeading">🪷 팔공산 갓바위 부처님 소원 기도문</h3>
 <div class="tts-controls"><button id="readPrayer" type="button">🔊 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button><button id="hidePrayer" type="button">✕ 사라지기</button></div>
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기를 눌러보세요.</div>
-<div class="prayer-browser-actions">
-<a id="openPrayerChrome" class="prayer-chrome-link" href="https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html" target="_blank" rel="noopener noreferrer">🌐 소리가 안 나면 크롬으로 열기</a>
-<button type="button" id="copyPrayerLink">🔗 주소 복사</button>
-</div>
+
 <div id="prayerBrowserHelp" class="prayer-browser-help" hidden>
 <p id="prayerBrowserMessage">기도문 소리가 재생되지 않으면 크롬으로 다시 열어 주세요.</p>
 <p>일부 앱 내부 브라우저는 크롬 자동 실행을 차단합니다. 그럴 때는 <strong>주소 복사</strong>를 누른 뒤 크롬 주소창에 붙여넣어 주세요.</p>
@@ -577,7 +579,7 @@ async function copyPrayerSiteAddress(){
  try{
   if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('Clipboard API not available');
   await navigator.clipboard.writeText(prayerSiteUrl);
-  $('prayerBrowserMessage').textContent='주소를 복사했습니다. 크롬 앱 주소창에 붙여넣어 주세요.';
+  $('copyPrayerStatus').textContent='주소를 복사했습니다. 크롬 앱 주소창에 붙여넣어 주세요.';
  }catch(e){
   const temp=document.createElement('textarea');
   temp.value=prayerSiteUrl;temp.setAttribute('readonly','');
@@ -586,9 +588,8 @@ async function copyPrayerSiteAddress(){
   let copied=false;
   try{copied=document.execCommand('copy')}catch(e){}
   temp.remove();
-  $('prayerBrowserMessage').textContent=copied?'주소를 복사했습니다. 크롬 앱 주소창에 붙여넣어 주세요.':'이 주소를 크롬에 붙여넣어 주세요: '+prayerSiteUrl;
+  $('copyPrayerStatus').textContent=copied?'주소를 복사했습니다. 크롬 앱 주소창에 붙여넣어 주세요.':'이 주소를 크롬에 붙여넣어 주세요: '+prayerSiteUrl;
  }
- $('prayerBrowserHelp').hidden=false;
 }
 $('copyPrayerLink').onclick=copyPrayerSiteAddress;
 $('readPrayer').onclick=speakPrayer;
