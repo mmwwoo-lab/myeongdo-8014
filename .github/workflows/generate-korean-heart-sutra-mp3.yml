@@ -1,0 +1,42 @@
+name: Generate Korean Heart Sutra MP3
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/generate-korean-heart-sutra-mp3.yml']
+permissions:
+  contents: write
+jobs:
+  audio:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate full Korean interpretation audio
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet edge-tts
+          python - <<'PY'
+          import asyncio, pathlib, re, edge_tts
+          html=pathlib.Path('Gatbawi/index.html').read_text(encoding='utf-8')
+          section=html.split('const heartKoreanLines=[',1)[1].split('];',1)[0]
+          lines=re.findall(r"'([^']+)'",section)
+          assert len(lines)>=14, f"Expected full Korean lines, got {len(lines)}"
+          async def synthesize():
+              communicate=edge_tts.Communicate('\n'.join(lines),voice='ko-KR-InJoonNeural',rate='+0%')
+              await communicate.save('docs/Gatbawi/heart-sutra-korean.mp3')
+          asyncio.run(synthesize())
+          file=pathlib.Path('docs/Gatbawi/heart-sutra-korean.mp3')
+          assert file.stat().st_size>50000, file.stat().st_size
+          pathlib.Path('Gatbawi/heart-sutra-korean.mp3').write_bytes(file.read_bytes())
+          print('Korean interpretation lines:',len(lines),'MP3 bytes:',file.stat().st_size)
+          PY
+      - name: Commit complete Korean MP3 into both site directories
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Gatbawi/heart-sutra-korean.mp3 docs/Gatbawi/heart-sutra-korean.mp3
+          git commit -m "Host full Korean Heart Sutra reading MP3" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
