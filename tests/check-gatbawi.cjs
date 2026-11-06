@@ -18,6 +18,8 @@ assert(html.includes('createAdmissionPrayer'),'대학진학 기도문 생성 기
 assert(html.includes('speechSynthesis'),'기도문 음성 낭독 기능이 없습니다');
 assert(html.includes('startChant'),'나무아미타불 염불 기능이 없습니다');
 assert(html.includes('startHeartSutra')&&html.includes('stopHeartSutra')&&html.includes('마하반야바라밀다심경'),'반야심경 낭독 기능이 없습니다');
+assert(html.includes('showHeartSutra')&&html.includes('sutra-mode')&&html.includes('markHeartLine'),'반야심경 본문·스크롤 표시 기능이 없습니다');
+assert(html.includes('u.rate=.7'),'반야심경 느린 낭독 속도 설정이 없습니다');
 assert(!html.includes('startInstrumental')&&!html.includes('AudioContext'),'삭제된 경음악 기능이 남아 있습니다');
 for(const name of ['퀼트 산사에서 맞이한 평온한 아침.png'])assert(fs.existsSync(path.join(base,name)),'이미지 파일 누락: '+name);
 console.log('PASS: 명도재 디지털 법당 HTML / JavaScript / 화면 요소 / 이미지 확인');
