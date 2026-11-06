@@ -1,0 +1,23 @@
+(() => {
+ 'use strict';
+ let works=[],selection=[],viewing=[],current=0,lastFocus=null,timer=null;
+ const $=id=>document.getElementById(id),dialog=$('viewer');
+ const make=(tag,text,cls)=>{const e=document.createElement(tag);if(text)e.textContent=text;if(cls)e.className=cls;return e;};
+ const status=()=>{$('gallery-status').textContent=`작품 ${selection.length}점 표시 중`;};
+ function render(group){selection=works.filter(w=>group==='all'||w.group===group);$('gallery-grid').replaceChildren();selection.forEach(w=>{const article=make('article',null,'art-card'),button=make('button');button.type='button';button.setAttribute('aria-label',w.label+' 확대 감상');const well=make('div',null,'image-well'),image=make('img');image.src=w.image;image.alt=w.alt;image.width=w.width;image.height=w.height;image.loading='lazy';well.append(image);const meta=make('div',null,'card-meta');meta.append(make('span',w.label.toUpperCase()),make('span','자세히 보기 ↗'));button.append(well,meta,make('h3',w.subtitle),make('p',w.category+' · AI 창작 이미지'));button.onclick=()=>open(w.id);const link=make('a','페이스북 원본 ↗','source-link');link.href=w.source;link.target='_blank';link.rel='noopener noreferrer';article.append(button,link);$('gallery-grid').append(article);});status();}
+ function stop(){if(timer){clearInterval(timer);timer=null;}$('auto').textContent='자동 넘김 시작';$('auto').setAttribute('aria-pressed','false');}
+ function paint(){const w=viewing[current];if(!w)return;$('viewer-image').src=w.image;$('viewer-image').alt=w.alt;$('viewer-title').textContent=w.label;$('viewer-subtitle').textContent=w.subtitle;$('viewer-category').textContent=w.group==='cosmos'?'COSMOS — 꽃의 서정':'TIGER — 산의 기상';$('viewer-guide').textContent=w.explanation;$('viewer-critique').textContent=w.critique;$('viewer-source').href=w.source;$('viewer-count').textContent=`${String(current+1).padStart(2,'0')} / ${String(viewing.length).padStart(2,'0')}`;$('prev').disabled=viewing.length<2;$('next').disabled=viewing.length<2;history.replaceState(null,'','#work-'+w.id);}
+ function open(id){const w=works.find(x=>x.id===id);if(!w)return;viewing=(selection.some(x=>x.id===id)?selection:works).slice();current=viewing.findIndex(x=>x.id===id);lastFocus=document.activeElement;paint();dialog.showModal();dialog.scrollTop=0;document.body.style.overflow='hidden';$('close').focus();}
+ function move(delta){if(!viewing.length)return;current=(current+delta+viewing.length)%viewing.length;paint();}
+ document.querySelectorAll('[data-filter]').forEach(button=>button.onclick=()=>{document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));});render(button.dataset.filter);});
+ document.querySelectorAll('[data-open]').forEach(button=>button.onclick=()=>open(button.dataset.open));
+ $('slideshow').onclick=()=>{if(!selection.length)return;open(selection[0].id);};
+ $('close').onclick=()=>dialog.close();$('prev').onclick=()=>{stop();move(-1);};$('next').onclick=()=>{stop();move(1);};
+ $('auto').onclick=()=>{if(timer){stop();return;}timer=setInterval(()=>move(1),10000);$('auto').textContent='자동 넘김 멈춤';$('auto').setAttribute('aria-pressed','true');};
+ dialog.addEventListener('keydown',e=>{if(e.target.closest('button')&&['Enter',' '].includes(e.key))return;if(e.key==='ArrowRight'){e.preventDefault();stop();move(1);}if(e.key==='ArrowLeft'){e.preventDefault();stop();move(-1);}});
+ dialog.addEventListener('close',()=>{stop();document.body.style.overflow='';history.replaceState(null,'','#gallery');if(lastFocus?.isConnected)lastFocus.focus();});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+ const tabs=[$('tab-guide'),$('tab-critique')];function selectTab(index,focus=false){tabs.forEach((t,i)=>{t.setAttribute('aria-selected',String(i===index));t.tabIndex=i===index?0:-1;$(t.getAttribute('aria-controls')).hidden=i!==index;});if(focus)tabs[index].focus();}tabs.forEach((t,i)=>{t.onclick=()=>selectTab(i);t.onkeydown=e=>{if(['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();selectTab(e.key==='Home'?0:e.key==='End'?1:1-i,true);}};});
+ $('share').onclick=async()=>{const url=new URL(location.href);url.hash='';try{await navigator.clipboard.writeText(url.href);$('share-status').textContent='전시 주소를 복사했습니다.';}catch{$('share-status').textContent='자동 복사가 제한됩니다. 다음 주소를 선택해 복사하세요: '+url.href;}};
+ fetch('works.json').then(r=>{if(!r.ok)throw Error('자료 오류');return r.json();}).then(data=>{works=data.works;render('all');if(location.hash.startsWith('#work-'))open(location.hash.slice(6));}).catch(()=>{$('gallery-grid').textContent='작품 자료를 불러오지 못했습니다. 페이지를 새로 열어 주세요.';});
+})();

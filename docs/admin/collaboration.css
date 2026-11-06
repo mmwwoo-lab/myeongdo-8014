@@ -1,0 +1,39 @@
+/* 명도재 6단계 협업 — white canvas, pale lavender work cards. */
+#view-create .collaboration-panel{scroll-margin-top:30px;background:#fff;border:1px solid #e1d9ee;border-radius:14px;padding:22px}
+#view-create .collaboration-panel .form-section-header{background:linear-gradient(110deg,#f2eaff,#faf8ff)!important;border-radius:10px;padding:20px;border:1px solid #dfcff4}
+#view-create .collaboration-panel .form-section-header h2{color:#35254f!important}
+#view-create .collaboration-panel .form-section-header p{color:#536279!important}
+#collaboration-summary{padding:14px 17px!important;margin:12px 0 18px;color:#56406f!important;font-weight:700;background:#f9f5ff!important;border:1px solid #e5d9f5;border-radius:9px}
+#collaboration-summary[data-ready="true"]{background:#eff9f3!important;color:#245a3a!important;border-color:#cfe9d5}
+.collaboration-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.collaboration-stage{min-width:0;background:#fff;border:1px solid #dbceed;border-radius:12px;overflow:hidden}
+.collaboration-stage>summary{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:18px 20px;cursor:pointer;background:#f5f0ff;color:#382858;list-style-position:inside}
+.collaboration-stage>summary::marker{color:#7757a3}
+.collaboration-stage>summary .collaboration-stage-number{width:100%;font:700 11px/1.7 system-ui,sans-serif;letter-spacing:1px;color:#73549a}
+.collaboration-stage>summary strong{flex:1;min-width:150px;font-size:18px;font-weight:800;color:#3b2a59}
+.collaboration-stage>summary small{display:block;width:100%;font-size:12px;line-height:1.6;color:#53627c}
+.collaboration-stage-state{margin-left:auto;font:700 12px/1.6 system-ui,sans-serif;color:#5b4182;background:#e8dbf8;border-radius:15px;padding:3px 9px}
+.collaboration-stage[data-status="승인 완료"]>summary{background:#f1f9f5}
+.collaboration-stage[data-status="승인 완료"] .collaboration-stage-state{background:#d8f0e0;color:#276242}
+.collaboration-fields{padding:17px 19px 21px;background:#fff}
+#view-create .collaboration-fields label{display:block;margin:0 0 14px;font-size:13px;font-weight:700;color:#46355f}
+#view-create .collaboration-fields input:not([type=checkbox]),
+#view-create .collaboration-fields select,
+#view-create .collaboration-fields textarea{width:100%;display:block;min-width:0;margin:7px 0 0;padding:10px 12px;border:1px solid #d1c2e4;border-radius:8px;background:#fff!important;color:#2b3348!important;font:inherit}
+#view-create .collaboration-fields textarea{resize:vertical}
+#view-create .collaboration-fields select option{background:#fff!important;color:#2b3348!important}
+.collaboration-review-list{padding:13px 16px 8px;border:1px solid #d7c7eb;background:#fbf8ff;border-radius:10px;margin:10px 0 14px}
+.collaboration-review-list legend{color:#4b3971;font-weight:800;font-size:13px;padding:0 6px}
+#view-create .collaboration-fields .collaboration-review-item,
+#view-create .collaboration-fields .collaboration-final-signoff{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.6;margin-bottom:10px;color:#3f355b}
+#view-create .collaboration-fields input[type=checkbox]{flex:0 0 17px;width:17px;height:17px;margin:2px 0 0;accent-color:#7752a0}
+#view-create .collaboration-final-signoff{padding:13px;background:#f6f0ff;border-radius:9px;border:1px solid #ddd0ef}
+.collaboration-field-alert{color:#ae3551;font-weight:700;font-size:12px;min-height:0;margin:0 0 9px}
+.collaboration-field-alert:empty{display:none}
+.collaboration-issue-link,.collaboration-actions .collaboration-issues{display:inline-flex;align-items:center;text-decoration:none;background:#ebe3fa!important;color:#4b3674!important;border:1px solid #d6c5ee!important;border-radius:9px;padding:10px 13px;font-weight:750;font-size:12px}
+.collaboration-issue-link:hover,.collaboration-actions .collaboration-issues:hover{background:#dfd1f4!important}
+.collaboration-actions{display:flex;flex-wrap:wrap;gap:11px;margin:20px 0 10px}
+.collaboration-actions button{background:#ebe3fa!important;color:#4b3674!important;border:1px solid #d6c5ee!important;border-radius:9px;padding:11px 15px}
+.collaboration-panel>.helper{color:#576983!important;line-height:1.7}
+@media(max-width:890px){.collaboration-grid{grid-template-columns:1fr}}
+@media(max-width:600px){#view-create .collaboration-panel{padding:14px}.collaboration-stage>summary{padding:15px}}
