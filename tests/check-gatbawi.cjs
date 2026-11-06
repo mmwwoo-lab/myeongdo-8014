@@ -11,7 +11,7 @@ scripts.forEach((script,i)=>new vm.Script(script,{filename:'Gatbawi-script-'+(i+
 const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]));
 const refs=[...html.matchAll(/\$\('([A-Za-z][\w-]*)'\)/g)].map(m=>m[1]);
 for(const id of refs)assert(ids.has(id),'누락된 화면 요소: '+id);
-for(const id of ['summitPrayer','wish','wishBtn','admissionName','admissionSchool','admissionWish','admissionBtn','prayerCard','prayerHeading','prayerText','readPrayer','stopPrayer','hidePrayer','bgStart','bgStatus','heartStart'])assert(ids.has(id),'필수 화면 요소 누락: '+id);
+for(const id of ['summitPrayer','wish','wishBtn','admissionName','admissionSchool','admissionWish','admissionBtn','prayerCard','prayerHeading','prayerText','readPrayer','stopPrayer','hidePrayer','bgStart','bgStatus','heartStart','heartKoreanStart'])assert(ids.has(id),'필수 화면 요소 누락: '+id);
 for(const id of ['startBtn','pauseBtn','resetBtn','summitBtn','musicBtn','climbControls','climbPanel','stairsPath'])assert(!ids.has(id),'삭제된 산행 메뉴가 다시 나타났습니다: '+id);
 assert(html.includes('createWishMessage'),'일반 소원 기도문 생성 기능이 없습니다');
 assert(html.includes('createAdmissionPrayer'),'대학진학 기도문 생성 기능이 없습니다');
@@ -19,6 +19,7 @@ assert(html.includes('speechSynthesis'),'기도문 음성 낭독 기능이 없�
 assert(html.includes('startChant'),'나무아미타불 염불 기능이 없습니다');
 assert(html.includes('startHeartSutra')&&html.includes('stopHeartSutra')&&html.includes('마하반야바라밀다심경'),'반야심경 낭독 기능이 없습니다');
 assert(html.includes('showHeartSutra')&&html.includes('sutra-mode')&&html.includes('markHeartLine'),'반야심경 본문·스크롤 표시 기능이 없습니다');
+assert(html.includes('heartKoreanLines')&&html.includes("startHeartSutra('korean')")&&html.includes('반야심경 한글 끄기'),'우리말 반야심경 표시·낭독·끄기 기능이 없습니다');
 assert(html.includes('card.scrollTo({top:target')&&!html.includes('lines[index].scrollIntoView'),'반야심경 내부 스크롤 방식이 올바르지 않습니다');
 assert(html.includes('heart.utterance=null')&&html.includes("heart.active)stopHeartSutra()"),'반야심경 재생 및 중지 상태 관리가 없습니다');
 assert((html.match(/u\.rate=\.6/g)||[]).length>=2,'염불과 반야심경 모두 0.6배 속도로 설정되지 않았습니다');
