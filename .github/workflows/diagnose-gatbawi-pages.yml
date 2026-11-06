@@ -1,4 +1,4 @@
-name: Diagnose Gatbawi Pages 404
+name: Repair Gatbawi Pages 404
 on:
   push:
     branches: [main]
@@ -6,7 +6,7 @@ on:
       - '.github/workflows/diagnose-gatbawi-pages.yml'
 permissions:
   contents: read
-  pages: read
+  pages: write
 jobs:
   diagnose:
     runs-on: ubuntu-24.04
@@ -18,8 +18,12 @@ jobs:
         run: |
           echo "Local file:"
           ls -l Gatbawi/index.html gatbawi/index.html .nojekyll
-          echo "GitHub Pages configuration:"
-          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, cname, source, build_type, public, https_enforced}' || true
+          echo "GitHub Pages configuration BEFORE:"
+          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, cname, source, build_type, public, https_enforced}'
+          echo "Set Pages source to main repository root:"
+          gh api -X PUT "repos/${{ github.repository }}/pages" -f 'source[branch]=main' -f 'source[path]=/' -f 'build_type=legacy'
+          echo "GitHub Pages configuration AFTER:"
+          gh api "repos/${{ github.repository }}/pages" --jq '{html_url, status, cname, source, build_type, public, https_enforced}'
           echo "HTTP status for published URLs:"
           for url in "https://mmwwoo-lab.github.io/myeongdo-8014/" "https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html" "https://mmwwoo-lab.github.io/myeongdo-8014/gatbawi/index.html"; do
             echo "$url"
