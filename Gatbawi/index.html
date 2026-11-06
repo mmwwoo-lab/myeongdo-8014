@@ -39,7 +39,7 @@ footer{max-width:1250px;margin:auto;text-align:center;font-size:11px;color:#bdd0
 @media(max-width:550px){.prayer-card.sutra-mode{top:3%;max-height:91%;width:65%}.prayer-card.sutra-mode #prayerText{font-size:12px;line-height:1.85}.prayer-card.sutra-mode h3{font-size:15px}header{padding:15px}.scene{aspect-ratio:4/5}.prayer-card{right:6px;top:5%;width:60%;max-height:82%;padding:10px}.prayer-card h3{font-size:13px}.prayer-card p{font-size:12px;line-height:1.55}.tts-controls button{padding:7px;font-size:10px}.summit-prayer{font-size:11px;bottom:10px}}
 </style></head>
 <body>
-<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button">🙏 나무아미타불 염불</button><button id="bgStop" type="button" disabled>■ 나무아미타불 끄기</button><button id="heartStart" type="button">📖 반야심경 읽기</button><button id="heartStop" type="button" disabled>■ 반야심경 끄기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
+<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
 <main>
 <section class="scene" aria-label="팔공산 갓바위 부처님 기도 그림">
 <img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들" onerror="this.alt='이미지를 불러오지 못했습니다';">
@@ -88,7 +88,7 @@ function createWishMessage(wish){
  const available=200-intro.length-personal.length-close.length;
  return intro+personal+middle.slice(0,Math.max(0,available))+close;
 }
-const bg={active:false,token:0,timer:null};
+const bg={active:false,token:0,timer:null,utterance:null};
 const heart={active:false,token:0,utterance:null};
 const heartLines=[
 '마하반야바라밀다심경',
@@ -126,85 +126,97 @@ function markHeartLine(index){
  lines.forEach((p,i)=>p.classList.toggle('is-reading',i===index));
  if(lines[index])lines[index].scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function stopHeartSutra(){
+function stopHeartSutra(hide=true){
  heart.active=false;heart.token++;
  if(heart.utterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
  heart.utterance=null;
- $('heartStart').disabled=false;$('heartStop').disabled=true;
+ $('heartStart').textContent='📖 반야심경 읽기';
+ $('heartStart').setAttribute('aria-pressed','false');
+ if(hide&&$('prayerCard').classList.contains('sutra-mode')){
+  $('prayerCard').hidden=true;
+  $('prayerCard').classList.remove('sutra-mode');
+  $('prayerCard').setAttribute('aria-label','소원 기도문');
+  $('summitPrayer').textContent='🙏 팔공산 갓바위 부처님께 기도합니다';
+ }
  if($('bgStatus').textContent.includes('반야심경'))$('bgStatus').textContent='반야심경 정지';
 }
 function startHeartSutra(){
  stopBackground();stopPrayerSpeech();stopHeartSutra();
  showHeartSutra();
+ heart.active=true;
+ const token=++heart.token;
+ $('heartStart').textContent='■ 반야심경 끄기';
+ $('heartStart').setAttribute('aria-pressed','true');
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
   $('bgStatus').textContent='반야심경 본문 표시 중 · 이 기기는 음성 낭독을 지원하지 않습니다.';return;
  }
- const synth=window.speechSynthesis,token=++heart.token;
- heart.active=true;$('heartStart').disabled=true;$('heartStop').disabled=false;
+ const synth=window.speechSynthesis;
  const voice=synth.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
  let i=0;
  function next(){
   if(!heart.active||token!==heart.token)return;
-  if(i>=heartLines.length){stopHeartSutra();$('bgStatus').textContent='반야심경 읽기 완료';return;}
+  if(i>=heartLines.length){
+   heart.utterance=null;
+   $('bgStatus').textContent='반야심경 읽기 완료 · 끄기를 누르면 본문도 사라집니다.';
+   return;
+  }
   const current=i++;
   markHeartLine(current);
   const u=new SpeechSynthesisUtterance(heartLines[current]);
-  u.lang='ko-KR';u.rate=.7;u.pitch=.92;u.volume=.9;
+  u.lang='ko-KR';u.rate=.6;u.pitch=.92;u.volume=.9;
   if(voice)u.voice=voice;
   heart.utterance=u;
   $('bgStatus').textContent='📖 반야심경 천천히 낭독 중 ('+i+'/'+heartLines.length+')';
   u.onend=()=>{if(heart.active&&token===heart.token)next()};
-  u.onerror=()=>{if(heart.active&&token===heart.token){stopHeartSutra();$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 확인해 주세요.'}};
-  try{synth.speak(u)}catch(e){stopHeartSutra();$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생이 지원되지 않습니다.'}
+  u.onerror=()=>{
+   if(heart.active&&token===heart.token){
+    heart.utterance=null;
+    $('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 확인해 주세요.';
+   }
+  };
+  try{synth.speak(u)}catch(e){heart.utterance=null;$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 지원하지 않습니다.'}
  }
  next();
 }
-$('heartStart').onclick=startHeartSutra;
-$('heartStop').onclick=stopHeartSutra;
+$('heartStart').onclick=()=>{if(heart.active)stopHeartSutra();else startHeartSutra()};
 function stopBackground(){
  bg.active=false;bg.token++;
  if(bg.timer){clearTimeout(bg.timer);bg.timer=null;}
- if('speechSynthesis' in window)window.speechSynthesis.cancel();
- $('bgStart').disabled=false;
- $('bgStop').disabled=true;
- $('bgStatus').textContent='염불 정지';
+ if('speechSynthesis' in window&&bg.utterance)window.speechSynthesis.cancel();
+ bg.utterance=null;
+ $('bgStart').textContent='🙏 나무아미타불 염불';
+ $('bgStart').setAttribute('aria-pressed','false');
+ if($('bgStatus').textContent.includes('나무아미타불')||$('bgStatus').textContent.includes('염불'))$('bgStatus').textContent='염불 정지';
 }
 function startChant(){
- stopHeartSutra();
+ stopHeartSutra();stopPrayerSpeech();
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
-  $('bgStatus').textContent='이 브라우저에서는 염불 음성을 지원하지 않습니다.';
-  return;
+  $('bgStatus').textContent='이 브라우저에서는 염불 음성을 지원하지 않습니다.';return;
  }
  const synth=window.speechSynthesis;
- stopPrayerSpeech();
  bg.active=true;const token=++bg.token;
- $('bgStart').disabled=true;$('bgStop').disabled=false;
+ $('bgStart').textContent='■ 나무아미타불 끄기';
+ $('bgStart').setAttribute('aria-pressed','true');
  $('bgStatus').textContent='🙏 나무아미타불 염불 재생 중 (합성 음성)';
  function chantAgain(){
   if(!bg.active||token!==bg.token)return;
-  const utterance=new SpeechSynthesisUtterance('나무아미타불. 나무아미타불. 나무아미타불.');
-  utterance.lang='ko-KR';utterance.rate=.7;utterance.pitch=.88;utterance.volume=.65;
+  const u=new SpeechSynthesisUtterance('나무아미타불. 나무아미타불. 나무아미타불.');
+  u.lang='ko-KR';u.rate=.6;u.pitch=.88;u.volume=.65;
   const korean=synth.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
-  if(korean)utterance.voice=korean;
-  utterance.onend=()=>{
-   if(bg.active&&token===bg.token)bg.timer=setTimeout(chantAgain,700);
-  };
-  utterance.onerror=e=>{
+  if(korean)u.voice=korean;
+  bg.utterance=u;
+  u.onend=()=>{if(bg.active&&token===bg.token)bg.timer=setTimeout(chantAgain,700)};
+  u.onerror=()=>{
    if(!bg.active||token!==bg.token)return;
-   bg.active=false;bg.token++;
-   $('bgStart').disabled=false;$('bgStop').disabled=true;
-   $('bgStatus').textContent='염불 음성을 재생할 수 없습니다. 기기 한국어 음성 설정을 확인해 주세요.';
+   stopBackground();$('bgStatus').textContent='염불 음성을 재생할 수 없습니다. 기기 한국어 음성 설정을 확인해 주세요.';
   };
-  try{synth.speak(utterance)}catch(e){
-   bg.active=false;bg.token++;
-   $('bgStart').disabled=false;$('bgStop').disabled=true;
-   $('bgStatus').textContent='염불 음성을 재생할 수 없습니다.';
+  try{synth.speak(u)}catch(e){
+   stopBackground();$('bgStatus').textContent='염불 음성을 재생할 수 없습니다.';
   }
  }
  chantAgain();
 }
-$('bgStart').onclick=startChant;
-$('bgStop').onclick=stopBackground;
+$('bgStart').onclick=()=>{if(bg.active)stopBackground();else startChant()};
 let currentUtterance=null;
 function stopPrayerSpeech(){
  if(currentUtterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
