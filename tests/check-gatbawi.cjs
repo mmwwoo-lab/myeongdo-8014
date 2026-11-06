@@ -24,7 +24,7 @@ assert(html.includes('card.scrollTo({top:target')&&!html.includes('lines[index].
 assert(html.includes('heart.utterance=null')&&html.includes("heart.mode==='original')stopHeartSutra()")&&html.includes("heart.mode==='korean')stopHeartSutra()"),'반야심경 두 읽기 버튼의 전환·정지 기능이 없습니다');
 assert((html.match(/u\.rate=\.6/g)||[]).length>=2,'염불과 반야심경 모두 0.6배 속도로 설정되지 않았습니다');
 assert(!/id="(?:bgStop|heartStop)"/.test(html),'별도의 끄기 버튼이 남아 있습니다');
-assert(html.includes("if(heart.active)stopHeartSutra()")&&html.includes("if(bg.active)stopBackground()"),'한 버튼으로 켜고 끄는 기능이 없습니다');
+assert(html.includes("if(heart.active&&heart.mode==='original')stopHeartSutra()")&&html.includes("if(heart.active&&heart.mode==='korean')stopHeartSutra()")&&html.includes("if(bg.active)stopBackground()"),'하나의 버튼에서 각 낭독의 켜기·끄기가 동작하지 않습니다');
 assert(!html.includes('startInstrumental')&&!html.includes('AudioContext'),'삭제된 경음악 기능이 남아 있습니다');
 for(const name of ['퀼트 산사에서 맞이한 평온한 아침.png'])assert(fs.existsSync(path.join(base,name)),'이미지 파일 누락: '+name);
 console.log('PASS: 명도재 디지털 법당 HTML / JavaScript / 화면 요소 / 이미지 확인');
