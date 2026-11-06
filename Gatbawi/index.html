@@ -294,7 +294,7 @@ function createWishMessage(wish){
  const available=200-intro.length-personal.length-close.length;
  return intro+personal+middle.slice(0,Math.max(0,available))+close;
 }
-const bg={active:false,token:0,timer:null,utterance:null};
+const bg={active:false,token:0,timer:null,utterance:null,audio:null};
 const heart={active:false,token:0,utterance:null,mode:null};
 const heartLines=[
 '마하반야바라밀다심경',
@@ -442,6 +442,7 @@ function stopBackground(){
  if(bg.timer){clearTimeout(bg.timer);bg.timer=null;}
  if('speechSynthesis' in window&&bg.utterance)window.speechSynthesis.cancel();
  bg.utterance=null;
+ if(bg.audio){bg.audio.pause();bg.audio.currentTime=0;bg.audio=null;}
  if($('prayerCard').classList.contains('chant-mode')){
   $('prayerCard').hidden=true;
   $('prayerCard').classList.remove('chant-mode');
@@ -454,15 +455,27 @@ function stopBackground(){
 }
 function startChant(){
  stopHeartSutra();stopPrayerSpeech();
+ if(bg.active)stopBackground();
  bg.active=true;const token=++bg.token;
  showChantCard();
  $('bgStart').textContent='■ 나무아미타불 끄기';
  $('bgStart').setAttribute('aria-pressed','true');
+ if(typeof Audio==='function'){
+  const audio=new Audio('./namu-amitabul-male-chant.mp3');
+  audio.loop=true;audio.volume=.9;audio.preload='auto';
+  bg.audio=audio;
+  $('bgStatus').textContent='🙏 중후한 남성 염불 오디오 · 연속 재생 중';
+  audio.addEventListener('error',()=>{if(bg.active&&bg.token===token)$('bgStatus').textContent='염불 오디오를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.';});
+  const playing=audio.play();
+  if(playing&&typeof playing.catch==='function')playing.catch(()=>{if(bg.active&&bg.token===token)$('bgStatus').textContent='소리 재생이 제한되었습니다. 염불 버튼을 다시 눌러 재생해 주세요.';});
+  return;
+ }
+ // HTMLAudioElement 미지원 환경에서만 기기 내장 음성 사용
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
-  $('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 음성 낭독 미지원 (끄기로 창 닫기)';return;
+  $('bgStatus').textContent='이 기기에서는 염불 음성 재생을 지원하지 않습니다.';return;
  }
  const synth=window.speechSynthesis;
- $('bgStatus').textContent='🙏 나무아미타불 염불 재생 중 (합성 음성)';
+ $('bgStatus').textContent='🙏 나무아미타불 염불 · 연속 재생 중';
  function chantAgain(){
   if(!bg.active||token!==bg.token)return;
   const u=new SpeechSynthesisUtterance('나무아미타불. 나무아미타불. 나무아미타불.');
@@ -471,13 +484,8 @@ function startChant(){
   if(korean)u.voice=korean;
   bg.utterance=u;
   u.onend=()=>{if(bg.active&&token===bg.token)bg.timer=setTimeout(chantAgain,700)};
-  u.onerror=()=>{
-   if(!bg.active||token!==bg.token)return;
-   bg.utterance=null;$('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 음성 설정을 확인해 주세요. 끄기로 닫을 수 있습니다.';
-  };
-  try{synth.speak(u)}catch(e){
-   bg.utterance=null;$('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 음성 재생을 지원하지 않습니다.';
-  }
+  u.onerror=()=>{if(bg.active&&token===bg.token)$('bgStatus').textContent='음성 설정을 확인해 주세요.';};
+  try{synth.speak(u)}catch(e){$('bgStatus').textContent='음성을 재생할 수 없습니다.';}
  }
  chantAgain();
 }
