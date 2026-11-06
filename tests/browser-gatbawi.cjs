@@ -114,6 +114,11 @@ async function run(){
   await page.locator('#readPrayer').click();
   await page.locator('#stopPrayer').click();
   assert.equal(await page.locator('header #openPrayerChrome').count(),1,'Chrome link must be in the initial homepage header');
+  const htmlForChrome=(await page.content());
+  assert(htmlForChrome.includes('autoOpenChromeOnFirstEntry'),'Mobile first entry should attempt Chrome automatically');
+  assert(htmlForChrome.includes('chrome_opened'),'Auto launch must guard against redirect loops');
+  assert.equal(await page.locator('#copyPrayerLink').isVisible(),true,'Manual URL copy must remain available after auto-launch');
+
   assert.equal(await page.locator('header #copyPrayerLink').count(),1,'Copy link must be in the initial homepage header');
   assert.equal(await page.locator('#prayerCard #openPrayerChrome,#prayerCard #copyPrayerLink').count(),0,'Do not show Chrome controls inside prayer card');
   assert.equal(await page.locator('#openPrayerChrome').isVisible(),true,'Chrome browser link must be accessible even for silent sound failures');
