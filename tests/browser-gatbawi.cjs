@@ -39,6 +39,12 @@ async function run(){
   assert.equal(await card.isHidden(),true);
   await page.locator('#bgStart').click();
   assert.equal(await card.isVisible(),true,'Chant must show message');
+  const audioInfo=await page.evaluate(()=>{const a=[...document.querySelectorAll('audio')];return a.map(x=>({src:x.currentSrc||x.src,loop:x.loop,paused:x.paused}))});
+  // Audio may be created in memory, so request the hosted file directly for a grounded check.
+  const chantResp=await page.request.get(host+'/Gatbawi/namu-amitabul-male-chant.mp3');
+  assert.equal(chantResp.status(),200,'Male chant MP3 must exist');
+  assert((await chantResp.body()).length>20000,'Male chant MP3 should not be empty');
+
   assert((await page.locator('#prayerText').innerText()).includes('아미타부처님께 귀의합니다'),'Chant meaning visible');
   assert.equal(await page.locator('#bgStart').getAttribute('aria-pressed'),'true');
   await page.locator('#bgStart').click();
