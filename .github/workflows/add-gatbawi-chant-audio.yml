@@ -1,0 +1,27 @@
+name: Add Myeongdo Chant Audio
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/add-gatbawi-chant-audio.yml']
+permissions:
+  contents: write
+jobs:
+  add-audio:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download generated rhythmic male chant MP3 to published site
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --max-time 90 'https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/f02fa341-d4e4-4729-84a8-4baa023cc422.mp3' -o docs/Gatbawi/namu-amitabul-male-chant.mp3
+          cp docs/Gatbawi/namu-amitabul-male-chant.mp3 Gatbawi/namu-amitabul-male-chant.mp3
+          test $(wc -c < docs/Gatbawi/namu-amitabul-male-chant.mp3) -gt 20000
+          file docs/Gatbawi/namu-amitabul-male-chant.mp3
+      - name: Commit audio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/Gatbawi/namu-amitabul-male-chant.mp3 Gatbawi/namu-amitabul-male-chant.mp3
+          git commit -m "Host repeated male Namua Mitabul chant MP3 for offline-compatible playback" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
