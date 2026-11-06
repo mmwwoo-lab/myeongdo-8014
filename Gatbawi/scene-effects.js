@@ -90,20 +90,26 @@
   if(strength<=.005)return;
   const s=clamp(width/700,.55,1.55);
   const state=cloudState[i]||{start:t};
-  const travel=Math.min((t-state.start)*16*s,120*s);
-  const spread=1+1.15*strength;
-  ctx.save();ctx.translate(x+travel,y+Math.sin(t*.72+i)*5*s);
-  ctx.rotate(-.055);
+  const elapsed=Math.max(0,t-state.start);
+  // Repeated breathing cycle: cloud grows and shrinks while fading in and out.
+  // Opacity 0.16-0.90; scale 0.72-1.72. Hover entry/exit remains smoothly eased.
+  const wave=(1-Math.cos(elapsed*2.65))/2;
+  const visibility=(.16+.74*wave)*strength;
+  const spread=(.72+1.0*wave)*(.68+.32*strength);
+  // Valley mist glides gently to the side, loops rather than drifting off-screen.
+  const drift=Math.sin(elapsed*.52+i*.45)*52*s+Math.sin(elapsed*.18)*21*s;
+  const rise=Math.sin(elapsed*.76+i)*6*s;
+  ctx.save();ctx.translate(x+drift,y+rise);ctx.rotate(-.045);
   for(let j=0;j<5;j++){
    const xx=(j-2)*37*s*spread;
-   const radius=130*s*spread;
-   const alpha=(.22+.065*Math.sin(j*1.17)**2)*strength;
+   const radius=125*s*spread;
+   const alpha=clamp((.29+.055*Math.cos(j*1.13))*visibility,0,.8);
    const grad=ctx.createRadialGradient(xx,0,1,xx,0,radius);
-   grad.addColorStop(0,'rgba(248,252,255,'+alpha.toFixed(3)+')');
-   grad.addColorStop(.48,'rgba(241,250,254,'+(alpha*.49).toFixed(3)+')');
-   grad.addColorStop(1,'rgba(241,251,255,0)');
+   grad.addColorStop(0,'rgba(250,254,255,'+alpha.toFixed(3)+')');
+   grad.addColorStop(.45,'rgba(242,250,254,'+(alpha*.62).toFixed(3)+')');
+   grad.addColorStop(1,'rgba(242,251,255,0)');
    ctx.fillStyle=grad;ctx.beginPath();
-   ctx.ellipse(xx,0,radius,clamp(41*s*spread,19,130),0,0,Math.PI*2);ctx.fill();
+   ctx.ellipse(xx,0,radius,clamp(43*s*spread,17,128),0,0,Math.PI*2);ctx.fill();
   }
   ctx.restore();
  }
