@@ -1,0 +1,41 @@
+name: Generate full Heart Sutra MP3
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/generate-heart-sutra-mp3.yml']
+permissions:
+  contents: write
+jobs:
+  audio:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Synthesize complete Heart Sutra, male Korean narrator
+        run: |
+          python -m pip install --quiet edge-tts
+          python - <<'PY'
+          import asyncio, pathlib, re, edge_tts
+          html=pathlib.Path("Gatbawi/index.html").read_text(encoding="utf-8")
+          text=html.split("const heartLines=[",1)[1].split("];",1)[0]
+          lines=re.findall(r"'([^']+)'",text)
+          assert len(lines)>=12, len(lines)
+          async def make():
+              communicate=edge_tts.Communicate("\n".join(lines),voice="ko-KR-InJoonNeural",rate="+0%")
+              await communicate.save("docs/Gatbawi/heart-sutra-male.mp3")
+          asyncio.run(make())
+          path=pathlib.Path("docs/Gatbawi/heart-sutra-male.mp3")
+          assert path.stat().st_size>50000,path.stat().st_size
+          pathlib.Path("Gatbawi/heart-sutra-male.mp3").write_bytes(path.read_bytes())
+          print("Complete Heart Sutra MP3 bytes:",path.stat().st_size)
+          PY
+      - name: Commit audio files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/Gatbawi/heart-sutra-male.mp3 Gatbawi/heart-sutra-male.mp3
+          git commit -m "Add complete male Heart Sutra MP3" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
