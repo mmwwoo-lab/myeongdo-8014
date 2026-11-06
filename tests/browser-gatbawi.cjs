@@ -44,17 +44,12 @@ async function run(){
   assert(effectsDesktop.width>0&&effectsDesktop.height>0,'Canvas should be sized');
   assert(Math.abs(effectsDesktop.overlayWidth-effectsDesktop.sceneWidth)<8,'Effects overlay must follow image scene dimensions');
   assert.equal(effectsDesktop.originalImgStyle,'cover','Original image cover framing must stay unchanged');
-  const toggle=page.locator('.gatbawi-motion-toggle');
-  assert.equal(await toggle.count(),1,'Animation on/off button must exist');
-  assert.equal(await toggle.getAttribute('aria-pressed'),'true','Animation should start enabled');
+  assert.equal(await page.locator('.gatbawi-motion-toggle').count(),0,'Animation control button should be removed');
+  assert.equal(await page.locator('#chromeGuide,#openChrome,#copyChromeUrl').count(),0,'Chrome redirect controls must be removed');
   const firstFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
   await page.waitForTimeout(1100);
   const laterFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
-  assert.notEqual(firstFrame,laterFrame,'Candle and clouds must actually animate, not stay static');
-  await toggle.click();
-  assert.equal(await toggle.getAttribute('aria-pressed'),'false','Animation must stop on request');
-  await toggle.click();
-  assert.equal(await toggle.getAttribute('aria-pressed'),'true','Animation must resume on request');
+  assert.notEqual(firstFrame,laterFrame,'Candle and clouds must keep moving without a toggle button');
   // Hit the illustrated second worshipper's face in object-fit:cover coordinates.
   const clickSpot=await page.evaluate(()=>{
     const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
