@@ -61,7 +61,7 @@ html{scroll-behavior:smooth}
 </style><style>
 /* 완성형 퀼트 법당 위 참배 동작과 촛불 오버레이 */
 .summit-visual{overflow:hidden}
-</style><style>#climbControls[hidden],#climbPanel[hidden],#heroClimbBtn[hidden]{display:none!important}</style></head>
+</style><style>#climbControls[hidden],#climbPanel[hidden],#heroClimbBtn[hidden]{display:none!important}</style><style>.admission-wish{margin-top:19px;border-top:1px solid #d9c4a26b;padding-top:16px}.admission-wish h4{font-size:17px;margin:0 0 12px;color:#f8dba9}.admission-wish label{display:block;font-size:12px;margin:9px 0 5px;color:#f1dfbe}.admission-wish input,.admission-wish textarea{width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #d1b48b;background:#18343d;color:#fff0d8;padding:11px;font:inherit;font-size:13px}.admission-wish textarea{min-height:85px;resize:vertical}.admission-wish .admission-help{font-size:11px;line-height:1.55;color:#e6d8c4;margin:9px 0 0}</style></head>
 <body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 팔공산 갓바위 부처님</h1></div><p>명도재 이명우 제작 · 퀼트 인형들의 산길 순례와 소원 기도문</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
 <section class="welcome" id="home"><div class="welcome-copy"><small>팔공산 갓바위 부처님 · 퀼트 순례</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 소원을 올리고 기도문을 읽어 보세요.</p><a id="heroClimbBtn" href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
 <div class="welcome-art" aria-label="완성된 팔공산 갓바위 부처님과 가족들의 퀼트 법당 그림" role="img"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들의 퀼트 인형 모습" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='🪷 팔공산 갓바위 부처님';"></div></section>
@@ -107,7 +107,7 @@ html{scroll-behavior:smooth}
 <path id="stairsPath" d="M30 688Q209 622 296 575Q421 503 491 456T658 320Q767 233 838 198" fill="none" stroke="none"/>
 </svg><div id="summitVisual" class="summit-visual" aria-hidden="true"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님께 기도하는 가족들의 퀼트 인형 법당 그림" onerror="this.style.display='none';document.getElementById('summitPrayer').textContent='법당 이미지가 표시되지 않습니다. 새로고침 후 다시 시도해 주세요.'"><div class="summit-prayer" id="summitPrayer">🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다</div>
 <section id="prayerCard" class="prayer-card" aria-label="소원 기도문" hidden>
-<h3>🪷 팔공산 갓바위 부처님 소원 기도문</h3>
+<h3 id="prayerHeading">🪷 팔공산 갓바위 부처님 소원 기도문</h3>
 <div class="tts-controls"><button id="readPrayer" type="button">🔊 기도문 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button><button id="hidePrayer" type="button" aria-label="기도문 창 사라지기">✕ 사라지기</button></div>
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기 버튼을 눌러 기도문을 들어보세요.</div>
 <p id="prayerText"></p>
@@ -116,7 +116,12 @@ html{scroll-behavior:smooth}
 </section>
 <aside class="side">
 <section class="panel" id="climbPanel"><h3>👣 움직이는 순례자</h3><p id="walkMusicStatus" role="status" aria-live="polite">🎹 계단을 오르면 피아노와 동요풍 합창 선율이 재생됩니다.</p><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
-<section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button></section>
+<section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button>
+<div class="admission-wish"><h4>🎓 대학진학 소원 올리기</h4><label for="admissionName">수험생 이름 (선택)</label><input id="admissionName" maxlength="20" placeholder="수험생의 이름">
+<label for="admissionSchool">희망 대학·학과 (선택)</label><input id="admissionSchool" maxlength="70" placeholder="예: 희망 대학의 간호학과">
+<label for="admissionWish">대학진학 소원</label><textarea id="admissionWish" maxlength="300" placeholder="합격, 면접, 수능, 학업과 새로운 시작을 위한 마음을 적어 주세요."></textarea>
+<button id="admissionBtn" class="primary" type="button" style="width:100%">🎓 대학진학 소원 올리기</button>
+<p class="admission-help">수험생의 노력과 용기를 응원하는 기도문을 만들어 부처님 옆에 보여 드립니다. 결과를 보장하지 않는 응원의 글입니다.</p></div></section>
 </aside></main><footer>© 명도재 이명우 · 독립 창작 체험 웹앱 · 종교기관의 공식 서비스가 아닙니다.</footer>
 <script>
 (function(){
@@ -254,19 +259,42 @@ $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
 $('hidePrayer').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
 window.addEventListener('pagehide',()=>{if('speechSynthesis' in window)window.speechSynthesis.cancel()});
+function showPrayer(message, isAdmission){
+ stopPrayerSpeech();
+ stopWalkMusic();
+ $('prayerHeading').textContent=isAdmission?'🎓 팔공산 갓바위 부처님 대학진학 기도문':'🪷 팔공산 갓바위 부처님 소원 기도문';
+ $('prayerText').textContent=message;
+ state.p=1;state.playing=false;state.last=0;render();
+ $('prayerCard').hidden=false;
+ $('summitPrayer').textContent=isAdmission?'🎓 수험생의 꿈과 새로운 시작을 응원합니다.':'🪷 소원이 담긴 기도문을 올렸습니다.';
+ $('prayerCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+ toast(isAdmission?'대학진학 기도문을 올렸습니다. 음성 읽어주기를 눌러보세요.':'부처님 오른쪽에 소원 기도문을 올렸습니다. 🪷');
+}
+function createAdmissionPrayer(name,school,wish){
+ const who=(name||'소중한 수험생').replace(/\s+/g,' ').trim().slice(0,20);
+ const target=school.replace(/\s+/g,' ').trim().slice(0,55);
+ const intention=wish.replace(/\s+/g,' ').trim().slice(0,65);
+ const intro='팔공산 갓바위 부처님 전에 간절한 마음을 올립니다. ';
+ const person=who+'의 대학진학을 응원합니다. ';
+ const goal=target?'희망하는 '+target+' 진학을 향한 꿈에 지혜와 좋은 인연이 함께하기를 기원합니다. ':'';
+ const request=intention?'“'+intention+'”라는 바람을 마음에 새깁니다. ':'';
+ const encouragement='매일의 성실한 공부가 자신감으로 자라고, 시험과 면접에서는 차분히 실력을 펼치게 하소서. 결과에 흔들리지 않는 용기와 새로운 길을 향한 희망을 주소서. 나무아미타불.';
+ const full=intro+person+goal+request+encouragement;
+ if(full.length<=200)return full;
+ // 이름과 희망 진학 정보는 남기고 중복된 수식어부터 줄입니다.
+ const ending=' 노력한 만큼 마음껏 실력을 펼치고, 희망과 용기를 잃지 않게 하소서. 나무아미타불.';
+ const available=Math.max(0,200-intro.length-person.length-goal.length-ending.length);
+ return intro+person+goal+request.slice(0,available)+ending;
+}
 $('wishBtn').onclick=()=>{
  const w=$('wish').value.trim();
  if(!w){toast('마음속 소원을 적어보세요.');$('wish').focus();return;}
- stopPrayerSpeech();
- const message=createWishMessage(w);
- stopWalkMusic();
- $('prayerText').textContent=message;
- // 산길 출발 전에도 기도문을 볼 수 있도록 정상 화면으로 이동시킵니다.
- state.p=1;state.playing=false;render();
- $('prayerCard').hidden=false;
- $('summitPrayer').textContent='🪷 소원이 담긴 기도문을 올렸습니다.';
- $('prayerCard').scrollIntoView({behavior:'smooth',block:'nearest'});
- toast('부처님 오른쪽에 소원 기도문을 올렸습니다. 🪷');
+ showPrayer(createWishMessage(w),false);
+};
+$('admissionBtn').onclick=()=>{
+ const name=$('admissionName').value.trim(),school=$('admissionSchool').value.trim(),wish=$('admissionWish').value.trim();
+ if(!name&&!school&&!wish){toast('대학진학 소원이나 희망 대학을 적어보세요.');$('admissionWish').focus();return;}
+ showPrayer(createAdmissionPrayer(name,school,wish),true);
 };
 try{render();requestAnimationFrame(tick)}catch(error){console.error('Gatbawi app initialization failed',error);$('sceneText').textContent='화면 초기화 오류가 발생했습니다. 최신 Chrome 또는 Edge로 다시 열어 주세요.';}
 })();
