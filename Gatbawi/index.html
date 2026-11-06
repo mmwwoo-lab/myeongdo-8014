@@ -108,7 +108,7 @@ html{scroll-behavior:smooth}
 </svg><div id="summitVisual" class="summit-visual" aria-hidden="true"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님께 기도하는 가족들의 퀼트 인형 법당 그림" onerror="this.style.display='none';document.getElementById('summitPrayer').textContent='법당 이미지가 표시되지 않습니다. 새로고침 후 다시 시도해 주세요.'"><div class="summit-prayer" id="summitPrayer">🙏 갓바위 부처님 앞에서 두 손을 모읍니다</div>
 <section id="prayerCard" class="prayer-card" aria-label="소원 기도문" hidden>
 <h3>🪷 갓바위 소원 기도문</h3>
-<div class="tts-controls"><button id="readPrayer" type="button">🔊 기도문 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button></div>
+<div class="tts-controls"><button id="readPrayer" type="button">🔊 기도문 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button><button id="hidePrayer" type="button" aria-label="기도문 창 사라지기">✕ 사라지기</button></div>
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기 버튼을 눌러 기도문을 들어보세요.</div>
 <p id="prayerText"></p>
 </section></div><div class="overlay"><h2 id="sceneTitle">산 아래에서 출발합니다</h2><div id="sceneText">계단 올라가기 버튼을 눌러보세요.</div></div>
@@ -249,6 +249,7 @@ function speakPrayer(){
 }
 $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
+$('hidePrayer').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
 window.addEventListener('pagehide',()=>{if('speechSynthesis' in window)window.speechSynthesis.cancel()});
 $('wishBtn').onclick=()=>{
  const w=$('wish').value.trim();
