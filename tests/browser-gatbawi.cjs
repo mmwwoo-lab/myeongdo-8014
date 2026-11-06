@@ -113,6 +113,9 @@ async function run(){
   assert((await page.locator('#readPrayer').innerText()).includes('이어 읽기'),'Pause');
   await page.locator('#readPrayer').click();
   await page.locator('#stopPrayer').click();
+  assert.equal(await page.locator('header #openPrayerChrome').count(),1,'Chrome link must be in the initial homepage header');
+  assert.equal(await page.locator('header #copyPrayerLink').count(),1,'Copy link must be in the initial homepage header');
+  assert.equal(await page.locator('#prayerCard #openPrayerChrome,#prayerCard #copyPrayerLink').count(),0,'Do not show Chrome controls inside prayer card');
   assert.equal(await page.locator('#openPrayerChrome').isVisible(),true,'Chrome browser link must be accessible even for silent sound failures');
   assert.equal(await page.locator('#copyPrayerLink').isVisible(),true,'URL copy fallback must be available');
   assert.equal((await page.locator('#openPrayerChrome').getAttribute('href')).startsWith('https://'),true,'Desktop link must be a working https link');
