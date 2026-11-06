@@ -1,0 +1,32 @@
+name: Diagnose and repair Gatbawi public release
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/diagnose-repair-gatbawi.yml']
+permissions:
+  contents: read
+  pages: write
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Inspect public Pages and stale deployments
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +e
+          echo '=== Pages configuration ==='
+          gh api "repos/${{ github.repository }}/pages" --jq '{status,build_type,source,html_url}'
+          echo '=== Pages deployments list ==='
+          gh api "repos/${{ github.repository }}/pages/deployments?per_page=20" --jq '.[] | {id,status,created_at,updated_at}' || echo 'Deployment listing unavailable'
+          echo '=== Cancel stale deployment ==='
+          gh api -i -X POST "repos/${{ github.repository }}/pages/deployments/e8e622b444a2679599e7defe2964a1fe8f106987/cancel" || echo 'Cancellation failed'
+          echo '=== Public HTML ==='
+          curl -L -sS --max-time 20 -o /tmp/gatbawi.html -w 'HTTP %{http_code} bytes %{size_download}\n' 'https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html'
+          grep -o 'scene-effects.js[^"]*' /tmp/gatbawi.html | head -1 || true
+          if grep -q 'chromeGuide' /tmp/gatbawi.html; then echo 'OLD_CHROME_GUIDE_PRESENT'; else echo 'CHROME_GUIDE_ABSENT'; fi
+          echo '=== Public effects JS ==='
+          curl -L -sS --max-time 20 -o /tmp/gatbawi-effects.js -w 'HTTP %{http_code} bytes %{size_download}\n' 'https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/scene-effects.js'
+          if grep -q 'faceAnimationUntil' /tmp/gatbawi-effects.js; then echo 'FACE_ANIMATION_PRESENT'; else echo 'FACE_ANIMATION_MISSING'; fi
+          if grep -q 'gatbawi-motion-toggle' /tmp/gatbawi-effects.js; then echo 'OLD_TOGGLE_PRESENT'; else echo 'TOGGLE_ABSENT'; fi
