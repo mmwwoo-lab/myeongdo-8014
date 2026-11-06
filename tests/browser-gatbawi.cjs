@@ -55,6 +55,10 @@ async function run(){
   await page.locator('#heartKoreanStart').click();
   assert((await page.locator('#prayerText').innerText()).includes('관자재보살은'));
   assert.equal(await page.locator('#heartKoreanStart').getAttribute('aria-pressed'),'true');
+  const koreanAudio=await page.request.get(host+'/Gatbawi/heart-sutra-korean.mp3');
+  assert.equal(koreanAudio.status(),200,'Korean Heart Sutra MP3 must be served');
+  assert((await koreanAudio.body()).length>50000,'Korean Heart Sutra MP3 must contain the full text');
+  assert((await page.locator('#bgStatus').innerText()).includes('0.7배속'),'Korean Heart Sutra audio speed indicator should be 0.7x');
   await page.locator('#heartKoreanStart').click();
   assert.equal(await card.isHidden(),true);
   await page.locator('#wish').fill('우리 가족 건강');
