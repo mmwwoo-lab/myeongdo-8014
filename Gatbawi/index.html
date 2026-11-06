@@ -85,7 +85,7 @@ function stopBackground(){
  bg.active=false;bg.token++;
  if(bg.timer){clearTimeout(bg.timer);clearInterval(bg.timer);bg.timer=null;}
  if(bg.mode==='chant'&&'speechSynthesis' in window)window.speechSynthesis.cancel();
- if(bg.master){bg.master.gain.setTargetAtTime(0,bg.context.currentTime,.035);}
+ if(bg.master&&bg.context){try{bg.master.gain.setTargetAtTime(0,bg.context.currentTime,.025)}catch(e){}bg.master=null;}
  bg.mode='';
  $('bgStart').disabled=false;$('bgStop').disabled=true;
  $('bgStatus').textContent='배경음 꺼짐';
@@ -113,7 +113,7 @@ function startInstrumental(){
   const C=window.AudioContext||window.webkitAudioContext;
   if(!C)throw Error('Web Audio unsupported');
   bg.context??=new C();
-  bg.context.resume();
+  const resumed=bg.context.resume();
   bg.master=bg.context.createGain();bg.master.gain.value=.27;bg.master.connect(bg.context.destination);
   bg.mode='music';bg.step=0;bg.next=bg.context.currentTime+.06;
   scheduleBackgroundMusic();
@@ -148,7 +148,7 @@ $('bgStart').onclick=()=>{
 $('bgStop').onclick=stopBackground;
 let currentUtterance=null;
 function stopPrayerSpeech(){
- if('speechSynthesis' in window)window.speechSynthesis.cancel();
+ if(currentUtterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
  currentUtterance=null;
  $('readPrayer').textContent='🔊 기도문 읽어주기';
  $('prayerAudioStatus').textContent='읽어주기 버튼을 눌러 기도문을 들어보세요.';
@@ -157,8 +157,8 @@ function speakPrayer(){
  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
  $('prayerAudioStatus').textContent='이 브라우저에서는 음성 읽기를 지원하지 않습니다. Chrome 또는 Edge를 이용해 주세요.';return;
  }
+ if(bg.active)stopBackground();
  const synth=window.speechSynthesis;
- if(!currentUtterance && bg.active)stopBackground();
  if(synth.speaking && !synth.paused){synth.pause();$('readPrayer').textContent='▶ 이어 읽기';$('prayerAudioStatus').textContent='낭독 일시정지';return;}
  if(synth.paused){synth.resume();$('readPrayer').textContent='⏸ 잠시 멈춤';$('prayerAudioStatus').textContent='기도문 낭독 중';return;}
  const text=$('prayerText').textContent.trim();
@@ -166,7 +166,7 @@ function speakPrayer(){
  synth.cancel();
  const utterance=new SpeechSynthesisUtterance(text);
  utterance.lang='ko-KR';utterance.rate=.87;utterance.pitch=1;utterance.volume=1;
- const koVoices=synth.getVoices().filter(v=>v.lang.toLowerCase().startsWith('ko'));
+ const koVoices=synth.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
  if(koVoices.length)utterance.voice=koVoices.find(v=>/female|woman|여성|sunhi|yuna|heami/i.test(v.name))||koVoices[0];
  currentUtterance=utterance;
  utterance.onstart=()=>{if(currentUtterance===utterance){$('readPrayer').textContent='⏸ 잠시 멈춤';$('prayerAudioStatus').textContent='기도문 낭독 중';}};
@@ -177,8 +177,9 @@ function speakPrayer(){
 $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
 $('hidePrayer').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
-window.addEventListener('pagehide',()=>{stopBackground();if('speechSynthesis' in window)window.speechSynthesis.cancel()});
+window.addEventListener('pagehide',()=>{stopBackground();stopPrayerSpeech()});
 function showPrayer(message, isAdmission){
+ if(bg.active)stopBackground();
  stopPrayerSpeech();
  $('prayerHeading').textContent=isAdmission?'🎓 팔공산 갓바위 부처님 대학진학 기도문':'🪷 팔공산 갓바위 부처님 소원 기도문';
  $('prayerText').textContent=message;
