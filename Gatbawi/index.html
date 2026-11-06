@@ -69,7 +69,7 @@ footer{text-align:center;font-size:12px;color:#b6cbd0;padding:0 15px 24px}.toast
 <path id="forestPath" d="M30 688Q170 530 286 605Q417 625 450 503Q501 398 622 455Q740 501 765 354Q800 235 838 198" fill="none" stroke="none"/>
 </svg>
 <div class="overlay"><h2 id="sceneTitle">산 아래에서 출발합니다</h2><div id="sceneText">계단길 또는 숲길을 선택해 보세요.</div></div>
-<div class="bottom"><button id="stairsBtn" class="active">🪨 계단길</button><button id="forestBtn">🌲 산길</button><button id="startBtn" class="primary">▶️ 인형들 걷기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="resetBtn">↺ 다시 출발</button></div>
+<div class="bottom"><button id="stairsBtn" class="active">🪨 계단길</button><button id="forestBtn">🌲 산길</button><button id="startBtn" class="primary">▶️ 인형들 걷기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="resetBtn">↺ 다시 출발</button><button id="summitBtn">🪷 정상 바로가기</button></div>
 </section>
 <aside class="side">
 <section class="panel"><h3>👣 움직이는 순례자</h3><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
@@ -82,14 +82,18 @@ footer{text-align:center;font-size:12px;color:#b6cbd0;padding:0 15px 24px}.toast
 const $=id=>document.getElementById(id);
 const state={route:'stairs',p:0,playing:false,last:0,speed:2,bows:0,beads:0,lit:false,ctx:null};
 const paths={stairs:$('stairsPath'),forest:$('forestPath')};
+const supported=!!(paths.stairs&&typeof paths.stairs.getTotalLength==='function');
+
 function toast(message){document.querySelector('.toast')?.remove();let el=document.createElement('div');el.className='toast';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),2800)}
 function render(){
  $('stairsShape').style.display=state.route==='stairs'?'':'none';
  $('stairsMark').style.display=state.route==='stairs'?'':'none';
  $('forestShape').style.display=state.route==='forest'?'':'none';
  $('forestEdge').style.display=state.route==='forest'?'':'none';
- const path=paths[state.route],length=path.getTotalLength(),point=path.getPointAtLength(length*state.p);
- const next=path.getPointAtLength(Math.min(length,length*state.p+2));
+ const path=paths[state.route];
+ const length=supported?path.getTotalLength():1;
+ const point=supported?path.getPointAtLength(length*state.p):{x:30+808*state.p,y:688-490*state.p};
+ const next=supported?path.getPointAtLength(Math.min(length,length*state.p+2)):{x:point.x+2,y:point.y-1};
  const angle=Math.atan2(next.y-point.y,next.x-point.x)*180/Math.PI;
  $('walker').setAttribute('transform','translate('+point.x+' '+(point.y-20)+') rotate('+(Math.max(-25,Math.min(25,angle*.27)))+') scale(.73)');
  $('walker').classList.toggle('walking',state.playing);
@@ -101,20 +105,21 @@ function render(){
  $('startBtn').textContent=state.playing?'🚶‍♂️ 걷는 중':'▶️ 인형들 걷기';
  $('candles').style.opacity=state.lit?'1':'.22';
 }
-function tick(t){if(state.playing){if(state.last){state.p=Math.min(1,state.p+(t-state.last)*.000027*state.speed)}if(state.p>=1){state.playing=false;toast('관봉 정상에 도착했습니다. 갓바위 부처님께 기도해 보세요.');ding(440,.9)}render()}state.last=t;requestAnimationFrame(tick)}
+function tick(t){if(state.playing){if(state.last){state.p=Math.min(1,state.p+Math.min(100,t-state.last)*.000027*state.speed)}if(state.p>=1){state.playing=false;toast('관봉 정상에 도착했습니다. 갓바위 부처님께 기도해 보세요.');ding(440,.9)}render()}state.last=t;requestAnimationFrame(tick)}
 function ding(freq,duration){try{state.ctx??=new (window.AudioContext||window.webkitAudioContext)();state.ctx.resume();const o=state.ctx.createOscillator(),g=state.ctx.createGain();o.type='sine';o.frequency.setValueAtTime(freq,state.ctx.currentTime);o.frequency.exponentialRampToValueAtTime(freq*.72,state.ctx.currentTime+duration);g.gain.setValueAtTime(.001,state.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.15,state.ctx.currentTime+.03);g.gain.exponentialRampToValueAtTime(.001,state.ctx.currentTime+duration);o.connect(g).connect(state.ctx.destination);o.start();o.stop(state.ctx.currentTime+duration+.05)}catch(e){}}
 function choose(route){state.route=route;state.p=0;state.playing=false;render()}
 function arrived(){if(state.p<1){toast('먼저 인형들과 산길을 올라 정상에 도착해 주세요.');return false}return true}
 $('stairsBtn').onclick=()=>choose('stairs');$('forestBtn').onclick=()=>choose('forest');
 $('startBtn').onclick=()=>{if(state.p>=1)state.p=0;state.playing=true;state.last=0;render()};
 $('pauseBtn').onclick=()=>{state.playing=false;render()};
-$('resetBtn').onclick=()=>{state.p=0;state.playing=false;render()};
+$('resetBtn').onclick=()=>{state.p=0;state.playing=false;state.last=0;render()};
+$('summitBtn').onclick=()=>{state.p=1;state.playing=false;state.last=0;render();toast('갓바위 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
 $('speed').oninput=e=>{state.speed=+e.target.value;$('speedText').textContent=['','느리게','보통','빠르게','매우 빠르게'][state.speed]};
 $('bowBtn').onclick=()=>{if(!arrived())return;state.bows=Math.min(108,state.bows+1);$('bowCount').textContent=state.bows;const b=$('bowing');b.style.opacity='1';b.classList.remove('bow');void b.getBoundingClientRect();b.classList.add('bow');ding(240,.25);toast(state.bows===108?'108배를 마쳤습니다.':'정성껏 '+state.bows+'번째 절을 올렸습니다.')};
 $('candleBtn').onclick=()=>{if(!arrived())return;state.lit=!state.lit;render();toast(state.lit?'양쪽 촛불을 밝혔습니다.':'촛불을 껐습니다.')};
 $('beadsBtn').onclick=()=>{if(!arrived())return;state.beads=(state.beads%108)+1;$('beadText').textContent='염주 '+state.beads+' / 108알';ding(310,.12)};
 $('bellBtn').onclick=()=>{ding(264,2.4);toast('산사의 범종이 울립니다.')};
 $('wishBtn').onclick=()=>{if(!arrived())return;const w=$('wish').value.trim();if(!w){toast('마음속 소원을 적어보세요.');return}toast('정성 어린 기도의 마음을 올렸습니다. 🪷');$('wish').value=''};
-render();requestAnimationFrame(tick);
+try{render();requestAnimationFrame(tick)}catch(error){console.error('Gatbawi app initialization failed',error);$('sceneText').textContent='화면 초기화 오류가 발생했습니다. 최신 Chrome 또는 Edge로 다시 열어 주세요.';}
 })();
 </script></body></html>
