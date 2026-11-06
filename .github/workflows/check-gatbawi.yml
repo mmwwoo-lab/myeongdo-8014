@@ -1,0 +1,21 @@
+name: Validate Gatbawi Digital Temple
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Gatbawi/**'
+      - 'tests/check-gatbawi.cjs'
+      - '.github/workflows/check-gatbawi.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-gatbawi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check HTML, JavaScript, controls and images
+        run: node tests/check-gatbawi.cjs
