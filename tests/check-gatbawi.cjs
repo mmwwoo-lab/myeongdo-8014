@@ -17,6 +17,8 @@ assert(html.includes('createWishMessage'),'일반 소원 기도문 생성 기능
 assert(html.includes('createAdmissionPrayer'),'대학진학 기도문 생성 기능이 없습니다');
 assert(html.includes('speechSynthesis'),'기도문 음성 낭독 기능이 없습니다');
 assert(html.includes('startChant'),'나무아미타불 염불 기능이 없습니다');
+assert(html.includes('showChantCard')&&html.includes('chant-mode')&&html.includes('아미타부처님께 귀의합니다.'),'나무아미타불 메시지창 뜻풀이 기능이 없습니다');
+assert(html.includes("if($('prayerCard').classList.contains('chant-mode'))"),'염불 끄기 시 메시지창 숨기기 기능이 없습니다');
 assert(html.includes('startHeartSutra')&&html.includes('stopHeartSutra')&&html.includes('마하반야바라밀다심경'),'반야심경 낭독 기능이 없습니다');
 assert(html.includes('showHeartSutra')&&html.includes('sutra-mode')&&html.includes('markHeartLine'),'반야심경 본문·스크롤 표시 기능이 없습니다');
 assert(html.includes('heartKoreanLines')&&html.includes("startHeartSutra('korean')")&&html.includes('반야심경 한글 끄기'),'우리말 반야심경 표시·낭독·끄기 기능이 없습니다');
