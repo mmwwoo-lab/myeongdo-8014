@@ -1,6 +1,9 @@
 name: Deploy Myeongdo 8014 Website
-# 수동 배포 전용: GitHub Pages 기본 자동 배포와 충돌하지 않도록 설정
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,7 +37,7 @@ jobs:
       - name: Upload static website files
         uses: actions/upload-pages-artifact@v4
         with:
-          path: '.'
+          path: 'docs'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
