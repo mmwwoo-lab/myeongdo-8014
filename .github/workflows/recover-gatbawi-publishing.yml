@@ -1,0 +1,31 @@
+name: Recover Gatbawi Pages publishing
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/recover-gatbawi-publishing.yml']
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: recovery-pages
+  cancel-in-progress: false
+jobs:
+  recover:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - name: Diagnose and switch Pages build source to Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/pages" --jq '{status,build_type,source}'
+          gh api -X PUT "repos/${{ github.repository }}/pages" -f build_type=workflow || echo "::warning::Pages build type could not be changed; deployment may remain blocked"
+          gh api "repos/${{ github.repository }}/pages" --jq '{status,build_type,source}'
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4
