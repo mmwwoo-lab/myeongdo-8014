@@ -8,7 +8,7 @@
 <style>
 :root{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#fff2dc;background:#142b34}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0,#3b5e63,#142b34 75%);min-height:100vh}
-header{max-width:1250px;margin:auto;padding:20px 17px 12px}h1{font-size:clamp(24px,3.5vw,37px);margin:0 0 5px;color:#f7d4a1}header p{font-size:13px;margin:0;color:#c9d9d7}.background-audio{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}.background-audio button{padding:8px 12px}.background-audio small{font-size:11px;color:#d9e1d6}
+header{max-width:1250px;margin:auto;padding:20px 17px 12px}h1{font-size:clamp(24px,3.5vw,37px);margin:0 0 5px;color:#f7d4a1}header p{font-size:13px;margin:0;color:#c9d9d7}.chant-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}.chant-controls button{padding:8px 12px}.chant-controls small{font-size:11px;color:#d9e1d6}
 main{max-width:1250px;margin:auto;padding:12px 17px 26px;display:grid;grid-template-columns:minmax(0,1fr) 320px;align-items:start;gap:16px}
 .scene{position:relative;border:2px solid #dabd91;border-radius:18px;overflow:hidden;background:#173740;aspect-ratio:16/10;min-width:0;box-shadow:0 15px 42px #0005}
 .scene>img{width:100%;height:100%;object-fit:cover;display:block}
@@ -39,7 +39,7 @@ footer{max-width:1250px;margin:auto;text-align:center;font-size:11px;color:#bdd0
 @media(max-width:550px){.prayer-card.sutra-mode{top:3%;max-height:91%;width:65%}.prayer-card.sutra-mode #prayerText{font-size:12px;line-height:1.85}.prayer-card.sutra-mode h3{font-size:15px}header{padding:15px}.scene{aspect-ratio:4/5}.prayer-card{right:6px;top:5%;width:60%;max-height:82%;padding:10px}.prayer-card h3{font-size:13px}.prayer-card p{font-size:12px;line-height:1.55}.tts-controls button{padding:7px;font-size:10px}.summit-prayer{font-size:11px;bottom:10px}}
 </style></head>
 <body>
-<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="background-audio" aria-label="나무아미타불 염불"><button id="bgStart" type="button">🙏 나무아미타불 염불</button><button id="bgStop" type="button" disabled>■ 나무아미타불 끄기</button><button id="heartStart" type="button">📖 반야심경 읽기</button><button id="heartStop" type="button" disabled>■ 반야심경 끄기</button><small id="bgStatus" role="status" aria-live="polite">나무아미타불 염불만 재생합니다</small></div></header>
+<header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button">🙏 나무아미타불 염불</button><button id="bgStop" type="button" disabled>■ 나무아미타불 끄기</button><button id="heartStart" type="button">📖 반야심경 읽기</button><button id="heartStop" type="button" disabled>■ 반야심경 끄기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
 <main>
 <section class="scene" aria-label="팔공산 갓바위 부처님 기도 그림">
 <img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들" onerror="this.alt='이미지를 불러오지 못했습니다';">
