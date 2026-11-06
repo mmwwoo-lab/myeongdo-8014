@@ -71,6 +71,16 @@ async function run(){
   await page.locator('#heartKoreanStart').click();
   assert.equal(await card.isVisible(),true,'Mobile Korean Sutra should show');
   assert((await card.boundingBox()).width>100,'Mobile message width');
+  const layout=await page.evaluate(()=>{
+    const card=document.getElementById('prayerCard').getBoundingClientRect();
+    const scene=document.querySelector('.scene').getBoundingClientRect();
+    const buttons=[...document.querySelectorAll('.chant-controls button')].map(x=>x.getBoundingClientRect());
+    return {cardWidth:card.width,cardHeight:card.height,sceneHeight:scene.height,buttonHeights:buttons.map(x=>x.height),horizontalOverflow:document.documentElement.scrollWidth>innerWidth};
+  });
+  assert(layout.cardWidth<300&&layout.cardHeight<layout.sceneHeight*.62,'Mobile prayer panel should be compact: '+JSON.stringify(layout));
+  assert(layout.buttonHeights.every(h=>h<=52),'Mobile chant buttons too tall: '+JSON.stringify(layout.buttonHeights));
+  assert.equal(layout.horizontalOverflow,false,'Mobile page must not scroll horizontally');
+
   console.log('PASS Gatbawi: image, chanting, Korean & original sutra, prayer voice, school prayer, mobile, no JavaScript errors');
  }finally{await browser.close()}
 }
