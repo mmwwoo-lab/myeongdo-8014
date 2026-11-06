@@ -31,20 +31,6 @@
  const summitOverlay=scene.querySelector('.summit-prayer');
  if(prayerOverlay)prayerOverlay.style.zIndex='5';
  if(summitOverlay)summitOverlay.style.zIndex='4';
- const control=document.createElement('button');
- control.type='button';
- control.className='gatbawi-motion-toggle';
- control.textContent=motionEnabled?'✨ 그림 움직임 끄기':'✨ 그림 움직임 켜기';
- control.setAttribute('aria-pressed',String(motionEnabled));
- control.title='촛불, 계곡 구름, 눈 깜빡임 효과 켜기 또는 끄기';
- control.style.cssText='position:absolute;top:8px;left:8px;z-index:9;font-size:11px;padding:6px 9px;border-radius:10px;min-height:30px;background:#193f34e8!important;color:#fff7dc!important;border:1px solid #efce8a!important;box-shadow:0 2px 6px #1238!important;';
- scene.appendChild(control);
- control.addEventListener('click',()=>{
-   motionEnabled=!motionEnabled;
-   control.textContent=motionEnabled?'✨ 그림 움직임 끄기':'✨ 그림 움직임 켜기';
-   control.setAttribute('aria-pressed',String(motionEnabled));
-   start();
- });
  const ctx=canvas.getContext('2d',{alpha:true});
  if(!ctx)return;
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -172,7 +158,7 @@
  }
  function clickFace(event){
   if(!motionEnabled||!visible||new URLSearchParams(location.search).get('effects')==='edit')return;
-  if(event.target.closest?.('.prayer-card,.gatbawi-motion-toggle'))return;
+  if(event.target.closest?.('.prayer-card'))return;
   const bounds=scene.getBoundingClientRect();
   const xx=event.clientX-bounds.left,yy=event.clientY-bounds.top;
   const p=photoGeometry();
@@ -191,7 +177,7 @@
  }
  scene.addEventListener('pointerdown',clickFace);
  scene.addEventListener('pointermove',event=>{
-  if(event.target.closest?.('.prayer-card,.gatbawi-motion-toggle'))return;
+  if(event.target.closest?.('.prayer-card'))return;
   const bounds=scene.getBoundingClientRect(),p=photoGeometry();
   const nx=(event.clientX-bounds.left-p.dx)/(p.iw*p.scale);
   const ny=(event.clientY-bounds.top-p.dy)/(p.ih*p.scale);
