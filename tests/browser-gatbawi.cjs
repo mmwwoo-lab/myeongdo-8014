@@ -55,6 +55,22 @@ async function run(){
   assert.equal(await toggle.getAttribute('aria-pressed'),'false','Animation must stop on request');
   await toggle.click();
   assert.equal(await toggle.getAttribute('aria-pressed'),'true','Animation must resume on request');
+  // Hit the illustrated second worshipper's face in object-fit:cover coordinates.
+  const clickSpot=await page.evaluate(()=>{
+    const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
+    const r=scene.getBoundingClientRect(),iw=img.naturalWidth,ih=img.naturalHeight;
+    const scale=Math.max(r.width/iw,r.height/ih);
+    return {x:r.left+(r.width-iw*scale)/2+.310*iw*scale,
+            y:r.top+(r.height-ih*scale)/2+.684*ih*scale};
+  });
+  await page.mouse.click(clickSpot.x,clickSpot.y);
+  assert.equal(await page.locator('.scene').getAttribute('data-face-motion'),'2','Clicking second face must trigger her eyes and mouth');
+  assert.equal(await page.locator('.scene').getAttribute('data-face-motion-count'),'1','Face animation should start once');
+  const faceStart=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
+  await page.waitForTimeout(350);
+  const faceLater=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
+  assert.notEqual(faceStart,faceLater,'Clicked face animation should change frames');
+
 
 
   const card=page.locator('#prayerCard');
