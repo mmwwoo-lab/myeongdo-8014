@@ -124,17 +124,20 @@ function createAdmissionPrayer(name,school,wish){
  const who=(name||'소중한 수험생').replace(/\s+/g,' ').trim().slice(0,16);
  const target=school.replace(/\s+/g,' ').trim().slice(0,35);
  const intention=wish.replace(/\s+/g,' ').trim().slice(0,40);
- const intro='팔공산 갓바위 부처님 전에 간절한 마음을 올립니다. ';
+ const intro='팔공산 갓바위 부처님 전에 간절히 발원합니다. ';
  const person=who+'의 대학진학을 응원합니다. ';
- const goal=target?'희망하는 '+target+' 진학에 좋은 인연이 함께하기를 기원합니다. ':'';
+ const goal=target?'희망하는 '+target+'에 진학하여 꿈을 펼치기를 기원합니다. ':'';
  const detail=intention?'“'+intention+'”라는 소망도 마음에 담습니다. ':'';
- const ending='공부한 만큼 시험과 면접에서 차분히 실력을 펼치고, 자신의 꿈을 향해 힘차게 나아가게 하소서. 나무아미타불.';
- const shortEnding='노력의 결실을 맺고, 용기와 희망으로 새로운 길을 열게 하소서. 나무아미타불.';
- const base=intro+person+goal;
- if((base+detail+ending).length<=200)return base+detail+ending;
- if((base+detail+shortEnding).length<=200)return base+detail+shortEnding;
- if((base+shortEnding).length<=200)return base+shortEnding;
- return (intro+person+'진학의 꿈에 지혜와 평안이 함께하게 하소서. '+shortEnding).slice(0,200);
+ const study='시험과 면접에서 차분히 실력을 발휘하고 배움의 기쁨을 누리게 하소서. ';
+ const career='대학진학 후에는 좋은 곳에 취업하여 보람 있게 일하고 행복한 미래를 열어 가게 하소서. 나무아미타불.';
+ const core=intro+person;
+ const available=200-core.length-career.length;
+ let extra=goal+detail+study;
+ if(extra.length>available)extra=goal+study;
+ if(extra.length>available)extra=goal;
+ if(extra.length>available)extra=study;
+ if(extra.length>available)extra='';
+ return core+extra+career;
 }
 $('wishBtn').onclick=()=>{
  const w=$('wish').value.trim();
