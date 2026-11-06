@@ -8,6 +8,7 @@
  const picture=scene?.querySelector(':scope > img');
  if(!scene||!picture)return;
  const prefersReducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||false;
+ let motionEnabled=!prefersReducedMotion;
  const canvas=document.createElement('canvas');
  canvas.className='gatbawi-effects-layer';
  canvas.setAttribute('aria-hidden','true');
@@ -17,11 +18,11 @@
  });
  // 기본 좌표는 그림 내 상대 위치입니다. 실물 사진에 맞춰 편집 모드로 보정할 수 있습니다.
  const defaults={
-  flames:[[0.205,0.625],[0.803,0.635]],
-  clouds:[[0.28,0.22],[0.48,0.29],[0.67,0.24]],
-  eyes:[[0.36,0.69],[0.54,0.72]]
+  flames:[[0.365,0.506],[0.660,0.505]],
+  clouds:[[0.16,0.315],[0.23,0.388],[0.72,0.345],[0.84,0.425]],
+  eyes:[[0.167,0.648],[0.308,0.680],[0.763,0.686],[0.878,0.683]]
  };
- const storageKey='myeongdo-gatbawi-scene-effects-v1';
+ const storageKey='myeongdo-gatbawi-scene-effects-v2';
  let config;
  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');config=saved&&typeof saved==='object'?Object.assign({},defaults,saved):structuredClone(defaults);}catch{config={flames:defaults.flames.map(x=>x.slice()),clouds:defaults.clouds.map(x=>x.slice()),eyes:defaults.eyes.map(x=>x.slice())};}
  for(const key of ['flames','clouds','eyes'])if(!Array.isArray(config[key]))config[key]=defaults[key].map(x=>x.slice());
@@ -30,6 +31,20 @@
  const summitOverlay=scene.querySelector('.summit-prayer');
  if(prayerOverlay)prayerOverlay.style.zIndex='5';
  if(summitOverlay)summitOverlay.style.zIndex='4';
+ const control=document.createElement('button');
+ control.type='button';
+ control.className='gatbawi-motion-toggle';
+ control.textContent=motionEnabled?'✨ 그림 움직임 끄기':'✨ 그림 움직임 켜기';
+ control.setAttribute('aria-pressed',String(motionEnabled));
+ control.title='촛불, 계곡 구름, 눈 깜빡임 효과 켜기 또는 끄기';
+ control.style.cssText='position:absolute;top:8px;left:8px;z-index:9;font-size:11px;padding:6px 9px;border-radius:10px;min-height:30px;background:#193f34e8!important;color:#fff7dc!important;border:1px solid #efce8a!important;box-shadow:0 2px 6px #1238!important;';
+ scene.appendChild(control);
+ control.addEventListener('click',()=>{
+   motionEnabled=!motionEnabled;
+   control.textContent=motionEnabled?'✨ 그림 움직임 끄기':'✨ 그림 움직임 켜기';
+   control.setAttribute('aria-pressed',String(motionEnabled));
+   start();
+ });
  const ctx=canvas.getContext('2d',{alpha:true});
  if(!ctx)return;
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -55,37 +70,37 @@
  }
  function candle(x,y,t,i){
   const s=clamp(width/700,0.65,1.35);
-  const sway=Math.sin(t*1.45+i*1.3)*2.2*s+Math.sin(t*2.7+i)*0.65*s;
+  const sway=Math.sin(t*1.65+i*1.3)*3.1*s+Math.sin(t*3.1+i)*1.1*s;
   const pulse=1+Math.sin(t*3.15+i*2.2)*0.045;
   ctx.save();ctx.translate(x,y);ctx.rotate(sway/55);
   const halo=ctx.createRadialGradient(0,-10*s,1,0,-10*s,20*s);
-  halo.addColorStop(0,'rgba(255,213,96,.24)');
-  halo.addColorStop(0.55,'rgba(255,189,66,.095)');
+  halo.addColorStop(0,'rgba(255,213,96,.48)');
+  halo.addColorStop(0.55,'rgba(255,189,66,.19)');
   halo.addColorStop(1,'rgba(255,179,55,0)');
   ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,-10*s,20*s,0,Math.PI*2);ctx.fill();
-  const h=20*s*pulse,w=4.5*s*pulse;
+  const h=25*s*pulse,w=5.5*s*pulse;
   ctx.beginPath();ctx.moveTo(0,0);
   ctx.bezierCurveTo(-w*1.2,-h*.34,-w*.7,-h*.74,sway*.17,-h);
   ctx.bezierCurveTo(w*.67,-h*.66,w*1.28,-h*.32,0,0);
   const g=ctx.createLinearGradient(0,0,0,-h);
-  g.addColorStop(0,'rgba(255,128,29,.7)');
-  g.addColorStop(.55,'rgba(255,213,83,.83)');
-  g.addColorStop(1,'rgba(255,250,194,.8)');
+  g.addColorStop(0,'rgba(255,128,29,.90)');
+  g.addColorStop(.55,'rgba(255,213,83,.97)');
+  g.addColorStop(1,'rgba(255,250,194,.98)');
   ctx.fillStyle=g;ctx.fill();
   ctx.beginPath();ctx.ellipse(-.3*s,-4*s,1.8*s,4.2*s,0,0,2*Math.PI);
   ctx.fillStyle='rgba(255,251,213,.75)';ctx.fill();
   ctx.restore();
  }
  function cloud(x,y,t,i){
-  const drift=(t*2.2+i*29)%(width*.24+60)-width*.12;
-  const drop=(t*.32+i*11)%(height*.1+30)-height*.05;
+  const drift=(t*3.7+i*29)%(width*.19+70)-width*.09;
+  const drop=(t*.42+i*11)%(height*.10+30)-height*.05;
   const scale=clamp(width/700,.6,1.25);
   ctx.save();ctx.translate(x+drift,y+drop);ctx.rotate(-.1);
   for(let j=0;j<3;j++){
    const xx=j*24*scale;
    const grad=ctx.createRadialGradient(xx,0,2,xx,0,64*scale);
-   grad.addColorStop(0,'rgba(250,254,255,.105)');
-   grad.addColorStop(.5,'rgba(240,249,250,.052)');
+   grad.addColorStop(0,'rgba(250,254,255,.27)');
+   grad.addColorStop(.5,'rgba(240,249,250,.12)');
    grad.addColorStop(1,'rgba(240,250,255,0)');
    ctx.fillStyle=grad;
    ctx.beginPath();ctx.ellipse(xx,0,70*scale,15*scale,0,0,Math.PI*2);ctx.fill();
@@ -94,13 +109,13 @@
  }
  // 아주 짧은 눈 감김: 평상시에는 원본 눈을 가리지 않음.
  function blinking(x,y,t,i){
-  const cycle=(t+i*2.6)%6.9;
-  if(cycle>0.19)return;
-  const d=(cycle<.095?cycle/.095:(.19-cycle)/.095);
+  const cycle=(t+i*1.8)%5.3;
+  if(cycle>0.34)return;
+  const d=(cycle<.17?cycle/.17:(.34-cycle)/.17);
   const scale=clamp(width/700,.65,1.35);
   ctx.save();ctx.translate(x,y);ctx.lineCap='round';
-  ctx.strokeStyle='rgba(61,49,39,'+(.56*d).toFixed(3)+')';
-  ctx.lineWidth=1.4*scale;
+  ctx.strokeStyle='rgba(61,49,39,'+(.86*d).toFixed(3)+')';
+  ctx.lineWidth=2.15*scale;
   // 하나의 좌표가 두 눈 사이 중앙. 눈 주변에만 짧은 곡선을 그립니다.
   for(const offset of [-4.5,4.5]){
    ctx.beginPath();
@@ -111,7 +126,7 @@
   ctx.restore();
  }
  function draw(time){
-  if(!visible||prefersReducedMotion)return;
+  if(!visible||!motionEnabled)return;
   const t=time/1000;
   ctx.clearRect(0,0,width,height);
   // 배경은 움직이지 않고 반투명 구름층만 조용히 계곡 방향으로 흐름.
@@ -120,7 +135,7 @@
   config.eyes.forEach((xy,i)=>{if(Array.isArray(xy)&&xy.length===2){const [x,y]=point(xy);blinking(x,y,t,i)}});
   animationId=requestAnimationFrame(draw);
  }
- function start(){cancelAnimationFrame(animationId);if(!visible)return;resize();if(prefersReducedMotion){ctx.clearRect(0,0,width,height);return;}animationId=requestAnimationFrame(draw);}
+ function start(){cancelAnimationFrame(animationId);if(!visible)return;resize();if(!motionEnabled){ctx.clearRect(0,0,width,height);return;}animationId=requestAnimationFrame(draw);}
  const ro=typeof ResizeObserver==='function'?new ResizeObserver(start):null;
  ro?.observe(scene);
  window.addEventListener('resize',start,{passive:true});
@@ -149,7 +164,7 @@
     config[select.value].push([Number(x.toFixed(4)),Number(y.toFixed(4))]);
     panel.dataset[selectedKey(select.value)]=String(i+1);
     try{localStorage.setItem(storageKey,JSON.stringify(config))}catch{}
-    if(prefersReducedMotion){ctx.clearRect(0,0,width,height);config.flames.forEach((xy,k)=>candle(...point(xy),0,k))}
+    if(!motionEnabled){ctx.clearRect(0,0,width,height);config.flames.forEach((xy,k)=>candle(...point(xy),0,k))}
   });
   function selectedKey(k){return 'count'+k}
   reset.onclick=()=>{config[select.value]=[];panel.dataset[selectedKey(select.value)]='0';try{localStorage.setItem(storageKey,JSON.stringify(config))}catch{}};
