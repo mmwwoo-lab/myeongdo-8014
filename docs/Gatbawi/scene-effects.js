@@ -26,6 +26,10 @@
  try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');config=saved&&typeof saved==='object'?Object.assign({},defaults,saved):structuredClone(defaults);}catch{config={flames:defaults.flames.map(x=>x.slice()),clouds:defaults.clouds.map(x=>x.slice()),eyes:defaults.eyes.map(x=>x.slice())};}
  for(const key of ['flames','clouds','eyes'])if(!Array.isArray(config[key]))config[key]=defaults[key].map(x=>x.slice());
  scene.appendChild(canvas);
+ const prayerOverlay=scene.querySelector('.prayer-card');
+ const summitOverlay=scene.querySelector('.summit-prayer');
+ if(prayerOverlay)prayerOverlay.style.zIndex='5';
+ if(summitOverlay)summitOverlay.style.zIndex='4';
  const ctx=canvas.getContext('2d',{alpha:true});
  if(!ctx)return;
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
