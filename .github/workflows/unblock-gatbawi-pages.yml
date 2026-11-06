@@ -10,9 +10,9 @@ jobs:
   unblock:
     runs-on: ubuntu-24.04
     steps:
-      - name: Cancel previous stuck Pages deployment
+      - name: Cancel stalled Pages deployment before new animated face release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api -X POST "repos/${{ github.repository }}/pages/deployments/552d1e3a57190fc26939ef4a3a1bed4a9f77b098/cancel" || echo "No cancellable deployment remains"
+          gh api -X POST "repos/${{ github.repository }}/pages/deployments/e8e622b444a2679599e7defe2964a1fe8f106987/cancel" || echo "No cancellable deployment remains"
           gh api "repos/${{ github.repository }}/pages" --jq '{status,source}'
