@@ -200,11 +200,11 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
-<section class="chrome-guide" id="chromeGuide" aria-label="크롬 브라우저에서 열기" role="region">
-<strong>🌐 크롬 브라우저로 열기</strong>
-<p id="chromeGuideText">페이스북 앱에서 자동 전환이 막히면 아래 버튼을 눌러 주세요.</p>
-<div class="chrome-guide-actions"><button type="button" id="openChrome">🌐 크롬으로 열기</button><button type="button" id="copyChromeUrl">🔗 홈페이지 주소 복사</button></div>
-<small>안드로이드에서는 크롬 실행을 시도합니다. 아이폰에서는 공유 메뉴의 ‘브라우저에서 열기’를 선택해 주세요. 설치 여부 및 앱 정책에 따라 자동 전환은 제한될 수 있습니다.</small>
+<section class="chrome-guide" id="chromeGuide" aria-label="음성 지원을 위한 크롬 브라우저 안내" role="region">
+<strong>🔊 기도문 음성 지원을 위해 크롬 브라우저로 이동합니다.</strong>
+<p id="chromeGuideText">염불과 반야심경, 소원 기도문을 더욱 원활하게 들으실 수 있도록 크롬 브라우저에서 열겠습니다. 아래 ‘계속하기’를 선택해 주세요.</p>
+<div class="chrome-guide-actions"><button type="button" id="openChrome">계속하기 · 크롬으로 열기</button><button type="button" id="copyChromeUrl">🔗 주소 복사</button></div>
+<small>일부 앱이나 휴대전화에서는 자동 연결이 제한될 수 있습니다. 이 경우 주소를 복사해 크롬에서 열어 주세요. 음성 지원은 기기와 브라우저 설정에 따라 달라질 수 있습니다.</small>
 </section>
 <main>
 <section class="scene" aria-label="팔공산 갓바위 부처님 기도 그림">
@@ -232,38 +232,33 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 <footer>© 명도재 이명우 · 비공식 창작 기도 체험</footer>
 <script>
 
-/* Android Facebook/Instagram in-app browser: try installed Chrome, with visible fallback. */
+/* 앱 내 브라우저: 이용자가 계속하기를 선택하면 Chrome 전환을 시도합니다. */
 (function(){
  const guide=document.getElementById('chromeGuide');
  const open=document.getElementById('openChrome');
  const copy=document.getElementById('copyChromeUrl');
  const message=document.getElementById('chromeGuideText');
  if(!guide||!open||!copy||!message)return;
- const ua=navigator.userAgent||'';
+ const ua=typeof navigator==='undefined'?'':(navigator.userAgent||'');
  const android=/Android/i.test(ua);
  const ios=/iPhone|iPad|iPod/i.test(ua);
- const inApp=/(FBAN|FBAV|FB_IAB|Instagram|KAKAOTALK|NAVER\(|Line\/|wv\))/i.test(ua);
+ const inApp=/(FBAN|FBAV|FB_IAB|Instagram|KAKAOTALK|NAVER\\(|Line\\/|wv\\))/i.test(ua);
  const url='https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html';
  const target='intent://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(url)+';end';
- function launchChrome(){if(android){window.location.href=target;}else if(ios){message.textContent='아이폰에서는 자동 실행이 제한될 수 있습니다. 아래의 주소 복사 후 크롬에 붙여넣거나, 공유 메뉴에서 브라우저로 열어 주세요.';guide.classList.add('is-visible');}else{window.open(url,'_blank','noopener,noreferrer');}}
+ function launchChrome(){
+  if(android){window.location.href=target;}
+  else if(ios){guide.classList.add('is-visible');message.textContent='아이폰에서는 크롬으로 자동 전환되지 않을 수 있습니다. 주소 복사를 누른 뒤 크롬에서 열거나 앱 메뉴의 ‘브라우저에서 열기’를 선택해 주세요.';}
+  else{window.open(url,'_blank','noopener,noreferrer');}
+ }
  open.addEventListener('click',launchChrome);
  copy.addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(url);message.textContent='주소를 복사했습니다. 크롬 주소창에 붙여넣어 주세요.';}
-  catch(e){message.textContent='복사가 제한되었습니다. 주소: '+url;}
+  try{await navigator.clipboard.writeText(url);message.textContent='홈페이지 주소가 복사되었습니다. 크롬 주소창에 붙여넣어 주세요.';}
+  catch(e){message.textContent='주소를 복사해 크롬에서 열어 주세요: '+url;}
  });
  if(inApp){
   guide.classList.add('is-visible');
-  if(android){
-   message.textContent='앱 내 브라우저를 감지했습니다. 크롬으로 자동 전환을 시도합니다. 이동하지 않으면 ‘크롬으로 열기’를 누르세요.';
-   // Only one automatic attempt per tab, preventing repeated browser fallback loops.
-   try{
-    if(!sessionStorage.getItem('gatbawi_chrome_attempted')){
-     sessionStorage.setItem('gatbawi_chrome_attempted','1');
-     setTimeout(launchChrome,400);
-    }
-   }catch(e){/* Restricted storage: keep manual launch available. */}
-  }else if(ios){
-   message.textContent='아이폰의 앱 내 브라우저에서는 크롬 자동 전환이 제한됩니다. 메뉴의 ‘브라우저에서 열기’를 선택하거나 주소를 복사해 크롬에서 여세요.';
+  if(ios){
+   message.textContent='기도문 음성 지원을 위해 크롬 브라우저 이용을 권장합니다. 아이폰에서는 아래 ‘계속하기’를 선택하거나, 앱 메뉴의 ‘브라우저에서 열기’를 이용해 주세요.';
   }
  }
 })();
