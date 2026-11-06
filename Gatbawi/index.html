@@ -61,18 +61,6 @@ html{scroll-behavior:smooth}
 </style><style>
 /* 완성형 퀼트 법당 위 참배 동작과 촛불 오버레이 */
 .summit-visual{overflow:hidden}
-.bow-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-.bow-overlay .figure{position:absolute;bottom:2%;height:51%;width:23%;background-image:url('./퀼트 산사에서 맞이한 평온한 아침.png');background-repeat:no-repeat;background-size:434.8% 196%;transform-origin:50% 95%;opacity:0;will-change:transform;filter:drop-shadow(0 3px 4px #26364055)}
-.bow-overlay .figure.one{left:1%;background-position:0% 97%;clip-path:ellipse(48% 48% at 50% 49%)}
-.bow-overlay .figure.two{left:22%;background-position:29% 97%;clip-path:ellipse(49% 49% at 50% 50%)}
-.bow-overlay .figure.three{left:69%;background-position:76% 97%;clip-path:ellipse(47% 49% at 50% 50%)}
-.bow-overlay .figure.four{left:82%;background-position:100% 97%;clip-path:ellipse(46% 48% at 50% 50%)}
-.summit-visual.bowing-family .figure{opacity:1;animation:devoteeBow 1.45s ease-in-out 1 both}
-.summit-visual.bowing-family .figure:after{content:"";position:absolute;inset:0;border:2px dashed #e9d7bd50;border-radius:50%;pointer-events:none}
-.summit-visual.bowing-family .figure.two{animation-delay:.12s}
-.summit-visual.bowing-family .figure.three{animation-delay:.2s}
-.summit-visual.bowing-family .figure.four{animation-delay:.28s}
-@keyframes devoteeBow{0%,100%{transform:translateY(0) rotate(0deg) scaleY(1);opacity:0}10%,85%{opacity:1}50%,65%{transform:translateY(11%) rotate(12deg) scaleY(.7);opacity:1}}
 .candle-layer{position:absolute;inset:0;pointer-events:none;z-index:2}
 .candle-layer .flame-wrap{position:absolute;top:38%;width:7%;height:18%;transform-origin:50% 100%;opacity:0;transition:opacity .3s, transform .4s;transform:scale(.55)}
 .candle-layer .flame-wrap.left{left:32.7%}.candle-layer .flame-wrap.right{left:62.6%}
@@ -80,12 +68,12 @@ html{scroll-behavior:smooth}
 .candle-layer .flame-shape{width:100%;height:100%;filter:drop-shadow(0 0 10px #ffb144);animation:gentleFlame .7s ease-in-out infinite alternate}
 .candle-layer .flame-shape:before{content:"";display:block;height:100%;width:100%;background:radial-gradient(ellipse at 50% 77%,#fffce3 0%,#ffcf60 35%,#f07723 70%,transparent 76%);clip-path:polygon(50% 0%,83% 36%,96% 77%,78% 100%,22% 100%,4% 77%,17% 36%)}
 @keyframes gentleFlame{to{transform:scaleX(.9) rotate(4deg) translateY(-2px)}}
-@media(prefers-reduced-motion:reduce){.summit-visual.bowing-family .figure{animation-duration:.01ms}.candle-layer .flame-shape{animation:none}}
+@media(prefers-reduced-motion:reduce){.candle-layer .flame-shape{animation:none}}
 </style></head>
 <body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 명도재 디지털 법당</h1></div><p>팔공산 갓바위 · 걸어 올라가는 퀼트 인형들의 순례</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
 <section class="welcome" id="home"><div class="welcome-copy"><small>PALGONGSAN · GATBAWI · QUILT TEMPLE</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 촛불을 밝히고, 합장하며 소원을 올려보세요.</p><a href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
 <div class="welcome-art" aria-label="완성된 갓바위 부처님과 가족들의 퀼트 법당 그림" role="img"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님 앞에서 기도하는 가족들의 퀼트 인형 모습" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='🪷 명도재 갓바위 디지털 법당';"></div></section>
-<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>가족 퀼트 인형들이 계단길을 따라 갓바위 정상으로 걸어갑니다.</article><article><strong>🙏 갓바위 참배</strong>108배 가족 절하기와 양쪽 촛불 켜기·끄기, 소원 기도문 낭독을 체험합니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 갓바위 산길 체험 · 디지털 법당</h2>
+<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>가족 퀼트 인형들이 계단길을 따라 갓바위 정상으로 걸어갑니다.</article><article><strong>🙏 갓바위 참배</strong>양쪽 촛불 켜기·끄기와 소원 기도문·음성 낭독을 체험합니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 갓바위 산길 체험 · 디지털 법당</h2>
 <main><section class="scene" aria-label="퀼트 인형 신도들이 팔공산 갓바위로 오르는 애니메이션">
 <svg id="world" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid slice">
 <defs>
@@ -123,9 +111,9 @@ html{scroll-behavior:smooth}
 <path id="stairsMark" d="M30 688Q209 622 296 575Q421 503 491 456T658 320Q767 233 838 198" fill="none" stroke="#9e9889" stroke-width="76" stroke-dasharray="4 29"/>
 <g id="summit" transform="translate(836 199)"><ellipse cy="68" rx="170" ry="45" fill="url(#patch)" stroke="#ead7b7" stroke-width="6" stroke-dasharray="6 5"/><use href="#buddha" transform="translate(0 -21) scale(.65)"/><g id="candles" opacity=".22"><rect x="-95" y="20" width="11" height="33" rx="5" fill="#faf0dc"/><rect x="85" y="20" width="11" height="33" rx="5" fill="#faf0dc"/><path class="flame" d="M-90 19Q-102 3 -89 -6Q-77 9 -90 19" fill="#ffd36b"/><path class="flame" d="M90 19Q78 3 91 -6Q104 9 90 19" fill="#ffd36b"/></g><g><rect x="-63" y="47" width="130" height="23" rx="4" fill="url(#patch)" stroke="#f0d9bc" stroke-width="3"/><circle cx="-36" cy="40" r="12" fill="#b7745d"/><ellipse cx="0" cy="40" rx="14" ry="10" fill="#f6ecd8"/><circle cx="36" cy="40" r="12" fill="#cfaa69"/></g></g>
 <g id="walker" transform="translate(35 665) scale(.72)"><use href="#doll"/><use href="#dollWoman" transform="translate(-72 12) scale(.88)"/><use href="#dollChild" transform="translate(75 19) scale(.75)"/></g>
-<g id="bowing" opacity="0" transform="translate(658 265) scale(.52)"><use href="#doll"/></g>
+
 <path id="stairsPath" d="M30 688Q209 622 296 575Q421 503 491 456T658 320Q767 233 838 198" fill="none" stroke="none"/>
-</svg><div id="summitVisual" class="summit-visual" aria-hidden="true"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님께 기도하는 가족들의 퀼트 인형 법당 그림" onerror="this.style.display='none';document.getElementById('summitPrayer').textContent='법당 이미지가 표시되지 않습니다. 새로고침 후 다시 시도해 주세요.'"><div class="bow-overlay" id="familyBowLayer" aria-hidden="true"><div class="figure one"></div><div class="figure two"></div><div class="figure three"></div><div class="figure four"></div></div><div class="candle-layer" id="candleLayer" aria-hidden="true"><div class="flame-wrap left"><div class="flame-shape"></div></div><div class="flame-wrap right"><div class="flame-shape"></div></div></div><div class="summit-prayer" id="summitPrayer">🙏 갓바위 부처님 앞에서 두 손을 모읍니다</div>
+</svg><div id="summitVisual" class="summit-visual" aria-hidden="true"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="갓바위 부처님께 기도하는 가족들의 퀼트 인형 법당 그림" onerror="this.style.display='none';document.getElementById('summitPrayer').textContent='법당 이미지가 표시되지 않습니다. 새로고침 후 다시 시도해 주세요.'"><div class="candle-layer" id="candleLayer" aria-hidden="true"><div class="flame-wrap left"><div class="flame-shape"></div></div><div class="flame-wrap right"><div class="flame-shape"></div></div></div><div class="summit-prayer" id="summitPrayer">🙏 갓바위 부처님 앞에서 두 손을 모읍니다</div>
 <section id="prayerCard" class="prayer-card" aria-label="소원 기도문" hidden>
 <h3>🪷 갓바위 소원 기도문</h3>
 <div class="tts-controls"><button id="readPrayer" type="button">🔊 기도문 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button></div>
@@ -136,7 +124,7 @@ html{scroll-behavior:smooth}
 </section>
 <aside class="side">
 <section class="panel"><h3>👣 움직이는 순례자</h3><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
-<section class="panel"><h3>🙏 정상에서의 기도</h3><div class="actions"><button id="bowBtn">🙏 가족이 절하기</button><button id="candleOnBtn">🕯️ 촛불 켜기</button><button id="candleOffBtn">🧯 촛불 끄기</button></div><p id="candleStatus" role="status" aria-live="polite">촛불 상태: 꺼짐 · 디지털 촛불입니다.</p><div class="num"><span id="bowCount">0</span> / 108배</div></section>
+<section class="panel"><h3>🙏 정상에서의 기도</h3><div class="actions"><button id="candleOnBtn">🕯️ 촛불 켜기</button><button id="candleOffBtn">🧯 촛불 끄기</button></div><p id="candleStatus" role="status" aria-live="polite">촛불 상태: 꺼짐 · 디지털 촛불입니다.</p></section>
 <section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button><p>소원을 올리면 부처님 오른쪽에 약 200자의 기도문이 나타나며, 음성으로 읽어줍니다. 소원 내용은 외부 서버로 전송하거나 저장하지 않습니다.</p>
 <div id="wishReply" role="status" aria-live="polite" hidden style="margin-top:13px;padding:16px;border:1px solid #e4c795;border-radius:12px;background:#122e36">
 <strong style="color:#f3d4a1">🪷 갓바위 앞에서 전하는 마음의 법문</strong>
@@ -148,7 +136,7 @@ html{scroll-behavior:smooth}
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const state={p:0,playing:false,last:0,speed:2,bows:0,lit:false,ctx:null};
+const state={p:0,playing:false,last:0,speed:2,lit:false,ctx:null};
 const stairsPath=$('stairsPath');
 const supported=!!(stairsPath&&typeof stairsPath.getTotalLength==='function');
 
@@ -170,7 +158,6 @@ function render(){
  $('candleStatus').textContent='촛불 상태: '+(state.lit?'켜짐 🔥':'꺼짐 · 디지털 촛불입니다.');
 
  const isSummit=state.p>=1;
- $('bowBtn').disabled=!isSummit||state.bows>=108;
  $('candleOnBtn').disabled=!isSummit||state.lit;
  $('candleOffBtn').disabled=!isSummit||!state.lit;
  $('summitVisual').classList.toggle('active',isSummit);
@@ -182,24 +169,9 @@ function arrived(){if(state.p<1){toast('먼저 계단을 올라 정상에 도착
 
 $('startBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;if(state.p>=1)state.p=0;state.playing=true;state.last=0;render()};
 $('pauseBtn').onclick=()=>{state.playing=false;render()};
-$('resetBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;state.bows=0;state.lit=false;$('bowCount').textContent='0';$('summitVisual').classList.remove('bowing-family','praying');$('summitPrayer').textContent='🙏 갓바위 부처님 앞에서 두 손을 모읍니다';render()};
+$('resetBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;state.lit=false;$('summitPrayer').textContent='🙏 갓바위 부처님 앞에서 두 손을 모읍니다';render()};
 $('summitBtn').onclick=()=>{state.p=1;state.playing=false;state.last=0;render();toast('갓바위 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
 $('speed').oninput=e=>{state.speed=+e.target.value;$('speedText').textContent=['','느리게','보통','빠르게','매우 빠르게'][state.speed]};
-let familyBowTimeout=null;
-$('bowBtn').onclick=()=>{
- if(!arrived())return;
- if(state.bows>=108){toast('108배를 모두 마쳤습니다. 다시 절하려면 새 수행을 시작해 주세요.');return;}
- if(familyBowTimeout){clearTimeout(familyBowTimeout);familyBowTimeout=null}
- state.bows=Math.min(108,state.bows+1);
- $('bowCount').textContent=state.bows;
- const scene=$('summitVisual');
- scene.classList.remove('bowing-family','praying');
- void scene.getBoundingClientRect();
- scene.classList.add('bowing-family','praying');
- $('summitPrayer').textContent='🙏 가족 모두가 부처님께 '+state.bows+'번째 절을 올립니다';
- familyBowTimeout=setTimeout(()=>{scene.classList.remove('bowing-family','praying');familyBowTimeout=null},2300);
- toast(state.bows===108?'108배 수행을 마쳤습니다.':'가족이 고개를 숙여 '+state.bows+'번째 절을 올립니다.');
-};
 $('candleOnBtn').onclick=()=>{
  if(!arrived())return;
  state.lit=true;render();
