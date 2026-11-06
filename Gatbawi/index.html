@@ -112,10 +112,10 @@ html{scroll-behavior:smooth}
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기 버튼을 눌러 기도문을 들어보세요.</div>
 <p id="prayerText"></p>
 </section></div><div class="overlay"><h2 id="sceneTitle">산 아래에서 출발합니다</h2><div id="sceneText">계단 올라가기 버튼을 눌러보세요.</div></div>
-<div class="bottom"><button id="startBtn" class="primary">🪨 계단 올라가기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="resetBtn">↺ 다시 출발</button><button id="summitBtn">🪷 정상 바로가기</button></div>
+<div class="bottom"><button id="startBtn" class="primary">🪨 계단 올라가기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="musicBtn" type="button" aria-pressed="true">🎵 음악 켜짐</button><button id="resetBtn">↺ 다시 출발</button><button id="summitBtn">🪷 정상 바로가기</button></div>
 </section>
 <aside class="side">
-<section class="panel"><h3>👣 움직이는 순례자</h3><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
+<section class="panel"><h3>👣 움직이는 순례자</h3><p id="walkMusicStatus" role="status" aria-live="polite">🎹 계단을 오르면 피아노와 동요풍 합창 선율이 재생됩니다.</p><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
 <section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button></section>
 </aside></main><footer>© 명도재 이명우 · 독립 창작 체험 웹앱 · 종교기관의 공식 서비스가 아닙니다.</footer>
 <script>
@@ -142,14 +142,63 @@ function render(){
  $('summitVisual').classList.toggle('active',isSummit);
  $('summitVisual').setAttribute('aria-hidden',isSummit?'false':'true');
 }
-function tick(t){if(state.playing){if(state.last){state.p=Math.min(1,state.p+Math.min(100,t-state.last)*.000027*state.speed)}if(state.p>=1){state.playing=false;toast('관봉 정상에 도착했습니다. 갓바위 부처님께 기도해 보세요.');ding(440,.9)}render()}state.last=t;requestAnimationFrame(tick)}
+function tick(t){if(state.playing){if(state.last){state.p=Math.min(1,state.p+Math.min(100,t-state.last)*.000027*state.speed)}if(state.p>=1){state.playing=false;stopWalkMusic();toast('관봉 정상에 도착했습니다. 갓바위 부처님께 기도해 보세요.');ding(440,.9)}render()}state.last=t;requestAnimationFrame(tick)}
 function ding(freq,duration){try{state.ctx??=new (window.AudioContext||window.webkitAudioContext)();state.ctx.resume();const o=state.ctx.createOscillator(),g=state.ctx.createGain();o.type='sine';o.frequency.setValueAtTime(freq,state.ctx.currentTime);o.frequency.exponentialRampToValueAtTime(freq*.72,state.ctx.currentTime+duration);g.gain.setValueAtTime(.001,state.ctx.currentTime);g.gain.exponentialRampToValueAtTime(.15,state.ctx.currentTime+.03);g.gain.exponentialRampToValueAtTime(.001,state.ctx.currentTime+duration);o.connect(g).connect(state.ctx.destination);o.start();o.stop(state.ctx.currentTime+duration+.05)}catch(e){}}
+/* 계단 산행용 자작 동요풍 선율 — 피아노 + 합성 어린이 합창 음색.
+   실제 어린이의 녹음이 아닌 브라우저 오디오 합성입니다. */
+const music={enabled:true,timer:null,step:0,at:0,voiceNodes:[]};
+const tune=[60,62,64,67,67,64,62,60,62,64,65,69,67,65,64,62,60,64,67,72,71,69,67,64,65,64,62,60,62,60,60,null];
+const chords=[[48,52,55],[45,48,52],[53,57,60],[55,59,62]];
+function musicNote(midi){return 440*Math.pow(2,(midi-69)/12)}
+function playMusicNote(midi,when,duration,kind){
+ if(midi==null||!state.ctx)return;
+ const ctx=state.ctx;const master=ctx.createGain();master.gain.value=kind==='piano'?.068:.025;master.connect(ctx.destination);
+ const voice=ctx.createGain();voice.gain.setValueAtTime(.0001,when);voice.gain.exponentialRampToValueAtTime(kind==='piano'?.74:.43,when+.025);
+ voice.gain.exponentialRampToValueAtTime(.0001,when+duration);voice.connect(master);
+ const harmonics=kind==='piano'?[[1,'triangle',.8],[2,'sine',.28],[3,'sine',.12]]:[[1,'sine',1],[2,'triangle',.23],[3,'sine',.10]];
+ for(const [ratio,type,volume] of harmonics){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(musicNote(midi)*ratio,when);g.gain.value=volume;o.connect(g).connect(voice);o.start(when);o.stop(when+duration+.03);}
+}
+function scheduleWalkMusic(){
+ if(!state.playing||!music.enabled||!state.ctx)return;
+ const ctx=state.ctx;const beat=60/112;
+ while(music.at<ctx.currentTime+.26){
+  const n=music.step%tune.length;const when=music.at;
+  playMusicNote(tune[n],when,beat*.76,'piano');
+  if(n%2===0&&tune[n]!=null)playMusicNote(tune[n]+12,when+.05,beat*.85,'chorus');
+  if(n%8===0){for(const tone of chords[Math.floor(n/8)%chords.length])playMusicNote(tone,when,beat*2.3,'piano')}
+  music.step++;music.at+=beat;
+ }
+}
+function startWalkMusic(){
+ if(!music.enabled||!state.playing)return;
+ try{
+  state.ctx??=new (window.AudioContext||window.webkitAudioContext)();
+  state.ctx.resume();
+  if(music.timer)return;
+  music.at=state.ctx.currentTime+.06;music.step=0;
+  scheduleWalkMusic();
+  music.timer=setInterval(scheduleWalkMusic,110);
+  $('walkMusicStatus').textContent='🎵 피아노와 동요풍 합성 합창 선율 재생 중';
+ }catch(e){$('walkMusicStatus').textContent='이 브라우저에서는 배경 음악을 사용할 수 없습니다.';}
+}
+function stopWalkMusic(){
+ if(music.timer){clearInterval(music.timer);music.timer=null;}
+ music.step=0;
+ $('walkMusicStatus').textContent=music.enabled?'🎹 계단 올라가기를 누르면 음악이 다시 재생됩니다.':'🔇 산행 음악 꺼짐';
+}
+$('musicBtn').onclick=()=>{
+ music.enabled=!music.enabled;
+ $('musicBtn').textContent=music.enabled?'🎵 음악 켜짐':'🔇 음악 꺼짐';
+ $('musicBtn').setAttribute('aria-pressed',String(music.enabled));
+ if(music.enabled){if(state.playing)startWalkMusic();else $('walkMusicStatus').textContent='🎹 계단을 오르면 피아노 동요 선율이 재생됩니다.';}
+ else stopWalkMusic();
+};
 function arrived(){if(state.p<1){toast('먼저 계단을 올라 정상에 도착해 주세요.');return false}return true}
 
-$('startBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;if(state.p>=1)state.p=0;state.playing=true;state.last=0;render()};
-$('pauseBtn').onclick=()=>{state.playing=false;render()};
-$('resetBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;$('summitPrayer').textContent='🙏 갓바위 부처님 앞에서 두 손을 모읍니다';render()};
-$('summitBtn').onclick=()=>{state.p=1;state.playing=false;state.last=0;render();toast('갓바위 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
+$('startBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;if(state.p>=1)state.p=0;state.playing=true;state.last=0;render();startWalkMusic()};
+$('pauseBtn').onclick=()=>{state.playing=false;stopWalkMusic();render()};
+$('resetBtn').onclick=()=>{stopWalkMusic();stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;$('summitPrayer').textContent='🙏 갓바위 부처님 앞에서 두 손을 모읍니다';render()};
+$('summitBtn').onclick=()=>{stopWalkMusic();state.p=1;state.playing=false;state.last=0;render();toast('갓바위 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
 $('speed').oninput=e=>{state.speed=+e.target.value;$('speedText').textContent=['','느리게','보통','빠르게','매우 빠르게'][state.speed]};
 function createWishMessage(wish){
  const clean=wish.replace(/\s+/g,' ').trim();
@@ -206,6 +255,7 @@ $('wishBtn').onclick=()=>{
  if(!w){toast('마음속 소원을 적어보세요.');$('wish').focus();return;}
  stopPrayerSpeech();
  const message=createWishMessage(w);
+ stopWalkMusic();
  $('prayerText').textContent=message;
  // 산길 출발 전에도 기도문을 볼 수 있도록 정상 화면으로 이동시킵니다.
  state.p=1;state.playing=false;render();
