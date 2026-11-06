@@ -191,7 +191,13 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 .admission-stats p{font-size:12px!important;line-height:1.6!important;margin:4px 0 6px!important;color:#283e31!important}
 .admission-stats a{display:inline-block;padding:6px 9px;margin:3px 6px 0 0;border:1px solid #b58d43;border-radius:7px;color:#154b3c;background:#fff7d6;font-weight:700;text-decoration:none;font-size:11px}
 @media(max-width:600px){.admission-stats{margin-top:7px;padding:7px;font-size:10.5px}.admission-stats strong{font-size:11px}.admission-stats p{font-size:10.5px!important;line-height:1.5!important}.admission-stats a{font-size:10px;padding:5px 6px}}
-/* 음성 읽기 불가 시에만 표시되는 크롬 전환 안내 */
+/* 소리가 나지 않을 때 크롬 연결 및 주소 복사 */
+.prayer-browser-actions{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.prayer-browser-actions a,.prayer-browser-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:6px 10px;border-radius:8px;border:1px solid #cfaf69;font-size:12px;text-decoration:none;font-weight:600;line-height:1.4;background:#135a40;color:#fff8e9;cursor:pointer}
+.prayer-browser-actions a:hover,.prayer-browser-actions button:hover{background:#207652}
+.prayer-browser-help strong{font-weight:700}
+@media(max-width:600px){.prayer-browser-actions a,.prayer-browser-actions button{font-size:11px;min-height:32px;padding:6px 8px}}
+
 .prayer-browser-help[hidden]{display:none!important}
 .prayer-browser-help{margin:9px 0;padding:9px 10px;background:#fff6df;color:#244837;border:1px solid #d1ae66;border-radius:9px;font-size:12px;line-height:1.6}
 .prayer-browser-help p{margin:0 0 7px}
@@ -208,9 +214,13 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 <h3 id="prayerHeading">🪷 팔공산 갓바위 부처님 소원 기도문</h3>
 <div class="tts-controls"><button id="readPrayer" type="button">🔊 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button><button id="hidePrayer" type="button">✕ 사라지기</button></div>
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기를 눌러보세요.</div>
+<div class="prayer-browser-actions">
+<a id="openPrayerChrome" class="prayer-chrome-link" href="https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html" target="_blank" rel="noopener noreferrer">🌐 소리가 안 나면 크롬으로 열기</a>
+<button type="button" id="copyPrayerLink">🔗 주소 복사</button>
+</div>
 <div id="prayerBrowserHelp" class="prayer-browser-help" hidden>
-<p id="prayerBrowserMessage">음성 읽기를 시작할 수 없습니다. 크롬에서 다시 시도해 보세요.</p>
-<button type="button" id="openPrayerChrome">🌐 크롬으로 열기</button>
+<p id="prayerBrowserMessage">기도문 소리가 재생되지 않으면 크롬으로 다시 열어 주세요.</p>
+<p>일부 앱 내부 브라우저는 크롬 자동 실행을 차단합니다. 그럴 때는 <strong>주소 복사</strong>를 누른 뒤 크롬 주소창에 붙여넣어 주세요.</p>
 </div>
 <div id="prayerText"></div>
 <div id="admissionStats" class="admission-stats" aria-label="2025학년도 대학 입시 성적 참고" hidden></div>
@@ -540,27 +550,47 @@ function speakPrayer(){
   },9000);
  }catch(e){fail();}
 }
-$('openPrayerChrome').onclick=()=>{
- const url=location.origin+location.pathname+location.search;
+// Use a native anchor for external browser launch: app webviews often block
+// JavaScript assignments to intent:// or popup navigation.
+const prayerSiteUrl='https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html';
+const prayerChromeLink=$('openPrayerChrome');
+(function preparePrayerChromeLink(){
  const ua=navigator.userAgent||'';
  if(/Android/i.test(ua)){
-  // Explicit tap only. Android may still block intents from an in-app browser.
-  const fallback=encodeURIComponent(url);
-  const target='intent://'+location.host+location.pathname+location.search+'#Intent;scheme='+location.protocol.replace(':','')+';package=com.android.chrome;S.browser_fallback_url='+fallback+';end';
-  location.href=target;
- }else if(/iPad|iPhone|iPod/i.test(ua)){
-  $('prayerBrowserMessage').textContent='아이폰은 자동으로 크롬으로 이동하지 않을 수 있습니다. 공유 메뉴에서 “브라우저에서 열기”를 선택하거나 주소를 복사해 크롬에서 열어 주세요.';
-  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(url).then(()=>{$('prayerBrowserMessage').textContent+=' 주소가 복사되었습니다.';}).catch(()=>{});
+  const tail=prayerSiteUrl.replace(/^https:\/\//,'');
+  prayerChromeLink.href='intent://'+tail+'#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(prayerSiteUrl)+';end';
+  prayerChromeLink.removeAttribute('target');
+  prayerChromeLink.textContent='🌐 크롬 앱으로 열기';
+ }else if(/iPhone|iPad|iPod/i.test(ua)){
+  // iOS Chrome's custom URL scheme is supported when Chrome is installed, but
+  // a standard HTTPS link and copy action are always available as fallbacks.
+  prayerChromeLink.href='googlechromes://'+prayerSiteUrl.replace(/^https:\/\//,'');
+  prayerChromeLink.removeAttribute('target');
+  prayerChromeLink.textContent='🌐 크롬 앱으로 열기';
  }else{
-  $('prayerBrowserMessage').textContent='컴퓨터에서는 크롬을 직접 실행한 뒤 홈페이지 주소를 붙여넣어 주세요.';
-  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(url).then(()=>{
-    $('prayerBrowserMessage').textContent+=' 홈페이지 주소가 복사되었습니다.';
-  }).catch(()=>{
-    $('prayerBrowserMessage').textContent+=' 주소: '+url;
-  });
-  else $('prayerBrowserMessage').textContent+=' 주소: '+url;
+  prayerChromeLink.href=prayerSiteUrl;
+  prayerChromeLink.target='_blank';
+  prayerChromeLink.textContent='🌐 홈페이지 새 창으로 열기';
  }
-};
+})();
+async function copyPrayerSiteAddress(){
+ try{
+  if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('Clipboard API not available');
+  await navigator.clipboard.writeText(prayerSiteUrl);
+  $('prayerBrowserMessage').textContent='주소를 복사했습니다. 크롬 앱 주소창에 붙여넣어 주세요.';
+ }catch(e){
+  const temp=document.createElement('textarea');
+  temp.value=prayerSiteUrl;temp.setAttribute('readonly','');
+  temp.style.cssText='position:fixed;opacity:0;left:-9999px';
+  document.body.appendChild(temp);temp.select();
+  let copied=false;
+  try{copied=document.execCommand('copy')}catch(e){}
+  temp.remove();
+  $('prayerBrowserMessage').textContent=copied?'주소를 복사했습니다. 크롬 앱 주소창에 붙여넣어 주세요.':'이 주소를 크롬에 붙여넣어 주세요: '+prayerSiteUrl;
+ }
+ $('prayerBrowserHelp').hidden=false;
+}
+$('copyPrayerLink').onclick=copyPrayerSiteAddress;
 $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
 $('hidePrayer').onclick=()=>{stopHeartSutra();stopPrayerSpeech();hidePrayerChromeHelp();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
