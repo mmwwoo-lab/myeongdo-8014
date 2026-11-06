@@ -1,0 +1,18 @@
+name: Unblock Gatbawi Pages publication
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/unblock-gatbawi-pages.yml']
+permissions:
+  contents: read
+  pages: write
+jobs:
+  unblock:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Cancel previous stuck Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X POST "repos/${{ github.repository }}/pages/deployments/552d1e3a57190fc26939ef4a3a1bed4a9f77b098/cancel" || echo "No cancellable deployment remains"
+          gh api "repos/${{ github.repository }}/pages" --jq '{status,source}'
