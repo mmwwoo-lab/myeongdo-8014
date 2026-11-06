@@ -329,6 +329,7 @@ const heartKoreanLines=[
 // 경전의 의미를 이해하기 쉽게 풀어 쓴 우리말 번역·의역입니다.
 function showHeartSutra(mode){
  const card=$('prayerCard'),body=$('prayerText');
+ if($('admissionStats'))$('admissionStats').hidden=true;
  card.classList.add('sutra-mode');
  card.setAttribute('aria-label',mode==='korean'?'반야심경 우리말 풀이':'반야심경 전문');
  $('prayerHeading').textContent=mode==='korean'?'📜 반야심경 한글 풀이':'📖 반야심경';
@@ -417,6 +418,7 @@ $('heartStart').onclick=()=>{if(heart.active&&heart.mode==='original')stopHeartS
 $('heartKoreanStart').onclick=()=>{if(heart.active&&heart.mode==='korean')stopHeartSutra();else startHeartSutra('korean')};
 function showChantCard(){
  const card=$('prayerCard'),body=$('prayerText');
+ if($('admissionStats'))$('admissionStats').hidden=true;
  card.classList.remove('sutra-mode');
  card.classList.add('chant-mode');
  card.setAttribute('aria-label','나무아미타불 염불과 뜻풀이');
@@ -532,7 +534,7 @@ function showAdmissionStats(school){
  const panel=$('admissionStats');
  if(!panel)return;
  panel.replaceChildren();
- const target=(school||'').replace(/\\s+/g,' ').trim().slice(0,70);
+ const target=(school||'').replace(/\s+/g,' ').trim().slice(0,70);
  if(!target){panel.hidden=true;return;}
  const title=document.createElement('strong');
  title.textContent='📊 2025학년도 입시 성적 참고 · '+target;
