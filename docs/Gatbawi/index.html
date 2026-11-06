@@ -140,6 +140,63 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
 .chrome-guide-actions{display:flex;flex-wrap:wrap;gap:8px}
 .chrome-guide-actions button{padding:9px 14px}
 .chrome-guide small{display:block;margin-top:8px;line-height:1.5;color:#50624a}
+
+/* 스마트폰 전용: 염불 버튼과 기도 메시지창을 화면에 맞게 축소 */
+@media (max-width:600px){
+ html,body{overflow-x:hidden}
+ header{padding:10px 12px 9px}
+ header h1{font-size:clamp(20px,5.5vw,25px);line-height:1.28;margin-bottom:3px}
+ header>p{font-size:11px}
+ .chant-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:8px;align-items:stretch}
+ .chant-controls button{min-width:0;min-height:34px;padding:5px 6px;font-size:11px;line-height:1.35;border-radius:8px;border-width:1px!important;box-shadow:none!important}
+ .chant-controls button:nth-of-type(3){grid-column:1/-1}
+ .chant-controls small{grid-column:1/-1;font-size:10px;line-height:1.35}
+ main{display:flex;flex-direction:column;gap:10px;padding:9px 10px 15px}
+ .scene{width:100%;aspect-ratio:4/4.35;border-radius:12px;border-width:1px}
+ .scene>img{object-position:center}
+ .prayer-card,.prayer-card.sutra-mode,.prayer-card.chant-mode{
+   position:absolute;top:5px;right:5px;left:auto;
+   width:min(74%,290px);max-width:calc(100% - 10px);
+   max-height:56%;height:auto;padding:8px 9px;
+   border-width:2px!important;border-radius:10px;
+   overflow-y:auto;overscroll-behavior:contain;
+   scrollbar-width:thin;z-index:8
+ }
+ .prayer-card h3,.prayer-card.sutra-mode h3,.prayer-card.chant-mode h3{
+   font-size:12px;line-height:1.35;margin:0 0 5px
+ }
+ .prayer-card p,.prayer-card #prayerText,.prayer-card.sutra-mode #prayerText,.prayer-card.chant-mode #prayerText{
+   font-size:11.5px;line-height:1.55;overflow-wrap:anywhere
+ }
+ .prayer-card p{margin-top:6px}
+ .prayer-card .sutra-line{margin:0 0 7px;padding:2px 3px}
+ .prayer-card.chant-mode .chant-phrase{font-size:15px;margin:5px 0 7px;padding-bottom:5px}
+ .prayer-card.chant-mode .chant-explanation{font-size:11px;line-height:1.5;margin:5px 0}
+ .tts-controls{gap:3px}
+ .tts-controls button{padding:5px 6px;font-size:10px;line-height:1.2;border:1px solid #d4b675!important;border-radius:7px}
+ .tts-status{font-size:10px;margin-top:4px;line-height:1.3}
+ .summit-prayer{bottom:6px;font-size:10px;padding:5px 9px;max-width:96%;line-height:1.3}
+ .panel{padding:12px;border-radius:11px}
+ .panel h2{font-size:16px;margin-bottom:7px}
+ .panel h3{font-size:14px;margin-bottom:6px}
+ .panel label{font-size:11px;margin:6px 0 3px}
+ textarea,input{min-height:0;padding:8px 10px;font-size:13px;border-radius:8px}
+ textarea{min-height:58px}
+ input{margin-bottom:5px}
+ button.primary.full{padding:8px 10px;font-size:12px;margin-top:7px;min-height:35px}
+ .admission-wish{margin-top:11px;padding-top:10px}
+ .admission-help{font-size:10px;margin:6px 0 0}
+ .chrome-guide{margin:7px 10px 0;padding:9px 10px}
+ .chrome-guide strong{font-size:12px}
+ .chrome-guide p,.chrome-guide small{font-size:10px;line-height:1.5}
+ .chrome-guide-actions button{font-size:10px;padding:6px 9px}
+ footer{font-size:10px;padding:3px 10px 15px}
+}
+@media(max-width:360px){
+ .chant-controls button{font-size:10px;padding:5px 4px}
+ .prayer-card,.prayer-card.sutra-mode,.prayer-card.chant-mode{width:78%;max-height:53%;padding:7px}
+ .prayer-card h3,.prayer-card.sutra-mode h3,.prayer-card.chant-mode h3{font-size:11px}
+}
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
