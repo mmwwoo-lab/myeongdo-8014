@@ -18,5 +18,7 @@ jobs:
         run: |
           npm install --no-save --no-package-lock playwright@1.57.0
           npx playwright install --with-deps chromium
+      - name: Test Gatbawi digital temple in Chromium
+        run: node tests/browser-gatbawi.cjs
       - name: Test personal homepage and creator in Chromium
         run: node tests/browser-smoke.cjs
