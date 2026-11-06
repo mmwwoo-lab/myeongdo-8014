@@ -19,6 +19,8 @@ assert(html.includes('speechSynthesis'),'기도문 음성 낭독 기능이 없�
 assert(html.includes('startChant'),'나무아미타불 염불 기능이 없습니다');
 assert(html.includes('startHeartSutra')&&html.includes('stopHeartSutra')&&html.includes('마하반야바라밀다심경'),'반야심경 낭독 기능이 없습니다');
 assert(html.includes('showHeartSutra')&&html.includes('sutra-mode')&&html.includes('markHeartLine'),'반야심경 본문·스크롤 표시 기능이 없습니다');
+assert(html.includes('card.scrollTo({top:target')&&!html.includes('lines[index].scrollIntoView'),'반야심경 내부 스크롤 방식이 올바르지 않습니다');
+assert(html.includes('heart.utterance=null')&&html.includes("heart.active)stopHeartSutra()"),'반야심경 재생 및 중지 상태 관리가 없습니다');
 assert((html.match(/u\.rate=\.6/g)||[]).length>=2,'염불과 반야심경 모두 0.6배 속도로 설정되지 않았습니다');
 assert(!/id="(?:bgStop|heartStop)"/.test(html),'별도의 끄기 버튼이 남아 있습니다');
 assert(html.includes("if(heart.active)stopHeartSutra()")&&html.includes("if(bg.active)stopBackground()"),'한 버튼으로 켜고 끄는 기능이 없습니다');
