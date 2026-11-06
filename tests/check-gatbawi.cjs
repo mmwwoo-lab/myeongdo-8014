@@ -29,4 +29,69 @@ assert(!/id="(?:bgStop|heartStop)"/.test(html),'별도의 끄기 버튼이 남�
 assert(html.includes("if(heart.active&&heart.mode==='original')stopHeartSutra()")&&html.includes("if(heart.active&&heart.mode==='korean')stopHeartSutra()")&&html.includes("if(bg.active)stopBackground()"),'하나의 버튼에서 각 낭독의 켜기·끄기가 동작하지 않습니다');
 assert(!html.includes('startInstrumental')&&!html.includes('AudioContext'),'삭제된 경음악 기능이 남아 있습니다');
 for(const name of ['퀼트 산사에서 맞이한 평온한 아침.png'])assert(fs.existsSync(path.join(base,name)),'이미지 파일 누락: '+name);
+
+// 실제 버튼 클릭 흐름을 가상 DOM으로 확인합니다.
+class FakeElement{
+  constructor(id=''){
+    this.id=id;this.children=[];this.dataset={};this.hidden=id==='prayerCard';
+    this.value='';this.attributes={};this._text='';
+    const classes=new Set();
+    this.classList={add:(...names)=>names.forEach(x=>classes.add(x)),
+      remove:(...names)=>names.forEach(x=>classes.delete(x)),
+      contains:name=>classes.has(name),
+      toggle:(name,on)=>{if(on===undefined? !classes.has(name):on)classes.add(name);else classes.delete(name)}};
+  }
+  set textContent(value){this._text=String(value);this.children=[]}
+  get textContent(){return this._text+this.children.map(x=>x.textContent).join('')}
+  setAttribute(name,value){this.attributes[name]=String(value)}
+  appendChild(child){this.children.push(child)}
+  replaceChildren(...children){this.children=[...children];this._text=''}
+  querySelectorAll(selector){return selector==='.sutra-line'?this.children.filter(x=>x.classList.contains('sutra-line')):[]}
+  scrollIntoView(){} scrollTo(){} focus(){}
+}
+const elements=new Map([...ids].map(id=>[id,new FakeElement(id)]));
+const doc={
+  getElementById:id=>elements.get(id)||null,
+  createElement:tag=>new FakeElement(tag),
+  querySelector:()=>null,
+  body:{appendChild(){}}
+};
+let lastSpoken=null;
+const synth={
+  getVoices:()=>[{lang:'ko-KR',name:'Korean'}],
+  speak:u=>{lastSpoken=u;synth.speaking=true},
+  cancel:()=>{synth.speaking=false;synth.paused=false},
+  pause:()=>{synth.paused=true},
+  resume:()=>{synth.paused=false},
+  speaking:false,paused:false
+};
+class MockUtterance{constructor(value){this.text=value}}
+const sandbox={document:doc,window:{speechSynthesis:synth,addEventListener(){}},
+  SpeechSynthesisUtterance:MockUtterance,
+  setTimeout:()=>1,clearTimeout:()=>{},console};
+scripts.forEach(script=>vm.runInNewContext(script,sandbox));
+const get=id=>elements.get(id);
+get('bgStart').onclick();
+assert(!get('prayerCard').hidden&&get('prayerCard').classList.contains('chant-mode'),'염불 시작 시 메시지창이 열리지 않습니다');
+assert(get('prayerText').textContent.includes('아미타부처님께 귀의합니다'),'염불 뜻풀이가 보이지 않습니다');
+assert(lastSpoken?.rate===0.6,'염불 읽기 속도가 0.6이 아닙니다');
+get('bgStart').onclick();
+assert(get('prayerCard').hidden&&!get('bgStart').attributes['aria-pressed'].includes('true'),'염불 끄기 시 메시지창이 닫히지 않습니다');
+get('heartStart').onclick();
+assert(!get('prayerCard').hidden&&get('prayerHeading').textContent.includes('반야심경'),'반야심경 본문을 표시할 수 없습니다');
+assert(lastSpoken?.rate===0.6,'반야심경 읽기 속도가 0.6이 아닙니다');
+get('heartKoreanStart').onclick();
+assert(get('prayerHeading').textContent.includes('한글 풀이')&&get('prayerText').children.length>10,'한글 반야심경으로 전환할 수 없습니다');
+get('heartKoreanStart').onclick();
+assert(get('prayerCard').hidden,'한글 반야심경 끄기 시 메시지창이 사라지지 않습니다');
+get('wish').value='가족 건강';
+get('wishBtn').onclick();
+assert(!get('prayerCard').hidden&&get('prayerHeading').textContent.includes('소원 기도문'),'소원 기도문이 표시되지 않습니다');
+get('bgStart').onclick();
+get('admissionName').value='수험생';
+get('admissionSchool').value='희망 대학';
+get('admissionBtn').onclick();
+assert(!get('prayerCard').classList.contains('chant-mode')&&get('prayerText').textContent.includes('취업'),'대학진학 소원으로 전환되지 않습니다');
+console.log('PASS: 염불·반야심경·한글 반야심경·소원 버튼 클릭 흐름');
+
 console.log('PASS: 명도재 디지털 법당 HTML / JavaScript / 화면 요소 / 이미지 확인');
