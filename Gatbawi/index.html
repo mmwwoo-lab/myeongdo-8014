@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>팔공산 갓바위 부처님 | 명도재 퀼트 순례</title>
-<meta name="description" content="퀼트 인형 신도들과 함께 팔공산 갓바위 부처님 계단길을 올라 기도하는 디지털 산사 체험">
+<meta name="description" content="퀼트 인형 신도들과 함께 팔공산 갓바위 부처님께 오르는 계단길을 올라 기도하는 디지털 산사 체험">
 <style>
 :root{font-family:"Malgun Gothic", "Apple SD Gothic Neo", sans-serif;color:#f8ecda;background:#162a31}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% 0,#375761,#152b34 70%);min-height:100vh}header{max-width:1450px;margin:auto;padding:18px 21px 12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
@@ -65,8 +65,8 @@ html{scroll-behavior:smooth}
 <body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 팔공산 갓바위 부처님</h1></div><p>명도재 이명우 제작 · 퀼트 인형들의 산길 순례와 소원 기도문</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
 <section class="welcome" id="home"><div class="welcome-copy"><small>팔공산 갓바위 부처님 · 퀼트 순례</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 소원을 올리고 기도문을 읽어 보세요.</p><a href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
 <div class="welcome-art" aria-label="완성된 팔공산 갓바위 부처님과 가족들의 퀼트 법당 그림" role="img"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들의 퀼트 인형 모습" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='🪷 팔공산 갓바위 부처님';"></div></section>
-<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>가족 퀼트 인형들이 계단길을 따라 팔공산 갓바위 부처님 정상으로 걸어갑니다.</article><article><strong>🙏 팔공산 갓바위 부처님 소원 기도</strong>소원을 작성해 올리고, 부처님 옆에 나타나는 기도문을 음성으로 들어봅니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 팔공산 갓바위 부처님 · 계단 순례 체험</h2>
-<main><section class="scene" aria-label="퀼트 인형 신도들이 팔공산 갓바위 부처님로 오르는 애니메이션">
+<section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>가족 퀼트 인형들이 계단길을 따라 팔공산 갓바위 부처님이 계신 정상으로 걸어갑니다.</article><article><strong>🙏 팔공산 갓바위 부처님 소원 기도</strong>소원을 작성해 올리고, 부처님 옆에 나타나는 기도문을 음성으로 들어봅니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 팔공산 갓바위 부처님 · 계단 순례 체험</h2>
+<main><section class="scene" aria-label="가족 퀼트 인형들이 팔공산 갓바위 부처님을 찾아 계단을 오르는 애니메이션">
 <svg id="world" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid slice">
 <defs>
 <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#93aec2"/><stop offset=".55" stop-color="#f1c9b5"/><stop offset="1" stop-color="#fae5c7"/></linearGradient>
@@ -135,7 +135,7 @@ function render(){
  $('walker').setAttribute('transform','translate('+point.x+' '+(point.y-20)+') rotate('+(Math.max(-25,Math.min(25,angle*.27)))+') scale(.73)');
  $('walker').classList.toggle('walking',state.playing);
  $('progressText').textContent=Math.round(state.p*100)+'%';$('trip').value=state.p*100;
- $('sceneTitle').textContent=state.p>=1?'팔공산 갓바위 부처님 앞에 도착했습니다':state.p===0?'산 아래에서 출발합니다':state.p<.5?'퀼트 인형들과 걷는 길':'팔공산 갓바위 부처님 정상으로 오르는 마지막 길';
+ $('sceneTitle').textContent=state.p>=1?'팔공산 갓바위 부처님 앞에 도착했습니다':state.p===0?'산 아래에서 출발합니다':state.p<.5?'퀼트 인형들과 걷는 길':'팔공산 갓바위 부처님이 계신 정상으로 오르는 마지막 길';
  $('sceneText').textContent=state.p>=1?'합장하고 기도를 올려보세요.':state.playing?'가족 인형들이 계단을 올라가는 중입니다.':'걷기 버튼을 누르면 인형들이 움직입니다.';
  $('startBtn').textContent=state.playing?'🚶‍♂️ 계단 오르는 중':'🪨 계단 올라가기';
  const isSummit=state.p>=1;
@@ -198,7 +198,7 @@ function arrived(){if(state.p<1){toast('먼저 계단을 올라 정상에 도착
 $('startBtn').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;if(state.p>=1)state.p=0;state.playing=true;state.last=0;render();startWalkMusic()};
 $('pauseBtn').onclick=()=>{state.playing=false;stopWalkMusic();render()};
 $('resetBtn').onclick=()=>{stopWalkMusic();stopPrayerSpeech();$('prayerCard').hidden=true;state.p=0;state.playing=false;state.last=0;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';render()};
-$('summitBtn').onclick=()=>{stopWalkMusic();state.p=1;state.playing=false;state.last=0;render();toast('팔공산 갓바위 부처님 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
+$('summitBtn').onclick=()=>{stopWalkMusic();state.p=1;state.playing=false;state.last=0;render();toast('팔공산 갓바위 부처님이 계신 정상에 도착했습니다. 기도 기능을 사용해 보세요.')};
 $('speed').oninput=e=>{state.speed=+e.target.value;$('speedText').textContent=['','느리게','보통','빠르게','매우 빠르게'][state.speed]};
 function createWishMessage(wish){
  const clean=wish.replace(/\s+/g,' ').trim();
