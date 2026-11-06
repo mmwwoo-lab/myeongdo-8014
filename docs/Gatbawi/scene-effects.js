@@ -23,7 +23,7 @@
  };
  const storageKey='myeongdo-gatbawi-scene-effects-v3';
  let config;
- try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');config=saved&&typeof saved==='object'?Object.assign({},defaults,saved):structuredClone(defaults);}catch{config={flames:defaults.flames.map(x=>x.slice()),clouds:defaults.clouds.map(x=>x.slice()),eyes:defaults.eyes.map(x=>x.slice())};}
+ try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');config=saved&&typeof saved==='object'?Object.assign({},defaults,saved):structuredClone(defaults);}catch{config={flames:defaults.flames.map(x=>x.slice()),clouds:defaults.clouds.map(x=>x.slice())};}
  for(const key of ['flames','clouds'])if(!Array.isArray(config[key]))config[key]=defaults[key].map(x=>x.slice());
  scene.appendChild(canvas);
  const prayerOverlay=scene.querySelector('.prayer-card');
@@ -34,7 +34,7 @@
  if(!ctx)return;
  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
  let width=0,height=0,ratio=1,frame=0,animationId=0,visible=!document.hidden;
- // Face click/tap interactions are timed and independent for all four worshippers.
+ // Hovered clouds spread and drift; flames repeatedly grow and shrink.
  let hoveredCloud=-1;
  let touchCloud=-1,touchUntil=0;
  const cloudState=[];
