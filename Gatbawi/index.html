@@ -61,9 +61,9 @@ html{scroll-behavior:smooth}
 </style><style>
 /* 완성형 퀼트 법당 위 참배 동작과 촛불 오버레이 */
 .summit-visual{overflow:hidden}
-</style></head>
+</style><style>#climbControls[hidden],#climbPanel[hidden],#heroClimbBtn[hidden]{display:none!important}</style></head>
 <body><header><div><small>MYEONGDOJAE · QUILT PILGRIMAGE</small><h1>🪷 팔공산 갓바위 부처님</h1></div><p>명도재 이명우 제작 · 퀼트 인형들의 산길 순례와 소원 기도문</p></header><nav class="site-nav"><a href="#home">홈</a><a href="#experience">산길 체험</a><a href="#experience">기도하기</a><a href="#features">이용 안내</a></nav>
-<section class="welcome" id="home"><div class="welcome-copy"><small>팔공산 갓바위 부처님 · 퀼트 순례</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 소원을 올리고 기도문을 읽어 보세요.</p><a href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
+<section class="welcome" id="home"><div class="welcome-copy"><small>팔공산 갓바위 부처님 · 퀼트 순례</small><h2>산길 끝에서 만나는<br><span>고요한 한 번의 기도</span></h2><p>퀼트 인형 신도들과 함께 계단길을 걸어 팔공산 갓바위 부처님을 찾아갑니다. 정상에서 소원을 올리고 기도문을 읽어 보세요.</p><a id="heroClimbBtn" href="#experience" onclick="document.getElementById('startBtn').click()">🚶 인형들과 산길 오르기</a></div>
 <div class="welcome-art" aria-label="완성된 팔공산 갓바위 부처님과 가족들의 퀼트 법당 그림" role="img"><img src="./퀼트 산사에서 맞이한 평온한 아침.png" alt="팔공산 갓바위 부처님 앞에서 기도하는 가족들의 퀼트 인형 모습" loading="eager" onerror="this.style.display='none';this.parentElement.textContent='🪷 팔공산 갓바위 부처님';"></div></section>
 <section id="features" class="feature-strip"><article><strong>👣 움직이는 인형 순례</strong>가족 퀼트 인형들이 계단길을 따라 팔공산 갓바위 부처님이 계신 정상으로 걸어갑니다.</article><article><strong>🙏 팔공산 갓바위 부처님 소원 기도</strong>소원을 작성해 올리고, 부처님 옆에 나타나는 기도문을 음성으로 들어봅니다.</article><article><strong>🌸 마음을 담는 공간</strong>별도의 계정 없이 소원을 적고, 스마트폰에서도 기도할 수 있습니다.</article></section><h2 class="section-lead" id="experience">🪷 팔공산 갓바위 부처님 · 계단 순례 체험</h2>
 <main><section class="scene" aria-label="가족 퀼트 인형들이 팔공산 갓바위 부처님을 찾아 계단을 오르는 애니메이션">
@@ -112,10 +112,10 @@ html{scroll-behavior:smooth}
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기 버튼을 눌러 기도문을 들어보세요.</div>
 <p id="prayerText"></p>
 </section></div><div class="overlay"><h2 id="sceneTitle">산 아래에서 출발합니다</h2><div id="sceneText">계단 올라가기 버튼을 눌러보세요.</div></div>
-<div class="bottom"><button id="startBtn" class="primary">🪨 계단 올라가기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="musicBtn" type="button" aria-pressed="true">🎵 음악 켜짐</button><button id="resetBtn">↺ 다시 출발</button><button id="summitBtn">🪷 정상 바로가기</button></div>
+<div class="bottom" id="climbControls"><button id="startBtn" class="primary">🪨 계단 올라가기</button><button id="pauseBtn">⏸ 잠시 멈춤</button><button id="musicBtn" type="button" aria-pressed="true">🎵 음악 켜짐</button><button id="resetBtn">↺ 다시 출발</button><button id="summitBtn">🪷 정상 바로가기</button></div>
 </section>
 <aside class="side">
-<section class="panel"><h3>👣 움직이는 순례자</h3><p id="walkMusicStatus" role="status" aria-live="polite">🎹 계단을 오르면 피아노와 동요풍 합창 선율이 재생됩니다.</p><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
+<section class="panel" id="climbPanel"><h3>👣 움직이는 순례자</h3><p id="walkMusicStatus" role="status" aria-live="polite">🎹 계단을 오르면 피아노와 동요풍 합창 선율이 재생됩니다.</p><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
 <section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button></section>
 </aside></main><footer>© 명도재 이명우 · 독립 창작 체험 웹앱 · 종교기관의 공식 서비스가 아닙니다.</footer>
 <script>
@@ -139,6 +139,9 @@ function render(){
  $('sceneText').textContent=state.p>=1?'합장하고 기도를 올려보세요.':state.playing?'가족 인형들이 계단을 올라가는 중입니다.':'걷기 버튼을 누르면 인형들이 움직입니다.';
  $('startBtn').textContent=state.playing?'🚶‍♂️ 계단 오르는 중':'🪨 계단 올라가기';
  const isSummit=state.p>=1;
+ $('climbControls').hidden=isSummit;
+ $('climbPanel').hidden=isSummit;
+ $('heroClimbBtn').hidden=isSummit;
  $('summitVisual').classList.toggle('active',isSummit);
  $('summitVisual').setAttribute('aria-hidden',isSummit?'false':'true');
 }
