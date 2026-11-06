@@ -242,7 +242,7 @@ button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!importan
  const ua=typeof navigator==='undefined'?'':(navigator.userAgent||'');
  const android=/Android/i.test(ua);
  const ios=/iPhone|iPad|iPod/i.test(ua);
- const inApp=/(FBAN|FBAV|FB_IAB|Instagram|KAKAOTALK|NAVER\\(|Line\\/|wv\\))/i.test(ua);
+ const inApp=/FBAN|FBAV|FB_IAB|Instagram|KAKAOTALK|NAVER|Line|; wv/i.test(ua);
  const url='https://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html';
  const target='intent://mmwwoo-lab.github.io/myeongdo-8014/Gatbawi/index.html#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(url)+';end';
  function launchChrome(){
