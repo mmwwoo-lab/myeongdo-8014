@@ -14,7 +14,15 @@ main{max-width:1250px;margin:auto;padding:12px 17px 26px;display:grid;grid-templ
 .scene>img{width:100%;height:100%;object-fit:cover;display:block}
 .summit-prayer{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:max-content;max-width:92%;border-radius:24px;background:#193840ee;color:#ffe8bd;padding:9px 15px;font-size:13px;text-align:center;border:1px solid #debf8a;pointer-events:none}
 .prayer-card{position:absolute;right:1.7%;top:8%;width:min(41%,355px);max-height:76%;overflow:auto;background:linear-gradient(135deg,#183a44f5,#315254f5);padding:16px;border-radius:16px;border:1px solid #ead09e;box-shadow:0 10px 30px #09222a99}
-.prayer-card[hidden]{display:none!important}.prayer-card h3{font-size:16px;line-height:1.4;color:#f5d6a5;margin:0 0 10px}.prayer-card p{font-size:14px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;margin:11px 0 0}
+.prayer-card[hidden]{display:none!important}
+.prayer-card.sutra-mode{top:5%;max-height:88%;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#d9ba85 #214148}
+.prayer-card.sutra-mode h3{font-size:18px;text-align:center;margin-bottom:14px}
+.prayer-card.sutra-mode .tts-controls,.prayer-card.sutra-mode .tts-status{display:none}
+.prayer-card.sutra-mode #prayerText{margin:0;font-size:14px;line-height:1.95;white-space:normal;word-break:keep-all;overflow-wrap:break-word}
+.sutra-line{margin:0 0 15px;padding:6px 4px;border-radius:7px;text-align:left}
+.sutra-line.is-reading{background:rgba(247,211,151,.15);color:#ffe4ae;box-shadow:inset 3px 0 #e5c184;padding-left:10px}
+.sutra-line:first-child{text-align:center;font-weight:700;color:#f4d9a5}
+.prayer-card h3{font-size:16px;line-height:1.4;color:#f5d6a5;margin:0 0 10px}.prayer-card p{font-size:14px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;margin:11px 0 0}
 .tts-controls{display:flex;flex-wrap:wrap;gap:5px}.tts-controls button{padding:8px 9px;font-size:11px}.tts-status{font-size:11px;color:#f0dac0;margin-top:7px}
 .side{display:flex;flex-direction:column}.panel{border:1px solid #d9c4a277;border-radius:16px;padding:18px;background:#23424bb5}
 .panel h2{font-size:19px;margin:0 0 12px;color:#f5d6a7}
@@ -28,7 +36,7 @@ button:hover{background:#416a70}button:focus-visible{outline:3px solid #ffdf91;o
 footer{max-width:1250px;margin:auto;text-align:center;font-size:11px;color:#bdd0d1;padding:5px 16px 25px}
 .toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#112a30ed;color:#ffe7c0;border:1px solid #e0be83;border-radius:24px;padding:12px 20px;z-index:20;text-align:center;max-width:90vw}
 @media(max-width:880px){main{grid-template-columns:1fr}.side{max-width:100%}.scene{aspect-ratio:16/10}.prayer-card{width:min(42%,350px)}}
-@media(max-width:550px){header{padding:15px}.scene{aspect-ratio:4/5}.prayer-card{right:6px;top:5%;width:60%;max-height:82%;padding:10px}.prayer-card h3{font-size:13px}.prayer-card p{font-size:12px;line-height:1.55}.tts-controls button{padding:7px;font-size:10px}.summit-prayer{font-size:11px;bottom:10px}}
+@media(max-width:550px){.prayer-card.sutra-mode{top:3%;max-height:91%;width:65%}.prayer-card.sutra-mode #prayerText{font-size:12px;line-height:1.85}.prayer-card.sutra-mode h3{font-size:15px}header{padding:15px}.scene{aspect-ratio:4/5}.prayer-card{right:6px;top:5%;width:60%;max-height:82%;padding:10px}.prayer-card h3{font-size:13px}.prayer-card p{font-size:12px;line-height:1.55}.tts-controls button{padding:7px;font-size:10px}.summit-prayer{font-size:11px;bottom:10px}}
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="background-audio" aria-label="나무아미타불 염불"><button id="bgStart" type="button">🙏 나무아미타불 염불</button><button id="bgStop" type="button" disabled>■ 나무아미타불 끄기</button><button id="heartStart" type="button">📖 반야심경 읽기</button><button id="heartStop" type="button" disabled>■ 반야심경 끄기</button><small id="bgStatus" role="status" aria-live="polite">나무아미타불 염불만 재생합니다</small></div></header>
@@ -96,6 +104,28 @@ const heartLines=[
 '능제일체고 진실불허. 고설반야바라밀다주 즉설주왈.',
 '아제아제 바라아제 바라승아제 모지 사바하.'
 ];
+function showHeartSutra(){
+ const card=$('prayerCard'),body=$('prayerText');
+ card.classList.add('sutra-mode');
+ card.setAttribute('aria-label','반야심경 전문');
+ $('prayerHeading').textContent='📖 반야심경';
+ body.replaceChildren();
+ for(let i=0;i<heartLines.length;i++){
+  const p=document.createElement('p');
+  p.className='sutra-line';
+  p.textContent=heartLines[i];
+  p.dataset.verse=String(i);
+  body.appendChild(p);
+ }
+ card.hidden=false;
+ card.scrollTop=0;
+ $('summitPrayer').textContent='🙏 반야심경을 정성껏 독송합니다';
+}
+function markHeartLine(index){
+ const lines=$('prayerText').querySelectorAll('.sutra-line');
+ lines.forEach((p,i)=>p.classList.toggle('is-reading',i===index));
+ if(lines[index])lines[index].scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 function stopHeartSutra(){
  heart.active=false;heart.token++;
  if(heart.utterance&&'speechSynthesis' in window)window.speechSynthesis.cancel();
@@ -104,26 +134,28 @@ function stopHeartSutra(){
  if($('bgStatus').textContent.includes('반야심경'))$('bgStatus').textContent='반야심경 정지';
 }
 function startHeartSutra(){
- if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
-  $('bgStatus').textContent='이 브라우저에서는 반야심경 읽기를 지원하지 않습니다.';return;
- }
  stopBackground();stopPrayerSpeech();stopHeartSutra();
+ showHeartSutra();
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
+  $('bgStatus').textContent='반야심경 본문 표시 중 · 이 기기는 음성 낭독을 지원하지 않습니다.';return;
+ }
  const synth=window.speechSynthesis,token=++heart.token;
- heart.active=true;
- $('heartStart').disabled=true;$('heartStop').disabled=false;
+ heart.active=true;$('heartStart').disabled=true;$('heartStop').disabled=false;
  const voice=synth.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith('ko'));
  let i=0;
  function next(){
   if(!heart.active||token!==heart.token)return;
-  if(i>=heartLines.length){stopHeartSutra();$('bgStatus').textContent='반야심경 읽기 완료';return}
-  const u=new SpeechSynthesisUtterance(heartLines[i++]);
-  u.lang='ko-KR';u.rate=.82;u.pitch=.92;u.volume=.9;
+  if(i>=heartLines.length){stopHeartSutra();$('bgStatus').textContent='반야심경 읽기 완료';return;}
+  const current=i++;
+  markHeartLine(current);
+  const u=new SpeechSynthesisUtterance(heartLines[current]);
+  u.lang='ko-KR';u.rate=.7;u.pitch=.92;u.volume=.9;
   if(voice)u.voice=voice;
   heart.utterance=u;
-  $('bgStatus').textContent='📖 반야심경 낭독 중 ('+i+'/'+heartLines.length+')';
+  $('bgStatus').textContent='📖 반야심경 천천히 낭독 중 ('+i+'/'+heartLines.length+')';
   u.onend=()=>{if(heart.active&&token===heart.token)next()};
-  u.onerror=()=>{if(heart.active&&token===heart.token){stopHeartSutra();$('bgStatus').textContent='반야심경 음성 재생 실패. 한국어 음성 설정을 확인해 주세요.'}};
-  try{synth.speak(u)}catch(e){stopHeartSutra();$('bgStatus').textContent='반야심경 읽기를 시작하지 못했습니다.'}
+  u.onerror=()=>{if(heart.active&&token===heart.token){stopHeartSutra();$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 확인해 주세요.'}};
+  try{synth.speak(u)}catch(e){stopHeartSutra();$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생이 지원되지 않습니다.'}
  }
  next();
 }
@@ -204,10 +236,12 @@ function speakPrayer(){
 }
 $('readPrayer').onclick=speakPrayer;
 $('stopPrayer').onclick=stopPrayerSpeech;
-$('hidePrayer').onclick=()=>{stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
+$('hidePrayer').onclick=()=>{stopHeartSutra();stopPrayerSpeech();$('prayerCard').hidden=true;$('summitPrayer').textContent='🙏 팔공산 갓바위 부처님 앞에서 두 손을 모읍니다';toast('기도문 창을 닫았습니다. 소원을 다시 올리면 새 기도문이 나타납니다.');};
 window.addEventListener('pagehide',()=>{stopHeartSutra();stopBackground();stopPrayerSpeech()});
 function showPrayer(message, isAdmission){
  stopHeartSutra();
+ $('prayerCard').classList.remove('sutra-mode');
+ $('prayerCard').setAttribute('aria-label','소원 기도문');
  if(bg.active)stopBackground();
  stopPrayerSpeech();
  $('prayerHeading').textContent=isAdmission?'🎓 팔공산 갓바위 부처님 대학진학 기도문':'🪷 팔공산 갓바위 부처님 소원 기도문';
