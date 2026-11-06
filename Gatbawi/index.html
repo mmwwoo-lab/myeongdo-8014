@@ -512,6 +512,7 @@ function speakPrayer(){
   if(koVoices.length)utterance.voice=koVoices.find(v=>/female|woman|여성|sunhi|yuna|heami/i.test(v.name))||koVoices[0];
  }catch(e){}
  currentUtterance=utterance;
+ let speechStarted=false;
  const fail=()=>{
   if(currentUtterance!==utterance)return;
   stopPrayerSpeech();
@@ -520,6 +521,7 @@ function speakPrayer(){
  };
  utterance.onstart=()=>{
   if(currentUtterance!==utterance)return;
+  speechStarted=true;
   if(prayerAudioWatchdog){clearTimeout(prayerAudioWatchdog);prayerAudioWatchdog=null;}
   hidePrayerChromeHelp();
   $('readPrayer').textContent='⏸ 잠시 멈춤';
@@ -534,8 +536,8 @@ function speakPrayer(){
  try{
   synth.speak(utterance);
   prayerAudioWatchdog=setTimeout(()=>{
-   if(currentUtterance===utterance&&!synth.speaking&&!synth.paused)fail();
-  },8000);
+   if(currentUtterance===utterance&&!speechStarted&&!synth.paused)fail();
+  },9000);
  }catch(e){fail();}
 }
 $('openPrayerChrome').onclick=()=>{
@@ -550,7 +552,13 @@ $('openPrayerChrome').onclick=()=>{
   $('prayerBrowserMessage').textContent='아이폰은 자동으로 크롬으로 이동하지 않을 수 있습니다. 공유 메뉴에서 “브라우저에서 열기”를 선택하거나 주소를 복사해 크롬에서 열어 주세요.';
   if(navigator.clipboard?.writeText)navigator.clipboard.writeText(url).then(()=>{$('prayerBrowserMessage').textContent+=' 주소가 복사되었습니다.';}).catch(()=>{});
  }else{
-  window.open(url,'_blank','noopener,noreferrer');
+  $('prayerBrowserMessage').textContent='컴퓨터에서는 크롬을 직접 실행한 뒤 홈페이지 주소를 붙여넣어 주세요.';
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(url).then(()=>{
+    $('prayerBrowserMessage').textContent+=' 홈페이지 주소가 복사되었습니다.';
+  }).catch(()=>{
+    $('prayerBrowserMessage').textContent+=' 주소: '+url;
+  });
+  else $('prayerBrowserMessage').textContent+=' 주소: '+url;
  }
 };
 $('readPrayer').onclick=speakPrayer;
