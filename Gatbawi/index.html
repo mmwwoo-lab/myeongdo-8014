@@ -125,13 +125,7 @@ html{scroll-behavior:smooth}
 <aside class="side">
 <section class="panel"><h3>👣 움직이는 순례자</h3><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
 <section class="panel"><h3>🙏 정상에서의 기도</h3><div class="actions"><button id="candleOnBtn">🕯️ 촛불 켜기</button><button id="candleOffBtn">🧯 촛불 끄기</button></div><p id="candleStatus" role="status" aria-live="polite">촛불 상태: 꺼짐 · 디지털 촛불입니다.</p></section>
-<section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button><p>소원을 올리면 부처님 오른쪽에 약 200자의 기도문이 나타나며, 음성으로 읽어줍니다. 소원 내용은 외부 서버로 전송하거나 저장하지 않습니다.</p>
-<div id="wishReply" role="status" aria-live="polite" hidden style="margin-top:13px;padding:16px;border:1px solid #e4c795;border-radius:12px;background:#122e36">
-<strong style="color:#f3d4a1">🪷 갓바위 앞에서 전하는 마음의 법문</strong>
-<p id="wishMessage" style="font-size:15px;line-height:1.9;color:#f7ecdc;white-space:pre-wrap"></p>
-<button id="copyWish" type="button" style="width:100%">📋 응원 메시지 복사하기</button>
-</div></section>
-<section class="panel"><h3>🧵 명도재 퀼트 인형 산사</h3><p>갓바위의 갓 모양 판석, 인형 신도, 산길, 계단, 공양물과 촛불까지 천과 바느질의 질감으로 통일한 2D 창작 체험입니다. 실제 산행 경로와 거리를 재현하는 지도는 아닙니다.</p></section>
+<section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button></section>
 </aside></main><footer>© 명도재 이명우 · 독립 창작 체험 웹앱 · 종교기관의 공식 서비스가 아닙니다.</footer>
 <script>
 (function(){
@@ -239,9 +233,7 @@ $('wishBtn').onclick=()=>{
  if(!w){toast('마음속 소원을 적어보세요.');$('wish').focus();return;}
  stopPrayerSpeech();
  const message=createWishMessage(w);
- $('wishMessage').textContent=message;
  $('prayerText').textContent=message;
- $('wishReply').hidden=false;
  // 산길 출발 전에도 기도문을 볼 수 있도록 정상 화면으로 이동시킵니다.
  state.p=1;state.playing=false;render();
  $('prayerCard').hidden=false;
@@ -249,7 +241,6 @@ $('wishBtn').onclick=()=>{
  $('prayerCard').scrollIntoView({behavior:'smooth',block:'nearest'});
  toast('부처님 오른쪽에 소원 기도문을 올렸습니다. 🪷');
 };
-$('copyWish').onclick=()=>{const message=$('wishMessage').textContent;if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(message).then(()=>toast('응원 메시지를 복사했습니다.')).catch(()=>toast('복사가 제한되었습니다. 메시지를 직접 선택해 주세요.'))}else{const area=document.createElement('textarea');area.value=message;document.body.appendChild(area);area.select();let ok=document.execCommand('copy');area.remove();toast(ok?'응원 메시지를 복사했습니다.':'메시지를 직접 선택하여 복사해 주세요.')}};
 try{render();requestAnimationFrame(tick)}catch(error){console.error('Gatbawi app initialization failed',error);$('sceneText').textContent='화면 초기화 오류가 발생했습니다. 최신 Chrome 또는 Edge로 다시 열어 주세요.';}
 })();
 </script></body></html>
