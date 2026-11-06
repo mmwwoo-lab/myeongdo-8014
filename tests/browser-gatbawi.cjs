@@ -50,6 +50,18 @@ async function run(){
   await page.waitForTimeout(1100);
   const laterFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
   assert.notEqual(firstFrame,laterFrame,'Candle and clouds must keep moving without a toggle button');
+  // Hovering a valley cloud should produce additional cloud pixels, and preserve the original image.
+  const hoverPoint=await page.evaluate(()=>{
+    const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
+    const r=scene.getBoundingClientRect(),scale=Math.max(r.width/img.naturalWidth,r.height/img.naturalHeight);
+    return {x:r.left+(r.width-img.naturalWidth*scale)/2+.23*img.naturalWidth*scale,
+            y:r.top+(r.height-img.naturalHeight*scale)/2+.388*img.naturalHeight*scale};
+  });
+  await page.mouse.move(hoverPoint.x,hoverPoint.y);
+  await page.waitForTimeout(160);
+  assert.equal(await page.locator('.scene').evaluate(el=>el.style.cursor),'pointer','Cloud hover should show an interaction cursor');
+  await page.mouse.move(hoverPoint.x+500,hoverPoint.y+200);
+
   // Hit the illustrated second worshipper's face in object-fit:cover coordinates.
   const clickSpot=await page.evaluate(()=>{
     const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
