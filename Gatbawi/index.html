@@ -90,6 +90,32 @@ button:focus-visible{outline:3px solid #ffe8a3;outline-offset:2px}
 }
 textarea,input{background:#e7f1df!important;color:#173d2c!important;border:1px solid #c9ab67!important}
 textarea::placeholder,input::placeholder{color:#557464}
+
+/* 연두색 단청 바탕, 또렷한 버튼과 상아색 메시지창 */
+:root{background:#d9eeb6}
+body{background-color:#d9eeb6;background-image:linear-gradient(120deg,rgba(247,255,219,.44),rgba(210,237,169,.17) 50%,rgba(233,248,200,.40)),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22260%22%20height%3D%22260%22%20viewBox%3D%220%200%20260%20260%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23a37e32%22%20stroke-width%3D%222%22%20opacity%3D%22.58%22%3E%3Cpath%20d%3D%22M130%2026Q92%2066%20130%20112Q168%2066%20130%2026M130%20112Q52%2094%2078%2045Q128%2049%20130%20112M130%20112Q208%2094%20182%2045Q132%2049%20130%20112M130%20112Q63%20144%2048%2088Q114%2071%20130%20112M130%20112Q197%20144%20212%2088Q146%2071%20130%20112M91%20122Q130%20157%20169%20122M130%20171Q105%20191%20130%20207Q155%20191%20130%20171M100%20223Q130%20246%20160%20223M0%20130Q35%20111%2046%20130Q35%20149%200%20130M260%20130Q225%20111%20214%20130Q225%20149%20260%20130%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");background-size:cover,260px 260px}
+button,.chant-controls button,.tts-controls button{
+ background:linear-gradient(145deg,#a44d32,#7c3428)!important;
+ border:2px solid #f3d28a!important;
+ color:#fffdf4!important;
+ box-shadow:0 3px 9px rgba(44,58,34,.30)!important;
+}
+button:hover,.chant-controls button:hover,.tts-controls button:hover{background:linear-gradient(145deg,#bf6746,#943e2f)!important;color:#fff!important}
+button[aria-pressed="true"]{background:linear-gradient(145deg,#244f78,#163953)!important;color:#fff!important;border-color:#e6b95c!important}
+button.primary{background:linear-gradient(145deg,#f5d37c,#d4a94b)!important;color:#173d2f!important;border-color:#fff0ba!important}
+button.primary:hover{background:linear-gradient(145deg,#ffe7a9,#dfb95f)!important}
+.prayer-card{
+ background:linear-gradient(155deg,rgba(255,252,232,.99),rgba(246,238,204,.99))!important;
+ border:3px solid #b58d43!important;
+ color:#233b2d!important;
+ box-shadow:0 13px 37px rgba(13,40,27,.53)!important;
+}
+.prayer-card h3,.prayer-card.sutra-mode h3,.prayer-card.chant-mode h3{color:#245139!important}
+.prayer-card p,.prayer-card #prayerText,.prayer-card.sutra-mode #prayerText,.prayer-card.chant-mode #prayerText{color:#273c2f!important}
+.prayer-card.chant-mode{z-index:7;max-height:82%;overflow-y:auto}
+.prayer-card.chant-mode .chant-phrase{color:#944f23!important;font-size:23px;font-weight:800;line-height:1.45}
+.prayer-card.chant-mode .chant-explanation{color:#254433!important;font-size:14px;line-height:1.9}
+.prayer-card .sutra-line.is-reading{background:#f7df96!important;color:#243d2e!important}
 </style></head>
 <body>
 <header><h1>🪷 팔공산 갓바위 부처님</h1><p>명도재 이명우 · 소원 기도</p><div class="chant-controls" aria-label="나무아미타불 염불"><button id="bgStart" type="button" aria-pressed="false">🙏 나무아미타불 염불</button><button id="heartStart" type="button" aria-pressed="false">📖 반야심경 읽기</button><button id="heartKoreanStart" type="button" aria-pressed="false">📜 반야심경 한글 읽기</button><small id="bgStatus" role="status" aria-live="polite">염불 또는 반야심경을 선택해 주세요.</small></div></header>
@@ -101,7 +127,7 @@ textarea::placeholder,input::placeholder{color:#557464}
 <h3 id="prayerHeading">🪷 팔공산 갓바위 부처님 소원 기도문</h3>
 <div class="tts-controls"><button id="readPrayer" type="button">🔊 읽어주기</button><button id="stopPrayer" type="button">■ 정지</button><button id="hidePrayer" type="button">✕ 사라지기</button></div>
 <div class="tts-status" id="prayerAudioStatus" role="status" aria-live="polite">읽어주기를 눌러보세요.</div>
-<p id="prayerText"></p>
+<div id="prayerText"></div>
 </section>
 </section>
 <aside class="side"><section class="panel">
@@ -299,14 +325,14 @@ function stopBackground(){
 }
 function startChant(){
  stopHeartSutra();stopPrayerSpeech();
- showChantCard();
- if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
-  $('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 이 브라우저에서는 염불 음성을 지원하지 않습니다.';return;
- }
- const synth=window.speechSynthesis;
  bg.active=true;const token=++bg.token;
+ showChantCard();
  $('bgStart').textContent='■ 나무아미타불 끄기';
  $('bgStart').setAttribute('aria-pressed','true');
+ if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
+  $('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 음성 낭독 미지원 (끄기로 창 닫기)';return;
+ }
+ const synth=window.speechSynthesis;
  $('bgStatus').textContent='🙏 나무아미타불 염불 재생 중 (합성 음성)';
  function chantAgain(){
   if(!bg.active||token!==bg.token)return;
@@ -318,10 +344,10 @@ function startChant(){
   u.onend=()=>{if(bg.active&&token===bg.token)bg.timer=setTimeout(chantAgain,700)};
   u.onerror=()=>{
    if(!bg.active||token!==bg.token)return;
-   stopBackground();$('bgStatus').textContent='염불 음성을 재생할 수 없습니다. 기기 한국어 음성 설정을 확인해 주세요.';
+   bg.utterance=null;$('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 음성 설정을 확인해 주세요. 끄기로 닫을 수 있습니다.';
   };
   try{synth.speak(u)}catch(e){
-   stopBackground();$('bgStatus').textContent='염불 음성을 재생할 수 없습니다.';
+   bg.utterance=null;$('bgStatus').textContent='나무아미타불 뜻풀이 표시 중 · 음성 재생을 지원하지 않습니다.';
   }
  }
  chantAgain();
