@@ -47,7 +47,7 @@ class FakeElement{
   appendChild(child){this.children.push(child)}
   replaceChildren(...children){this.children=[...children];this._text=''}
   querySelectorAll(selector){return selector==='.sutra-line'?this.children.filter(x=>x.classList.contains('sutra-line')):[]}
-  scrollIntoView(){} scrollTo(){} focus(){}
+  scrollIntoView(){} scrollTo(){} focus(){} addEventListener(){}
 }
 const elements=new Map([...ids].map(id=>[id,new FakeElement(id)]));
 const doc={
@@ -66,7 +66,7 @@ const synth={
   speaking:false,paused:false
 };
 class MockUtterance{constructor(value){this.text=value}}
-const sandbox={document:doc,window:{speechSynthesis:synth,addEventListener(){}},
+const sandbox={document:doc,navigator:{userAgent:'Mozilla/5.0 Chrome desktop'},window:{speechSynthesis:synth,addEventListener(){},open(){},location:{href:''}},
   SpeechSynthesisUtterance:MockUtterance,
   setTimeout:()=>1,clearTimeout:()=>{},console};
 scripts.forEach(script=>vm.runInNewContext(script,sandbox));
