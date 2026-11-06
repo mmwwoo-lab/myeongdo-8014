@@ -1,11 +1,5 @@
 name: Deploy Myeongdo 8014 Website
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/deploy-pages.yml'
-      - 'docs/Gatbawi/**'
-      - 'docs/gatbawi/**'
   workflow_dispatch:
 permissions:
   contents: read
