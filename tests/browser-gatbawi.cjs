@@ -63,6 +63,11 @@ async function run(){
   await page.waitForTimeout(400);
   const fogDriftFrame=await page.locator('.gatbawi-effects-layer').evaluate(c=>c.toDataURL());
   assert.notEqual(fogFrame,fogDriftFrame,'Hover fog should drift sideways and change in size');
+  const effectsSource=await page.request.get(host+'/Gatbawi/scene-effects.js');
+  assert.equal(effectsSource.status(),200,'Cloud animation JavaScript must exist');
+  const effectsText=await effectsSource.text();
+  assert(effectsText.includes('const visibility=(.16+.74*wave)*strength')&&effectsText.includes('const spread=(.72+1.0*wave)'), 'Cloud should repeat opacity and size breathing animations');
+
   assert.equal(await page.locator('.scene').getAttribute('data-face-motion'),null,'Face click animation should be absent');
   const facePoint=await page.evaluate(()=>{
     const scene=document.querySelector('.scene'),img=scene.querySelector(':scope > img');
