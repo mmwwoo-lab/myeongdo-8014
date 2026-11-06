@@ -382,12 +382,12 @@ function startHeartSutra(mode='original'){
  const button=$(mode==='korean'?'heartKoreanStart':'heartStart');
  button.textContent=mode==='korean'?'■ 반야심경 한글 끄기':'■ 반야심경 끄기';
  button.setAttribute('aria-pressed','true');
- if(mode==='original'&&typeof Audio==='function'){
-  const audio=new Audio('./heart-sutra-male.mp3');
-  audio.playbackRate=0.6;
+ if(typeof Audio==='function'){
+  const audio=new Audio(mode==='korean'?'./heart-sutra-korean.mp3':'./heart-sutra-male.mp3');
+  audio.playbackRate=mode==='korean'?0.7:0.6;
   audio.loop=false;audio.volume=.9;
   heart.audio=audio;
-  $('bgStatus').textContent='📖 반야심경 · 중후한 남성 독경 0.6배속 재생 중';
+  $('bgStatus').textContent=mode==='korean'?'📜 반야심경 한글 풀이 · 0.7배속 천천히 낭독 중':'📖 반야심경 · 중후한 남성 독경 0.6배속 재생 중';
   audio.addEventListener('ended',()=>{if(heart.active&&token===heart.token){$('bgStatus').textContent='반야심경 읽기 완료 · 끄기를 누르면 본문도 사라집니다.';$('prayerText').querySelectorAll('.sutra-line').forEach(p=>p.classList.remove('is-reading'));}});
   audio.addEventListener('error',()=>{if(heart.active&&token===heart.token)$('bgStatus').textContent='반야심경 MP3를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.';});
   markHeartLine(0);
@@ -413,10 +413,10 @@ function startHeartSutra(mode='original'){
   const current=i++;
   markHeartLine(current);
   const u=new SpeechSynthesisUtterance(lines[current]);
-  u.lang='ko-KR';u.rate=0.6;u.pitch=.92;u.volume=.9; // 반야심경 독송: 0.6배속 고정
+  u.lang='ko-KR';u.rate=mode==='korean'?0.7:0.6;u.pitch=.92;u.volume=.9; // 한글 풀이 0.7배속, 원문 0.6배속
   if(voice)u.voice=voice;
   heart.utterance=u;
-  $('bgStatus').textContent=(mode==='korean'?'📜 반야심경 한글':'📖 반야심경')+' 0.6배속 천천히 낭독 중 ('+i+'/'+lines.length+')';
+  $('bgStatus').textContent=(mode==='korean'?'📜 반야심경 한글':'📖 반야심경')+(mode==='korean'?' 0.7배속':' 0.6배속')+' 천천히 낭독 중 ('+i+'/'+lines.length+')';
   u.onend=()=>{if(heart.active&&token===heart.token)next()};
   u.onerror=e=>{
    if(heart.active&&token===heart.token){
