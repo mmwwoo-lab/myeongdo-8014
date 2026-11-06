@@ -94,7 +94,12 @@ html{scroll-behavior:smooth}
 <aside class="side">
 <section class="panel"><h3>👣 움직이는 순례자</h3><p>남성 신도, 여성 신도, 어린 동자 인형이 함께 산길을 오릅니다. 정상에 도착하면 참배가 시작됩니다.</p><label for="speed">걷기 속도 <output id="speedText">보통</output></label><input type="range" id="speed" min="1" max="4" step="1" value="2"><p>등산 진행 <strong id="progressText">0%</strong></p><progress id="trip" max="100" value="0"></progress></section>
 <section class="panel"><h3>🙏 정상에서의 기도</h3><div class="actions"><button id="bowBtn">🙏 절 올리기</button><button id="candleBtn">🕯️ 촛불 밝히기</button><button id="beadsBtn">📿 염주 돌리기</button><button id="bellBtn">🔔 범종 울리기</button></div><div class="num"><span id="bowCount">0</span> / 108배</div><p id="beadText">염주 0 / 108알</p></section>
-<section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button><p>기도문은 외부 서버로 전송하거나 저장하지 않습니다.</p></section>
+<section class="panel"><h3>🌸 마음에 담는 소원</h3><textarea id="wish" maxlength="300" placeholder="가족의 건강, 감사한 마음, 오늘의 소원을 적어보세요."></textarea><button id="wishBtn" class="primary" style="margin-top:9px;width:100%">소원 기도 올리기</button><p>소원에 어울리는 약 200자의 창작 법문과 응원 메시지가 이곳에 나타납니다. 소원 내용은 외부 서버로 전송하거나 저장하지 않습니다.</p>
+<div id="wishReply" role="status" aria-live="polite" hidden style="margin-top:13px;padding:16px;border:1px solid #e4c795;border-radius:12px;background:#122e36">
+<strong style="color:#f3d4a1">🪷 갓바위 앞에서 전하는 마음의 법문</strong>
+<p id="wishMessage" style="font-size:15px;line-height:1.9;color:#f7ecdc;white-space:pre-wrap"></p>
+<button id="copyWish" type="button" style="width:100%">📋 응원 메시지 복사하기</button>
+</div></section>
 <section class="panel"><h3>🧵 명도재 퀼트 인형 산사</h3><p>갓바위의 갓 모양 판석, 인형 신도, 산길, 계단, 공양물과 촛불까지 천과 바느질의 질감으로 통일한 2D 창작 체험입니다. 실제 산행 경로와 거리를 재현하는 지도는 아닙니다.</p></section>
 </aside></main><footer>© 명도재 이명우 · 독립 창작 체험 웹앱 · 종교기관의 공식 서비스가 아닙니다.</footer>
 <script>
@@ -139,7 +144,20 @@ $('bowBtn').onclick=()=>{if(!arrived())return;state.bows=Math.min(108,state.bows
 $('candleBtn').onclick=()=>{if(!arrived())return;state.lit=!state.lit;render();toast(state.lit?'양쪽 촛불을 밝혔습니다.':'촛불을 껐습니다.')};
 $('beadsBtn').onclick=()=>{if(!arrived())return;state.beads=(state.beads%108)+1;$('beadText').textContent='염주 '+state.beads+' / 108알';ding(310,.12)};
 $('bellBtn').onclick=()=>{ding(264,2.4);toast('산사의 범종이 울립니다.')};
-$('wishBtn').onclick=()=>{if(!arrived())return;const w=$('wish').value.trim();if(!w){toast('마음속 소원을 적어보세요.');return}toast('정성 어린 기도의 마음을 올렸습니다. 🪷');$('wish').value=''};
+function createWishMessage(wish){
+ const groups=[
+  {re:/건강|아프|병|수술|회복|치료|쾌유|부모|엄마|아빠|가족/,words:'몸과 마음이 지친 날에는 회복의 속도를 재촉하지 마세요. 작은 휴식과 따뜻한 돌봄도 귀한 수행입니다. 사랑하는 이의 안녕을 바라는 마음을 오늘의 다정한 말과 행동으로 전해 보세요.'},
+  {re:/시험|합격|공부|학업|취업|진학|성적|수능/,words:'배움의 길은 남과 겨루는 일이 아니라 어제의 나를 조금씩 넘어서는 일입니다. 결과를 미리 두려워하기보다 오늘 할 수 있는 한 걸음을 정성껏 내딛어 보세요. 쌓인 노력은 마음의 단단한 뿌리가 됩니다.'},
+  {re:/돈|사업|장사|재물|경제|빚|직장|일자리|성공/,words:'살림의 무게가 무거울수록 마음의 중심을 잃지 않는 일이 중요합니다. 급한 마음을 잠시 내려놓고 할 수 있는 일부터 차분히 살펴보세요. 정직한 노력과 이웃을 향한 배려가 내일의 길을 넓혀 줍니다.'},
+  {re:/불안|슬픔|외로|힘들|우울|걱정|두려|이별|상처/,words:'괴로운 마음을 억지로 밀어내지 않아도 됩니다. 구름이 지나가듯 감정도 머물렀다 흘러갑니다. 깊이 숨을 쉬고 스스로에게 부드러운 말을 건네 보세요. 작은 위로를 받아들이는 것 또한 용기입니다.'},
+  {re:/사랑|인연|결혼|친구|화해|관계/,words:'좋은 인연은 움켜쥔다고 머무는 것이 아닙니다. 서로의 마음을 존중하고 따뜻한 말 한마디를 건네는 순간 인연은 더욱 깊어집니다. 기대를 조금 내려놓고 진심을 전하는 하루가 되기를 바랍니다.'}
+ ];
+ const found=groups.find(group=>group.re.test(wish));
+ const middle=found?found.words:'바라는 마음이 간절할수록 지금 이 순간을 소중히 여기세요. 멀리 있는 답만 바라보지 말고 오늘 할 수 있는 작은 선행과 성실한 행동을 찾아보세요. 작은 한 걸음이 쌓여 삶의 방향을 바꿉니다.';
+ return '당신이 올린 소원을 정성껏 마음에 담습니다. '+middle+' 모든 일은 인연을 따라 변하니, 조급함을 잠시 내려놓고 자신과 이웃에게 자비를 베풀어 보세요. 소원이 반드시 이루어진다고 약속할 수는 없지만, 오늘의 진심이 내일을 향한 용기가 되기를 기원합니다. 나무아미타불.';
+}
+$('wishBtn').onclick=()=>{const w=$('wish').value.trim();if(!w){toast('마음속 소원을 적어보세요.');$('wish').focus();return}const message=createWishMessage(w);$('wishMessage').textContent=message;$('wishReply').hidden=false;$('wishReply').scrollIntoView({behavior:'smooth',block:'nearest'});toast('소원에 어울리는 마음의 법문을 전합니다. 🪷')};
+$('copyWish').onclick=()=>{const message=$('wishMessage').textContent;if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(message).then(()=>toast('응원 메시지를 복사했습니다.')).catch(()=>toast('복사가 제한되었습니다. 메시지를 직접 선택해 주세요.'))}else{const area=document.createElement('textarea');area.value=message;document.body.appendChild(area);area.select();let ok=document.execCommand('copy');area.remove();toast(ok?'응원 메시지를 복사했습니다.':'메시지를 직접 선택하여 복사해 주세요.')}};
 try{render();requestAnimationFrame(tick)}catch(error){console.error('Gatbawi app initialization failed',error);$('sceneText').textContent='화면 초기화 오류가 발생했습니다. 최신 Chrome 또는 Edge로 다시 열어 주세요.';}
 })();
 </script></body></html>
