@@ -122,9 +122,15 @@ function showHeartSutra(){
  $('summitPrayer').textContent='🙏 반야심경을 정성껏 독송합니다';
 }
 function markHeartLine(index){
+ const card=$('prayerCard');
  const lines=$('prayerText').querySelectorAll('.sutra-line');
  lines.forEach((p,i)=>p.classList.toggle('is-reading',i===index));
- if(lines[index])lines[index].scrollIntoView({behavior:'smooth',block:'nearest'});
+ // 낭독 시 문서 전체가 아닌 반야심경 카드 안쪽만 스크롤합니다.
+ if(lines[index]){
+  const line=lines[index];
+  const target=Math.max(0,line.offsetTop-card.offsetTop-card.clientHeight*.28);
+  card.scrollTo({top:target,behavior:'smooth'});
+ }
 }
 function stopHeartSutra(hide=true){
  heart.active=false;heart.token++;
@@ -157,6 +163,7 @@ function startHeartSutra(){
   if(!heart.active||token!==heart.token)return;
   if(i>=heartLines.length){
    heart.utterance=null;
+   $('prayerText').querySelectorAll('.sutra-line').forEach(p=>p.classList.remove('is-reading'));
    $('bgStatus').textContent='반야심경 읽기 완료 · 끄기를 누르면 본문도 사라집니다.';
    return;
   }
@@ -168,10 +175,10 @@ function startHeartSutra(){
   heart.utterance=u;
   $('bgStatus').textContent='📖 반야심경 천천히 낭독 중 ('+i+'/'+heartLines.length+')';
   u.onend=()=>{if(heart.active&&token===heart.token)next()};
-  u.onerror=()=>{
+  u.onerror=e=>{
    if(heart.active&&token===heart.token){
     heart.utterance=null;
-    $('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 확인해 주세요.';
+    if(e.error!=='canceled'&&e.error!=='interrupted')$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 확인해 주세요.';
    }
   };
   try{synth.speak(u)}catch(e){heart.utterance=null;$('bgStatus').textContent='반야심경 본문 표시 중 · 음성 재생을 지원하지 않습니다.'}
