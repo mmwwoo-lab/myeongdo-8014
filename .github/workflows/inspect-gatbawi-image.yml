@@ -1,0 +1,26 @@
+name: Inspect Gatbawi scene reference
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-gatbawi-image.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Emit small reference preview
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image
+          import io,base64
+          im=Image.open('Gatbawi/퀼트 산사에서 맞이한 평온한 아침.png').convert('RGB')
+          print('ORIGINAL_SIZE', im.size)
+          im.thumbnail((720,500))
+          b=io.BytesIO();im.save(b,format='JPEG',quality=67,optimize=True)
+          print('BEGIN_IMAGE_BASE64')
+          print(base64.b64encode(b.getvalue()).decode('ascii'))
+          print('END_IMAGE_BASE64')
+          PY
