@@ -15,7 +15,7 @@ function compose(seed,scene,n){
  const source=(seed+' '+scene).trim(),v=n%3;
  const topic=/역|기차|버스|여행|길/.test(source)?'station':/비|우산/.test(source)?'rain':/어머니|아버지|부모|가족|집/.test(source)?'family':/바다|강|물|신천/.test(source)?'water':/가을|낙엽|겨울|꽃|봄/.test(source)?'season':'letter';
  const settings={station:['작은 역 앞','오래된 승차권','먼 길을 떠났던 친구',['돌아오는 표','마지막 정거장','플랫폼의 약속']],rain:['비 내리는 골목','낡은 우산','소식이 끊겼던 이웃',['우산의 주인','비가 그친 뒤','젖은 봉투']],family:['오래된 집의 부엌','금이 간 찻잔','말수가 적었던 가족',['빈자리의 온도','찬장 속 편지','마지막 밥상']],water:['해 질 무렵의 물가','작은 유리병','먼 곳에서 돌아온 친구',['물가의 약속','유리병 속 주소','건너편 불빛']],season:['낙엽이 쌓인 마당','오래된 수첩','몇 해 만에 만난 친구',['계절이 두고 간 것','마당의 마지막 잎','접힌 페이지']],letter:['동네 끝 작은 책방','보내지 못한 편지','오래전 헤어진 친구',['받는 사람 없음','책갈피의 이름','늦게 도착한 편지']]};
- const [place,object,other,titles]=settings[topic],who=['윤호','서진','민재'][v];
+ const [place,object,other,titles]=settings[topic],who=['민우','지훈','도현'][v];
  const first=source.replace(/\s+/g,' ').split(/[.!?。！？\n]/)[0].trim().slice(0,95);
  const title=(first.length>=3&&first.length<=13&&v===2?first:titles[v]).slice(0,30);
  const paragraphs=[
