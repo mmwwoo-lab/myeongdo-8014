@@ -35,6 +35,16 @@ async function run(){
   const response=await page.goto(host+'/Gatbawi/index.html',{waitUntil:'load'});
   assert.equal(response.status(),200);
   assert.equal(await page.locator('.scene img').evaluate(img=>img.complete&&img.naturalWidth>0),true,'Buddha image');
+  assert.equal(await page.locator('.gatbawi-effects-layer').count(),1,'Scene effects overlay must load');
+  const effectsDesktop=await page.evaluate(()=>{
+    const img=document.querySelector('.scene>img'),canvas=document.querySelector('.gatbawi-effects-layer'),scene=document.querySelector('.scene');
+    const a=img.getBoundingClientRect(),b=canvas.getBoundingClientRect(),c=scene.getBoundingClientRect();
+    return {width:canvas.width,height:canvas.height,imgWidth:a.width,sceneWidth:c.width,overlayWidth:b.width,overlayHeight:b.height,relative:window.getComputedStyle(canvas).position,originalImgStyle:window.getComputedStyle(img).objectFit};
+  });
+  assert(effectsDesktop.width>0&&effectsDesktop.height>0,'Canvas should be sized');
+  assert(Math.abs(effectsDesktop.overlayWidth-effectsDesktop.sceneWidth)<3,'Effects overlay must follow image scene dimensions');
+  assert.equal(effectsDesktop.originalImgStyle,'cover','Original image cover framing must stay unchanged');
+
   const card=page.locator('#prayerCard');
   assert.equal(await card.isHidden(),true);
   await page.locator('#bgStart').click();
