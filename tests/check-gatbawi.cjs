@@ -11,12 +11,13 @@ scripts.forEach((script,i)=>new vm.Script(script,{filename:'Gatbawi-script-'+(i+
 const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]));
 const refs=[...html.matchAll(/\$\('([A-Za-z][\w-]*)'\)/g)].map(m=>m[1]);
 for(const id of refs)assert(ids.has(id),'누락된 화면 요소: '+id);
-for(const id of ['summitPrayer','wish','wishBtn','admissionName','admissionSchool','admissionWish','admissionBtn','prayerCard','prayerHeading','prayerText','readPrayer','stopPrayer','hidePrayer','bgStart','bgStop','bgStatus'])assert(ids.has(id),'필수 화면 요소 누락: '+id);
+for(const id of ['summitPrayer','wish','wishBtn','admissionName','admissionSchool','admissionWish','admissionBtn','prayerCard','prayerHeading','prayerText','readPrayer','stopPrayer','hidePrayer','bgStart','bgStop','bgStatus','heartStart','heartStop'])assert(ids.has(id),'필수 화면 요소 누락: '+id);
 for(const id of ['startBtn','pauseBtn','resetBtn','summitBtn','musicBtn','climbControls','climbPanel','stairsPath'])assert(!ids.has(id),'삭제된 산행 메뉴가 다시 나타났습니다: '+id);
 assert(html.includes('createWishMessage'),'일반 소원 기도문 생성 기능이 없습니다');
 assert(html.includes('createAdmissionPrayer'),'대학진학 기도문 생성 기능이 없습니다');
 assert(html.includes('speechSynthesis'),'기도문 음성 낭독 기능이 없습니다');
 assert(html.includes('startChant'),'나무아미타불 염불 기능이 없습니다');
+assert(html.includes('startHeartSutra')&&html.includes('stopHeartSutra')&&html.includes('마하반야바라밀다심경'),'반야심경 낭독 기능이 없습니다');
 assert(!html.includes('startInstrumental')&&!html.includes('AudioContext'),'삭제된 경음악 기능이 남아 있습니다');
 for(const name of ['퀼트 산사에서 맞이한 평온한 아침.png'])assert(fs.existsSync(path.join(base,name)),'이미지 파일 누락: '+name);
 console.log('PASS: 명도재 디지털 법당 HTML / JavaScript / 화면 요소 / 이미지 확인');
