@@ -54,7 +54,7 @@ const doc={
   getElementById:id=>elements.get(id)||null,
   createElement:tag=>new FakeElement(tag),
   querySelector:()=>null,
-  body:{appendChild(){}}
+  body:{appendChild(){},append(){}}
 };
 let lastSpoken=null;
 const synth={
