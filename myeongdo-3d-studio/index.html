@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#fff5f7">
 <title>명도재 행복 메시지 제작소 | 마음을 꽃피우는 글</title>
-<meta name="description" content="내 사연으로 시적인 행복 메시지를 만들어 보세요. 현대 시인 5명의 문학적 감성을 선택하고, 미리보기·낭독·복사·카카오톡 공유를 한곳에서.">
+<meta name="description" content="내 사연으로 시적인 행복 메시지를 만들어 보세요. 5가지 감성 글쓰기 스타일을 선택하고, 미리보기·낭독·복사·카카오톡 공유를 한곳에서.">
 <link rel="canonical" href="https://myeongdo-3d-studio-mmwwoo-6434.vercel.app/">
 <meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:site_name" content="명도재 행복 메시지 제작소">
 <meta property="og:title" content="🌷 명도재 행복 메시지 제작소">
@@ -31,15 +31,15 @@ main{max-width:1170px;width:calc(100% - 28px);margin:6px auto 40px;display:grid;
 <textarea id="seed" maxlength="600" required placeholder="예: 요즘 힘들어하는 친구에게 말해 주고 싶어요. 긴 겨울도 지나고 봄이 오듯, 네가 잘 버텨 온 하루하루가 참 소중하다고요."></textarea>
 <div class="samples"><button class="sample" type="button" data-example="오랜 시간 곁을 지켜 준 친구에게 고맙고 사랑한다는 마음을 전하고 싶어요.">💌 친구에게 감사</button><button class="sample" type="button" data-example="힘든 일을 겪고 있는 가족에게 서두르지 않아도 괜찮다는 따뜻한 응원을 보내고 싶어요.">🌼 따뜻한 위로</button><button class="sample" type="button" data-example="새로운 출발을 앞둔 사람에게 용기와 희망이 담긴 축하의 글을 보내고 싶어요.">✨ 새로운 시작</button></div></div>
 <div class="twocol"><div class="field"><div class="field-top"><label for="recipient">받는 사람 <span class="hint">(선택)</span></label></div><input id="recipient" type="text" maxlength="40" placeholder="예: 사랑하는 친구"></div><div class="field"><div class="field-top"><label for="occasion">메시지 종류</label></div><select id="occasion"><option>응원</option><option>감사</option><option>안부</option><option>생일</option><option>위로</option><option>축하</option><option>사랑</option><option>일상</option></select></div></div>
-<div class="field"><div class="field-top"><strong id="poetlabel">30대 인기 현대 시인의 감성</strong><span class="hint">한 분 선택</span></div><div class="poets" role="radiogroup" aria-labelledby="poetlabel">
-<label class="poet"><input type="radio" name="poet" value="hwang" checked><b>황인찬</b><small>일상 속 사랑 · 섬세한 감정</small></label>
-<label class="poet"><input type="radio" name="poet" value="yang"><b>양안다</b><small>낭만적인 상상 · 몽환적 장면</small></label>
-<label class="poet"><input type="radio" name="poet" value="moon"><b>문보영</b><small>재치 있는 일상 · 따뜻한 공감</small></label>
-<label class="poet"><input type="radio" name="poet" value="park"><b>박참새</b><small>솔직한 표현 · 개성 있는 감성</small></label>
-<label class="poet"><input type="radio" name="poet" value="yuk"><b>육호수</b><small>보살피는 마음 · 다정한 위로</small></label>
+<div class="field"><div class="field-top"><strong id="poetlabel">행복 메시지 글쓰기 스타일</strong><span class="hint">한 가지 선택</span></div><div class="poets" role="radiogroup" aria-labelledby="poetlabel">
+<label class="poet"><input type="radio" name="poet" value="hwang" checked><b>일상 서정형</b><small>일상 속 사랑 · 섬세한 감정</small></label>
+<label class="poet"><input type="radio" name="poet" value="yang"><b>낭만 감성형</b><small>낭만적인 상상 · 몽환적 장면</small></label>
+<label class="poet"><input type="radio" name="poet" value="moon"><b>유쾌 공감형</b><small>재치 있는 일상 · 따뜻한 공감</small></label>
+<label class="poet"><input type="radio" name="poet" value="park"><b>청춘 희망형</b><small>솔직한 표현 · 개성 있는 감성</small></label>
+<label class="poet"><input type="radio" name="poet" value="yuk"><b>다정 위로형</b><small>보살피는 마음 · 다정한 위로</small></label>
 </div></div>
 <div class="field"><div class="field-top"><strong id="lengthlabel">글의 길이</strong></div><div class="lengths" role="radiogroup" aria-labelledby="lengthlabel"><label><input type="radio" name="length" value="짧게"><span>짧게</span></label><label><input type="radio" name="length" value="보통" checked><span>보통</span></label><label><input type="radio" name="length" value="길게"><span>길게</span></label></div></div>
-<button id="generate" class="primary" type="submit">🌷 나만의 행복 메시지 만들기</button><p class="micro">선택한 시인의 문학적 특징은 창작 분위기의 참고 자료입니다. 원문·특정 문체를 복제하거나 시인이 직접 작성했다고 표시하지 않습니다. AI 연결이 없을 때도 기본 창작 기능을 사용할 수 있습니다.</p></form>
+<button id="generate" class="primary" type="submit">🌷 나만의 행복 메시지 만들기</button><p class="micro">선택한 스타일의 표현 특징을 참고해 독창적인 글을 작성합니다. 기존 작품의 문장을 복제하지 않습니다. AI 연결이 없을 때도 기본 창작 기능을 사용할 수 있습니다.</p></form>
 </section>
 <section class="panel" aria-labelledby="preview-heading">
 <div class="head"><div><h2 id="preview-heading">완성된 글 미리보기</h2><p>다시 쓰고, 목소리로 듣고, 소중한 사람에게 보내세요.</p></div><span class="step">STEP 02</span></div>
@@ -61,7 +61,7 @@ main{max-width:1170px;width:calc(100% - 28px);margin:6px auto 40px;display:grid;
 (function(){
 'use strict';
 var $=function(id){return document.getElementById(id)};
-var poetNames={hwang:'황인찬',yang:'양안다',moon:'문보영',park:'박참새',yuk:'육호수'};
+var poetNames={hwang:'일상 서정형',yang:'낭만 감성형',moon:'유쾌 공감형',park:'청춘 희망형',yuk:'다정 위로형'};
 var titles={응원:'당신의 내일에 피는 꽃',감사:'고마운 마음의 온도',안부:'오늘도 안녕하기를',생일:'당신의 아름다운 날',위로:'마음에 봄이 오는 길',축하:'새로운 계절의 첫날',사랑:'그대에게 전하는 꽃편지',일상:'오늘의 작은 행복'};
 var scenes={
 hwang:['햇살이 머문 의자에 오늘의 작은 기쁨 하나가 놓여 있었습니다.','평범한 오후에도 마음을 밝히는 순간이 있다는 것을 생각합니다.','가까운 사람의 이름을 떠올리면 오늘의 풍경이 조금 달라집니다.'],
@@ -91,7 +91,7 @@ if(length==='길게')chunks.splice(chunks.length-1,0,bridges[poet][(index+2)%3])
 return {title:titles[occasion],body:chunks.join('\n\n'),method:'기본 창작'};
 }
 function stopSpeech(){if('speechSynthesis' in window)window.speechSynthesis.cancel();utterance=null;$('pause').disabled=true;$('stop').disabled=true;$('pause').textContent='⏸ 일시정지'}
-function render(data,poet){stopSpeech();current={title:data.title,body:data.body};$('title').textContent=data.title;$('output').textContent=data.body;$('method').textContent=data.method==='ai'?'AI 원고 완성':'기본 창작 완성';$('chosen').textContent=poetNames[poet]+' 감성 참고 · 독창적인 글';['read','kakao','copy','again'].forEach(function(id){$(id).disabled=false})}
+function render(data,poet){stopSpeech();current={title:data.title,body:data.body};$('title').textContent=data.title;$('output').textContent=data.body;$('method').textContent=data.method==='ai'?'AI 원고 완성':'기본 창작 완성';$('chosen').textContent=poetNames[poet]+' · 독창적인 글';['read','kakao','copy','again'].forEach(function(id){$(id).disabled=false})}
 function fullText(){return current?current.title+'\n\n'+current.body:''}
 async function generate(e){if(e)e.preventDefault();var seed=$('seed').value.trim(),recipient=$('recipient').value.trim(),occasion=$('occasion').value,poet=chosen('poet'),length=chosen('length');if(!seed){status('전하고 싶은 마음을 입력해 주세요.','error');$('seed').focus();return}
 serial++;$('generate').disabled=true;$('generate').textContent='🌷 아름다운 문장을 만드는 중…';status('당신의 사연을 시적인 문장으로 다듬고 있습니다.');
